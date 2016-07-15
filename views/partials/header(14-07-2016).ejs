@@ -1,0 +1,93 @@
+<%
+
+function dynamicSort(property) {
+    var sortOrder = 1;
+    if(property[0] === "-") {
+        sortOrder = -1;
+        property = property.substr(1);
+    }
+    return function (a,b) {
+        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+        return result * sortOrder;
+    }
+}
+
+%>
+
+<header class="head-section ">
+	<div class="navbar navbar-default navbar-static-top container">
+   	 	<div class="navbar-header  margin-bottom-10 hidden-sm hidden-xs">
+   			<a class="navbar-brand" href="/"><img SRC="images/logo.jpg" CLASS="img-responsive"></a>
+    	</div>
+		<div class="navbar-header col-sm-12  margin-bottom-10 visible-sm visible-xs" >
+    		<a class="navbar-brand" href="/"><img SRC="images/logo.jpg" CLASS="img-responsive" STYLE="width:200px;"></a>
+    	</div>
+	 
+	 	<div CLASS="text-right pull-right  margin-top-30 hidden-sm hidden-xs">
+	 		<form method="get" action="/search" onsubmit="return $.checkSearchBox();" >
+				<input class="search2" type="text" name="s" placeholder="Search" value="">
+			</form>
+			<a CLASS="btn-round customer-sign" href="https://crm.tenthmatrix.co.uk/hit/sign-in.shtml" target="_blank" >Customer sign in</a>
+			
+		</div>
+		<div STYLE="text-align:left" ALIGN="LEFT" CLASS="col-sm-6">
+			<button class="navbar-toggle" data-target=".navbar-collapse" data-toggle="collapse" type="button">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+    		</button>
+    	</div>
+    </div>
+</header>
+<div STYLE="background-color:#40a3d4;">
+	<div CLASS="container ">
+		<div class="navbar-collapse collapse">
+    		<ul class="nav navbar-nav">
+			<% if (typeof navigation !== 'undefined' && navigation !== null) {
+				for(var tnav=0; tnav<navigation.length; tnav++){
+					if(navigation[tnav].categories=='top-navigation'){ 
+						if(navigation[tnav].type=="url"){		%>
+						 <li><a HREF="<%= navigation[tnav].content %>" title="<%= navigation[tnav].label %>"><%= navigation[tnav].label %></a></li>
+			<%			}else if(navigation[tnav].type=="items"){
+							var bookmarkItems = JSON.parse(navigation[tnav].bookmark_items);
+							if(bookmarkItems.length>0){	%>
+							<li class="dropdown">
+								<a class="dropdown-toggle" data-close-others="false" data-delay="0" data-hover="dropdown" data-toggle="dropdown" href="#"><%= navigation[tnav].label %> <i class="fa fa-angle-down"></i></a>
+								 <ul class="dropdown-menu">
+								 	<% bookmarkItems.sort(dynamicSort("item_sort_order"));
+								 		
+								 	for(var count=0; count< bookmarkItems.length; count++){
+								 		if(bookmarkItems[count].type=="url"){ 
+								 			var bsourceStr="";
+	  										if(bookmarkItems[count].target=="0" || bookmarkItems[count].target==0){	
+	  											bsourceStr="target='_blank'";
+	  										}
+	  									%>
+								 		 <li><a href="<%= bookmarkItems[count].content %>" <%= bsourceStr %> title="<%= bookmarkItems[count].label %>"><%= bookmarkItems[count].label %></a></li>
+								 	<% 	}else if(bookmarkItems[count].type=="html"){  %>
+								 			<%- bookmarkItems[count].content %>
+								 	<%	}
+								 	}	 %>
+								 </ul>
+							</li>
+					<%		}
+						}
+					} 
+				}	
+			} %>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div CLASS=" margin-top-20 visible-sm visible-xs">
+			<div CLASS="col-xs-12 col-sm-6 margin-bottom-15">
+			<form method="get" action="/search" onsubmit="return $.checkSearc2hBox();" >
+				<input class="search3" name="s" STYLE="width:100%; margin-left:0px; height:40px;" type="text" VALUE="" placeholder="Search">
+			</form>
+			</div>
+			<div CLASS="col-xs-12 col-sm-6 ">
+			<a href="https://crm.tenthmatrix.co.uk/hit/sign-in.shtml" target="_blank"   STYLE="width:100%; height:40px; color:#fff;"  ><div style="width:100%; height: 40px; line-height: 24px;
+text-align: center;" class="customer-sign btn-round">
+			Customer sign in</div></a></div>
+		</div>
