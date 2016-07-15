@@ -1,3 +1,17 @@
+	/**********************************************************************
+	*  Author: Neha Kapoor (neha@jobshout.org)
+	*  Project Lead: Balinder WALIA (bwalia@jobshout.org)
+	*  Project Lead Web...: https://twitter.com/balinderwalia
+	*  Name..: Jobshout Server NodeJS
+	*  Desc..: Jobshout Server (part of Jobshout Suite of Apps)
+	*  Web: http://jobshout.org
+	*  License: http://jobshout.org/LICENSE.txt
+	**/
+
+	/**********************************************************************
+	*  server.js handles the http requests
+	**/
+
 const express = require('express');
 const bodyParser= require('body-parser')
 var mongodb = require('mongodb')
