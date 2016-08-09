@@ -7,7 +7,17 @@
                                 <img src="jobshout_assets/img/user.jpg" alt="">
                             </div>
                             <div class="user-info">
-                                <div>Jonny <strong>Deen</strong></div>
+                            	<% if (typeof authenticatedUser !== 'undefined' && authenticatedUser !== null) {	
+                            		var loggedInUserNameStr="";
+                            		if (typeof authenticatedUser.firstname !== 'undefined' && authenticatedUser.firstname !== null) {	
+                            			loggedInUserNameStr+=authenticatedUser.firstname;
+                            		}
+                            		if (typeof authenticatedUser.lastname !== 'undefined' && authenticatedUser.firlastnamestname !== null) {	
+                            			loggedInUserNameStr+="&nbsp;<strong>"+authenticatedUser.lastname+"</strong>";
+                            		}
+                            	%>
+                                <div><%- loggedInUserNameStr %></div>
+                                <% } %>
                                 <div class="user-text-online">
                                     <span class="user-circle-online btn btn-success btn-circle "></span>&nbsp;Online
                                 </div>
@@ -44,7 +54,7 @@
 					<li>
                         <a href="#"><i class="fa fa-file-text"></i> Documents<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level collapse">
-                            <li> <a href="/<%= backendDirectory %>/list/document_list">List Documents</a> </li>
+                            <li> <a href="/<%= backendDirectory %>/list/documents">List Documents</a> </li>
 							<li><a href="/<%= backendDirectory %>/document">Enter new document</a></li>
                         </ul>
                     </li>
@@ -76,6 +86,19 @@
 							<li><a href="/<%= backendDirectory %>/web_route">Enter new Web Route</a></li>
                         </ul>
                     </li>
-                    
+                    <li>
+                        <a href="#"><i class="fa fa-file-text"></i> System Templates<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="/<%= backendDirectory %>/list/system_templates">System Templates</a> </li>
+							<li><a href="/<%= backendDirectory %>/system_template">Enter new System Templates</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-file-text"></i> Users<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="/<%= backendDirectory %>/list/users">Users</a> </li>
+							<li><a href="/<%= backendDirectory %>/user">Enter new user</a></li>
+                        </ul>
+                    </li>
 				</ul>
     </aside>

@@ -1,4 +1,15 @@
 <% include include/main-header %>
+<% 
+if (typeof contentObj.Published_timestamp !== 'undefined' && contentObj.Published_timestamp !== null) {  
+var a = new Date(contentObj.Published_timestamp * 1000);
+var year = a.getFullYear();
+var month = a.getMonth()+1;
+var dateNum = a.getDate();
+var hour = a.getHours();
+var min = a.getMinutes();
+var sec = a.getSeconds();
+var publishedDate = year + '-' + month + '-' + dateNum + ' ' + hour + ':' + min ;
+} %>
 <style>
 
    label{
@@ -15,8 +26,6 @@
 	   height:100px!important;
    }
    
-  
-   
    }
    @media(min-width:992px){
     .submit-btn-setting{
@@ -25,6 +34,8 @@
    }
 </style>
 
+    <!-- page specific css -->
+    <link href="jobshout_assets/plugins/datetime-picker/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 </head>
 <body>
 	<!-- navbar top -->
@@ -69,10 +80,12 @@
             <%	}
             }	%>
       		<div class="panel-body no-padding-top bg-white"> 
-      			<form class="form-horizontal" action="/<%= backendDirectory %>/document/save/" method="POST">
+      			<form class="form-horizontal" action="/<%= backendDirectory %>/save/document" method="POST">
       				<input type="hidden" class="form-control" id="table_name" name="table_name" value="documents">
       				<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="Code">
       				<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>">
+      				<input type="hidden" class="form-control" id="editorField" name="editorField" value="<% if (typeof editorField !== 'undefined' && editorField !== null) { %><%= editorField %><% }else{ %>_id<% } %>">
+      				<input type="hidden" class="form-control" id="editorValue" name="editorValue" value="<% if (typeof editorValue !== 'undefined' && editorValue !== null) { %><%= editorValue %><% } %>">
      				<div data-example-id="togglable-tabs">
     					<ul id="new-customer-tab" class="nav nav-tabs" role="tablist">
       						<li role="presentation" class="active"><a href="#customerinfo" id="home-tab" role="tab" data-toggle="tab" aria-controls="customer-info" aria-expanded="true">Page Editor</a></li>
@@ -87,14 +100,14 @@
   										<div class="form-group">
     										<label for="" class="col-sm-3 control-label">Heading<sup class="required">*</sup></label>
     										<div class="col-sm-9  ">
-    											<input type="text" required class="form-control" id="Document" name="Document" onblur="generate_code('chk_manual','Document','Code')" onkeyup="generate_code('chk_manual','Document','Code')"  value="<% if (typeof contentObj.Document !== 'undefined' && contentObj.Document !== null) { %><%= contentObj.Document %><% } %>">
+    											<input type="text" required class="form-control" id="Document" name="Document" onblur="generate_code('chk_manual','Document','Code'); generate_metaTags();" onkeyup="generate_code('chk_manual','Document','Code');generate_metaTags();"  value="<% if (typeof contentObj.Document !== 'undefined' && contentObj.Document !== null) { %><%= contentObj.Document %><% } %>">
     										</div>
   										</div>
   
   										<div class="form-group">
     										<label for="firstname" class="col-sm-3  control-label">Sub heading </label>
     										<div class="col-sm-9">
-      											<input type="text" class="form-control" id="Title" name="Title" value="<% if (typeof contentObj.Title !== 'undefined' && contentObj.Title !== null) { %><%= contentObj.Title %><% } %>">
+      											<input type="text" class="form-control" id="Title" name="Title" onblur="generate_metaTags();" onkeyup="generate_metaTags();" value="<% if (typeof contentObj.Title !== 'undefined' && contentObj.Title !== null) { %><%= contentObj.Title %><% } %>">
     										</div>
   										</div>
   										<div class="form-group">
@@ -111,6 +124,7 @@
                   									<option value="blog" <% if (typeof contentObj.Type !== 'undefined' && contentObj.Type !== null && contentObj.Type == "blog") { %>selected<% } %>>Blog</option>
                   									<option value="news" <% if (typeof contentObj.Type !== 'undefined' && contentObj.Type !== null && contentObj.Type == "news") { %>selected<% } %>>News</option>
                   									<option value="clients-testimonial" <% if (typeof contentObj.Type !== 'undefined' && contentObj.Type !== null && contentObj.Type == "clients-testimonial") { %>selected<% } %>>Clients testimonial</option>
+                    								<option value="resource-centre" <% if (typeof contentObj.Type !== 'undefined' && contentObj.Type !== null && contentObj.Type == "resource-centre") { %>selected<% } %>>Resource Centre</option>
                     							</select>
       										</div>
   										</div>
@@ -120,6 +134,16 @@
       											<input type="text" class="form-control" id="image_path" name="image_path" value="<% if (typeof contentObj.virtualFields !== 'undefined' && contentObj.virtualFields !== null) {  var virtualFields= contentObj.virtualFields; var image_path= virtualFields['image_path'] %><%= image_path %><% } %>">
     										</div>
   										</div>
+  										<div class="form-group no-margn-bottom">
+              								<label for="dtp_input1" class="col-md-3 control-label" >Published On  <span class="required">*</span></label>
+                  							<div class="col-md-6 col-lg-4" >
+                								<div class="input-group date form_datetime " style="max-width:300px;" >
+                    								<input class="form-control col-md-5 col-xs-12" required type="text" id="Published_timestamp" name="Published_timestamp" value="<% if (typeof publishedDate !== 'undefined' && publishedDate !== null) {  %><%= publishedDate %><% } %>" readonly>
+                    								<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                								</div>
+                  							</div>
+            							</div>
+  										
   										<div class="form-group">
     										<label for="" class="col-sm-3 control-label">Status</label>
     										<div class="col-sm-9">
@@ -141,10 +165,10 @@
                        					<div class="form-group">
                               				<label for="" class="col-sm-3 control-label">Code<sup class="required">*</sup></label>
                              				<div class="col-sm-9">
-                              					<input type="text" required class="form-control" id="Code" name="Code" placeholder="" readonly value="<% if (typeof contentObj.Code !== 'undefined' && contentObj.Code !== null) { %><%= contentObj.Code %><% } %>">
+                              					<input type="text" required class="form-control" id="Code" name="Code" placeholder="" value="<% if (typeof contentObj.Code !== 'undefined' && contentObj.Code !== null) { %><%= contentObj.Code %><% } %>" <% if (typeof contentObj.AutoFormat !== 'undefined' && contentObj.AutoFormat !== null && contentObj.AutoFormat == 1) {  }else { %>readonly<% } %>>
 							  					<span STYLE="font-size:12px; color:#737373;">URL (SEO friendly)</span>
 							  					<span class="help-block" STYLE="font-size:12px;">
-													<input name="chk_manual" id="chk_manual" value="0" type="checkbox" <% if (typeof contentObj.AutoFormat !== 'undefined' && contentObj.AutoFormat !== null && contentObj.AutoFormat == 0) { %>checked<% } %> >
+													<input name="chk_manual" id="chk_manual" value="0" type="checkbox" <% if (typeof contentObj.AutoFormat !== 'undefined' && contentObj.AutoFormat !== null && contentObj.AutoFormat == 1) { %>checked<% } %> >
 													I want to manually enter code</span>
                              				</div>
                         				</div>
@@ -152,20 +176,20 @@
                         				<div class="form-group">
                              				<label for="" class="col-sm-3 control-label">Window Title</label>
                              				<div class="col-sm-9">
-                              					<input type="text" class="form-control" id="PageTitle" name="PageTitle" placeholder="" value="<% if (typeof contentObj.PageTitle !== 'undefined' && contentObj.PageTitle !== null) { %><%= contentObj.PageTitle %><% } %>">
+                              					<input type="text" class="form-control" id="PageTitle" name="PageTitle" placeholder="" value="<% if (typeof contentObj.PageTitle !== 'undefined' && contentObj.PageTitle !== null) { %><%= contentObj.PageTitle %><% } %>" <% if (typeof contentObj.AutoFormatMetaData !== 'undefined' && contentObj.AutoFormatMetaData !== null && contentObj.AutoFormatMetaData == 1) {  }else { %>readonly<% } %>>
                             				</div>
                         				</div>
                         				<div class="form-group">
                               				<label for="" class="col-sm-3 control-label">Meta Data Keywords</label>
                              				<div class="col-sm-9">
-                             					<TEXTAREA CLASS="form-control" STYLE="height:220px;" id="MetaTagKeywords" name="MetaTagKeywords"><% if (typeof contentObj.MetaTagKeywords !== 'undefined' && contentObj.MetaTagKeywords !== null) { %><%= contentObj.MetaTagKeywords %><% } %></TEXTAREA>
+                             					<TEXTAREA CLASS="form-control" STYLE="height:220px;" id="MetaTagKeywords" name="MetaTagKeywords" <% if (typeof contentObj.AutoFormatMetaData !== 'undefined' && contentObj.AutoFormatMetaData !== null && contentObj.AutoFormatMetaData == 1) {  }else { %>readonly<% } %>><% if (typeof contentObj.MetaTagKeywords !== 'undefined' && contentObj.MetaTagKeywords !== null) { %><%= contentObj.MetaTagKeywords %><% } %></TEXTAREA>
 							 					<span STYLE="font-size:11px;">Search terms relevant to this page to find content of this page easily</span>
                              				</div>
                         				</div>
                         				<div class="form-group">
                               				<label for="" class="col-sm-3 control-label">Meta Data Description</label>
                              				<div class="col-sm-9">
-                             					<TEXTAREA CLASS="form-control" STYLE="height:220px;" id="MetaTagDescription" name="MetaTagDescription" ><% if (typeof contentObj.MetaTagDescription !== 'undefined' && contentObj.MetaTagDescription !== null) { %><%= contentObj.MetaTagDescription %><% } %></TEXTAREA>
+                             					<TEXTAREA CLASS="form-control" STYLE="height:220px;" id="MetaTagDescription" name="MetaTagDescription" <% if (typeof contentObj.AutoFormatMetaData !== 'undefined' && contentObj.AutoFormatMetaData !== null && contentObj.AutoFormatMetaData == 1) {  }else { %>readonly<% } %>><% if (typeof contentObj.MetaTagDescription !== 'undefined' && contentObj.MetaTagDescription !== null) { %><%= contentObj.MetaTagDescription %><% } %></TEXTAREA>
 							 					<span STYLE="font-size:11px;">Overview which describes this page (About 300 words)</span>
 							 					<span class="help-block" STYLE="font-size:12px;">
 													<input name="chk_manual_metatags" id="chk_manual_metatags" value="0" type="checkbox" <% if (typeof contentObj.AutoFormatMetaData !== 'undefined' && contentObj.AutoFormatMetaData !== null && contentObj.AutoFormatMetaData == 1) { %>checked<% } %>>
@@ -364,6 +388,7 @@
 	<% include include/footer %>
 <!-- Footer Ends Here-->
 <script SRC="jobshout_assets/plugins/tinymce/tinymce.min.js">
+
 <script>tinymce.init({ selector:'textarea' });</script>
 <script>
 var tiny_options=new Array();
@@ -379,8 +404,7 @@ tiny_options['theme_advanced_toolbar_align']= "left";
 tiny_options['theme_advanced_statusbar_location']= "bottom";
 tiny_options['theme_advanced_resizing']= true;
 tinymce.init(tiny_options);
-</script>
-<script>
+
 function generate_code(chkd,name,code){
 	var status=document.getElementById(chkd).checked;
 	if(status!=true){
@@ -397,6 +421,43 @@ function generate_code(chkd,name,code){
 		$('#'+code).prop("readonly",false);
 	}
 }
+function removeEmptyStrings(tempMetaTags){
+	var returnMetaTags= tempMetaTags != "";
+	return returnMetaTags;
+}
+
+function stopWords(tempMetaTags){
+	var FORGETABLE_WORDS = ',the,of,an,and,that,which,is,was,';
+	for(var i = 0, word; word = tempMetaTags[i++]; ) {
+		if (FORGETABLE_WORDS.indexOf(',' + word + ',') > -1 || word.length <= 3) {
+			tempMetaTags[i-1] = "";
+    	}
+	}
+	tempMetaTags = tempMetaTags.filter(removeEmptyStrings);
+	return tempMetaTags;
+}
+
+function generate_metaTags(){
+	var doc=$("#Document").val();
+	var Title=$("#Title").val();
+	var Body=$("#Body").val();
+	if($("#PageTitle").val()==""){
+		$("#PageTitle").val(Title);
+	}
+	Body=Body.replace(/<\/?[^>]+(>|$)/g, "");
+	if(Body.length>=250){
+		var metaDescription=Body.substr(0, 250);
+		$("#MetaTagDescription").val(metaDescription);
+	}	
+	
+	var tempMetaTags=doc+" "+Title+" "+Body;
+	tempMetaTags=tempMetaTags.split(" ");
+	tempMetaTags=stopWords(tempMetaTags);
+	
+	$.unique(tempMetaTags);
+	$("#MetaTagKeywords").val(tempMetaTags);
+}
+
 $(document).ready(function(){
 	
 	$("#type").change(function(){
@@ -417,7 +478,40 @@ $(document).ready(function(){
 			generate_code('chk_manual','Document','Code');
 		}
 	});
+	
+	$("#chk_manual_metatags").click(function(){
+		if(document.getElementById('chk_manual_metatags').checked) {
+			$('#PageTitle').prop("readonly",false);
+			$('#MetaTagDescription').prop("readonly",false);
+			$('#MetaTagKeywords').prop("readonly",false);
+			$('#PageTitle').val("");
+			$('#MetaTagDescription').val("");
+			$('#MetaTagKeywords').val("");
+		}else{
+			$('#PageTitle').prop("readonly",true);
+			$('#MetaTagDescription').prop("readonly",true);
+			$('#MetaTagKeywords').prop("readonly",true);
+			$('#PageTitle').val("");
+			$('#MetaTagDescription').val("");
+			$('#MetaTagKeywords').val("");
+			generate_metaTags();
+		}
+	});
 });
+</script>
+<script type="text/javascript" src="jobshout_assets/plugins/datetime-picker/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script type="text/javascript">
+	$('.form_datetime').datetimepicker({
+		weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		forceParse: 0,
+		pickerPosition: "bottom-left",		
+        showMeridian: 1,
+		pickTime: 0
+	});
 </script>
 </body>
 </html>

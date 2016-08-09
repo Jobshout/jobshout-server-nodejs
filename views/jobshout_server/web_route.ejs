@@ -55,10 +55,14 @@ console.log(contentObj)
 
            				<div class="row">
             				<div class="col-sm-12">
-            					<form class="form-horizontal" action="/<%= backendDirectory %>/web_route/save/" method="POST">
+            					<form class="form-horizontal" action="/<%= backendDirectory %>/save/web_route" method="POST">
             						<input type="hidden" class="form-control" id="table_name" name="table_name" value="web_routes">
       								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="route_url">
       								<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>">
+      								
+      								<input type="hidden" class="form-control" id="editorField" name="editorField" value="<% if (typeof editorField !== 'undefined' && editorField !== null) { %><%= editorField %><% }else{ %>_id<% } %>">
+      								<input type="hidden" class="form-control" id="editorValue" name="editorValue" value="<% if (typeof editorValue !== 'undefined' && editorValue !== null) { %><%= editorValue %><% } %>">
+      								
             						<div class="form-group">
                  						<label class="control-label col-md-3" for="">Select Table</label>
                   						<div class="col-md-6 col-lg-4">

@@ -1,5 +1,27 @@
 <% include include/main-header %>
-<style>
+
+<link rel="stylesheet" href="jobshout_assets/plugins/combobox/autocomplete-ui.css"/>
+    
+    <style>
+	.custom-combobox {
+		position: relative;
+		display: inline-block;
+	}
+	.custom-combobox-toggle {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		margin-left: -1px;
+		padding: 0;
+	}
+	.custom-combobox-input {
+		margin: 0;
+		padding: 5px 10px;
+	}
+	.ui-widget-overlay {
+		position: fixed;
+	}
+
    label{
 	   max-width:195px!important;
 	   text-align:left!important;
@@ -62,10 +84,12 @@
             							</div>
             						<%	}
             					}	%>
-            					<form class="form-horizontal" action="/<%= backendDirectory %>/bookmark/save/" method="POST">
+            					<form class="form-horizontal" action="/<%= backendDirectory %>/save/bookmark" method="POST">
             						<input type="hidden" class="form-control" id="table_name" name="table_name" value="bookmarks">
       								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="label">
       								<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>">
+      								<input type="hidden" class="form-control" id="editorField" name="editorField" value="<% if (typeof editorField !== 'undefined' && editorField !== null) { %><%= editorField %><% }else{ %>_id<% } %>">
+      								<input type="hidden" class="form-control" id="editorValue" name="editorValue" value="<% if (typeof editorValue !== 'undefined' && editorValue !== null) { %><%= editorValue %><% } %>">
             						<div class="form-group">
     									<label for="firstname" class="col-sm-3  control-label">Categories </label>
     									<div class="col-sm-9">
@@ -97,10 +121,18 @@
                     						<input type="text" required="required" id="label" name="label" class="form-control col-md-5 col-xs-12" value="<% if (typeof contentObj.label !== 'undefined' && contentObj.label !== null) { %><%= contentObj.label %><% } %>">
                   						</div>
                 					</div>
-              						<div class="form-group" id="linkurlSection">
+              						<div class="form-group" id="linkurlSection" <% if (typeof contentObj.type !== 'undefined' && contentObj.type !== null && contentObj.type == "items") { %>style="display:none;"<% } %>>
                   						<label class="control-label col-md-3" id="urlSectionLabel">URL<span class="required">*</span></label>
                   						<div class="col-md-6 col-lg-4">
                    							<input type="text" class="form-control" STYLE="max-width:100%;" id="content" name="content" value="<% if (typeof contentObj.content !== 'undefined' && contentObj.content !== null) { %><%= contentObj.content %><% } %>">
+                  						</div>
+                					</div>
+                					<div class="form-group" class="linkurlSection" <% if (typeof contentObj.type !== 'undefined' && contentObj.type !== null && contentObj.type == "items") { %>style="display:none;"<% } %>>
+                  						<label class="control-label col-md-3" id="urlSectionLabel">Or Select any web page as URL (Search for web page)</label>
+                  						<div class="col-md-6 col-lg-4 ui-widget">
+                   							 <select class="combobox form-control" id="document_id" >
+                             					
+											</select>
                   						</div>
                 					</div>
                 					<div class="form-group">
@@ -109,7 +141,7 @@
                    							<input type="text"  class="form-control col-md-5 col-xs-12" id="order_by_num" name="order_by_num" value="<% if (typeof contentObj.order_by_num !== 'undefined' && contentObj.order_by_num !== null) { %><%= contentObj.order_by_num %><% } %>">
                   						</div>
                 					</div>
-                					<div class="form-group" id="linkTargetDivID">
+                					<div class="form-group" class="linkTargetDivID">
     									<label for="" class="col-sm-3 control-label">Target</label>
     									<div class="col-sm-9">
     										<div class="radio" STYLE="float:left; margin-right:10px;">
@@ -131,16 +163,16 @@
     			  							</div>
 										</div>
 									</div>
-									<div CLASS="ROW">
-									<div CLASS="col-md-12" STYLE="margin-left:13px;">
-									<span style="float:right; font-weight:bold;">
+									<div CLASS="ROW ">
+									<div CLASS="col-md-12 itemsContent" STYLE="margin-left:13px;display:none;">
+										<span style="float:right; font-weight:bold;">
 												<button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal" style="margin-bottom: 10px;">+ Add new Item</button>
 											</span>
 									</div>
 									</div>
 									<div CLASS="row">
 									
-									<div class=" col-md-12" id="itemsTable"  <% if (typeof contentObj.type !== 'undefined' && contentObj.type !== null && contentObj.type == "items") { 	}else{	%>style="display:none;" <% }	%>>
+									<div class="itemsContent col-md-12" id="itemsTable"  <% if (typeof contentObj.type !== 'undefined' && contentObj.type !== null && contentObj.type == "items") { 	}else{	%>style="display:none;" <% }	%>>
     									<label for="" class="col-lg-3 col-sm-12 control-label" STYLE="padding-left:0px;">Bookmark Items</label>
     									<div >
 									
@@ -148,9 +180,6 @@
 											<input type="hidden" id="bookmark_items" name="bookmark_items" value="">
 											<div CLASS="table-responsive">
 										   <table class="table table-striped  table-bordered table-hover custom-tbl-st bt" id="table-breakpoint">
-											
-											  
-											
 												<thead>
 												  <tr class="item">
 												  	  <th><input id="chk_all" class="" type="checkbox" name="select"></th>
@@ -188,6 +217,7 @@
 											  }	%>
 											  </tbody>
 											</table>
+											<span style="float:right;font-size:12px;font-style:italic;color:#d9534f">Note: Please submit the form to save the changes!</span>
 											</div>
 											
 										</div>
@@ -300,7 +330,7 @@
                             Close
                 </button>
                 <button type="button" class="btn btn-primary" onClick="savelinkitem()">
-                    Save changes
+                    Add
                 </button>
             </div>
         </div>
@@ -313,6 +343,7 @@
 <!-- Footer Ends Here-->
 
 <!-- Page-Level Plugin Scripts-->
+ <script src="jobshout_assets/plugins/combobox/autocomplete-ui.js"></script>
 <script>
 function generateObjectJson(){
 	var createArr=new Array();
@@ -426,7 +457,7 @@ function savelinkitem(){
 		}else if($(ev).val()=="url"){
 			$(".itemTargetDivClass").show();
 			$("#itemlinklabel").html("URL");
-			var textarea    = document.getElementById('item_link'),
+			var textarea    = document.getElementById('item_link');
         	input = document.createElement('input');
    			input.id    = textarea.id;
    			input.name    = textarea.id;
@@ -437,35 +468,36 @@ function savelinkitem(){
 		$("#item_link").addClass('form-control');
  	}
 	function change_url(ev){
+		$(".itemsContent").hide();
 		if(ev=="html"){
 			$("#linkTargetDivID").hide();
 			$("#urlSectionDoc").hide();
-			$("#linkurlSection").show();
+			$(".linkurlSection").show();
 			$("#urlSectionLabel").html('Content <span class="required">*</span>');
-			var input    = document.getElementById('link_url'),
-        	textarea = document.createElement('textarea');
+			var input    = document.getElementById('content');
+			textarea = document.createElement('textarea');
    			textarea.id    = input.id;
    			textarea.name    = input.id;
     		textarea.value = input.value;
     		input.parentNode.replaceChild(textarea, input);
 		}else if(ev=="url"){
 			$("#urlSectionLabel").html('URL <span class="required">*</span>');
-			var textarea    = document.getElementById('link_url'),
+			var textarea    = document.getElementById('content');
         	input = document.createElement('input');
    			input.id    = textarea.id;
    			input.name    = textarea.id;
    			input.value=textarea.value;
     		textarea.parentNode.replaceChild(input, textarea);
     		$("#urlSectionDoc").show();
-    		$("#linkurlSection").show();
+    		$(".linkurlSection").show();
     		$("#linkTargetDivID").show();
     	}else if(ev=="items"){
     		$("#linkTargetDivID").hide();
-			$("#itemsTable").show();
+			$(".itemsContent").show();
 			$("#urlSectionDoc").hide();
-			$("#linkurlSection").hide();
+			$(".linkurlSection").hide();
 		}
-		$("#link_url").addClass('form-control');
+		$("#content").addClass('form-control');
 	}
 function resetItemForm(){
 	$("#msgSpan").remove();
@@ -481,9 +513,22 @@ function resetItemForm(){
 	$("#item_query_string").val("");
 	$( "#item_related_doc" ).html("");
 }
- $(document).ready(function(){
+$(document).ready(function(){
+	
+	var xhr;
+	xhr=$.getJSON("list_forms?start=0&limit=20&s=&templateStr=bookmark_web_pages",function(result){
+		var dropdownStr='<option value="" selected="selected">Select a web page</option>';
+		if(result.aaData.length>=1){
+			$.each(result.aaData, function(i,row){
+				dropdownStr+='<option value="'+row.Code+'">'+row.Document+'</option>';
+			});
+		}
+		$("#document_id").html(dropdownStr);
+		$('.combobox').combobox();
+	});
+	
+		
  	$("#btn_submit").click(function(){
- 		//alert()
  		generateObjectJson();
  		form.submit();
  	});
@@ -508,16 +553,215 @@ function resetItemForm(){
   		}  		
   	});
   	$('#link_url').keypress(function(e){
-						var k = e.which;
-    					/* numeric inputs can come from the keypad or the numeric row at the top */
-   						 if ( (k<48 || k>57) && (k<65 || k>90) && (k<97 || k>122) && (k!=45) && (k!=46) && (k!=95) && (k!=8) && (k!=0)) {
-        					e.preventDefault();
-							$.prompt("Allowed characters are A-Z, a-z, 0-9, _, -, .");
-        					return false;
-    					}
-					
-					});
+		var k = e.which;
+    	/* numeric inputs can come from the keypad or the numeric row at the top */
+   		if ( (k<48 || k>57) && (k<65 || k>90) && (k<97 || k>122) && (k!=45) && (k!=46) && (k!=95) && (k!=8) && (k!=0)) {
+        	e.preventDefault();
+			$.prompt("Allowed characters are A-Z, a-z, 0-9, _, -, .");
+        	return false;
+    	}
+	});
 });
+
+var xhr;
+(function( $ ) {
+	$.widget( "custom.combobox", {
+		_create: function() {
+				this.wrapper = $( "<span>" )
+				.addClass( "custom-combobox" )
+				.insertAfter( this.element );
+
+				this.element.hide();
+				this._createAutocomplete();
+				this._createShowAllButton();
+				},
+
+				_createAutocomplete: function() {
+				var ele_select= this.element;
+				var selected = this.element.children( ":selected" ),
+				value = selected.val() ? selected.text() : "";
+
+				this.input = $( "<input>" )
+				.appendTo( this.wrapper )
+				.val( value )
+				.attr( "title", "" )
+				.addClass( "custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left" )
+				.autocomplete({
+				delay: 0,
+				minLength: 0,
+				source: $.proxy( this, "_source" )
+				})
+				.tooltip({
+				tooltipClass: "ui-state-highlight"
+				});
+
+				this._on( this.input, {
+				autocompleteselect: function( event, ui ) {
+				//alert("show all");
+				ui.item.option.selected = true;
+
+				this._trigger( "select", event, {
+				  item: ui.item.option
+				});
+				
+				ele_select.trigger('change');
+					if(ele_select.attr('id')=='document_id'){
+						$("#content").val($("#document_id").val());
+					}
+				},
+
+				autocompletechange: "_removeIfInvalid"
+				});
+				},
+
+				_createShowAllButton: function() {
+				var input = this.input,
+				wasOpen = false;
+
+				$( "<a>" )
+				.attr( "tabIndex", -1 )
+				.attr( "title", "Show All Items" )
+				.tooltip()
+				.appendTo( this.wrapper )
+				.button({
+				icons: {
+				  primary: "ui-icon-triangle-1-s"
+				},
+				text: false
+				})
+				.removeClass( "ui-corner-all" )
+				.addClass( "custom-combobox-toggle ui-corner-right" )
+				.mousedown(function() {
+				wasOpen = input.autocomplete( "widget" ).is( ":visible" );
+				})
+				.click(function() {
+				input.focus();
+
+				// Close if already visible
+				if ( wasOpen ) {
+				  return;
+				}
+
+				// Pass last search string as value to search for, displaying last results
+				input.autocomplete( "search", 'SHOWALL' );
+				});
+				},
+
+				_source: function( request, response ) {
+				//var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+				var ele_select= this.element;
+				if(request.term=='SHOWALL'){
+				response(ele_select.children( "option" ).map(function() {
+				var text = $( this ).text();
+				var value= $( this ).val();
+				//if ( this.value && ( !request.term || matcher.test(text) ) )
+				return {
+				  label: text,
+				  value: text,
+				  option: this
+				};
+				}) );
+
+				}
+				else
+				{
+				
+				var jsonRow = 'list_forms?start=0&limit=20&templateStr=bookmark_web_pages&s='+request.term;
+				
+				if(xhr) xhr.abort();
+				xhr=$.getJSON(jsonRow,function(result){
+					
+				if(result.error){
+					var html='<option value=""></option>';
+					ele_select.html(html);
+					response(ele_select.children( "option" ).map(function() {
+					var text = $( this ).text();
+					var value= $( this ).val();
+					//if ( this.value && ( !request.term || matcher.test(text) ) )
+					return {
+				  		label: text,
+				  		value: text,
+				  		option: this
+					};
+					}) );
+				}else{
+					var html='<option value=""></option>';
+					if(result.aaData.length>=1){
+						$.each(result.aaData, function(i,row){
+							html+='<option value="'+row.Code+'">'+row.Document+'</option>';
+						});
+					}
+					
+					ele_select.html(html);
+					
+					
+					response(ele_select.children( "option" ).map(function() {
+				var text = $( this ).text();
+				var value= $( this ).val();
+				//if ( this.value && ( !request.term || matcher.test(text) ) )
+				return {
+				  label: text,
+				  value: text,
+				  option: this
+				};
+				}) );
+					
+					
+				}
+				});
+
+				} 
+
+				},
+
+				_removeIfInvalid: function( event, ui ) {
+
+					// Selected an item, nothing to do
+					if ( ui.item ) {
+
+					return;
+					}
+
+					// Search for a match (case-insensitive)
+					var value = this.input.val(),
+					valueLowerCase = value.toLowerCase(),
+					valid = false;
+					var ele_select= this.element;
+					this.element.children( "option" ).each(function() {
+					if ( $( this ).text().toLowerCase() === valueLowerCase ) {
+						this.selected = valid = true;	
+						if(ele_select.attr('id')=='document_id'){
+							$("#content").val(value);
+						}
+						ele_select.trigger('change');
+
+						return false;
+					}
+					});
+
+					// Found a match, nothing to do
+					if ( valid ) {
+					return;
+					}
+
+					// Remove invalid value
+					this.input
+					.val( "" )
+					.attr( "title", value + " didn't match any item" )
+					.tooltip( "open" );
+					this.element.val( "" );
+					this._delay(function() {
+					this.input.tooltip( "close" ).attr( "title", "" );
+					}, 2500 );
+					this.input.data( "ui-autocomplete" ).term = "";
+				},
+
+				_destroy: function() {
+					this.wrapper.remove();
+					this.element.show();
+				}
+			});
+			})( jQuery );
 </script>
 
 

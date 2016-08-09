@@ -57,7 +57,8 @@
             						<input type="hidden" class="form-control" id="table_name" name="table_name" value="email_queue">
       								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="name">
       								<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>">
-            						
+            						<input type="hidden" class="form-control" id="editorField" name="editorField" value="<% if (typeof editorField !== 'undefined' && editorField !== null) { %><%= editorField %><% }else{ %>_id<% } %>">
+      								<input type="hidden" class="form-control" id="editorValue" name="editorValue" value="<% if (typeof editorValue !== 'undefined' && editorValue !== null) { %><%= editorValue %><% } %>">
                          			<div class="form-group">
                   						<label class="control-label col-md-3" for="first-name">Sender Name<span class="required">*</span></label>
                   						<div class="col-md-6 col-lg-4">
