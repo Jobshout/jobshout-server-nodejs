@@ -33,9 +33,16 @@ $(function() {
         }
     })
 	
-	
-	
-	
+	//menu
+	$("#menu").on("click" , function(){
+		$(this).toggleClass("active");
+    	$("body").toggleClass("nav-open");
+  	});
+
+  	$("#menu2").on("click" , function(){
+   	 	$(this).toggleClass("active");
+    	$("body").toggleClass("nav-open");
+  	});
 	
 })
 
