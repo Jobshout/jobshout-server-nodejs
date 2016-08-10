@@ -105,8 +105,6 @@ function load_more(){
 				}
 				if (typeof html.enable_search !== 'undefined' && html.enable_search !== null && (html.enable_search==true ||  html.enable_search=="true") && start==0){
 					$(".form-inline").show();
-				}else{
-					$(".form-inline").hide();
 				}
 				if (typeof html.editor !== 'undefined' && html.editor !== null && html.editor!=""){
 					editorPage="/"+dirStr+"/"+html.editor;
@@ -126,7 +124,7 @@ function load_more(){
 						if (typeof html.display_columns !== 'undefined' && html.display_columns !== null && html.display_columns!=""){
 							$.each(html.display_columns, function(k,col){
 								if(col!="Action"){
-									if(row.hasOwnProperty(col)==true && (col=="Modified" || col=="modified_timestamp" || col=="modified")){
+									if(row.hasOwnProperty(col)==true && (col=="Modified" || col=="modified_timestamp" || col=="modified" || col=="Created" || col=="created_timestamp" || col=="created")){
 										contentHtml+="<td>"+timeConverter(row[col])+"</td>";
 									}else if(row.hasOwnProperty(col)==true && (col=="Status" || col=="status" || col=="active")){
 										if(row[col]==1 || row[col]=="1"){
