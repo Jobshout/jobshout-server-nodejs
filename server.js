@@ -1201,6 +1201,8 @@ function fetchTableName(filename){
 		table_name="contacts";
 	}else if(filename=="system_templates" || filename=="system_template"){
 		table_name="system_templates";
+	}else if(filename=="leads" || filename=="lead"){
+		table_name="leads";
 	}
 	return table_name;
 }
