@@ -101,15 +101,17 @@ $(document).ready(function(){
 });
 		$(function() {
 			$.checkSearchBox = function checkSearchBox(){
-				var searchText = $('#s').val();
-				if(searchText=='' || searchText=='Search...'){
+				var searchText = $('.search2').val();
+				if(searchText=='' || searchText=='Search'){
+					$('.search2').val('');
 					alert('Please enter search keyword(s).');return false;
 				}
 				else return true;
 			}
 			$.checkSearc2hBox = function checkSearc2hBox(){
-				var searchText = $('#search').val();
-				if(searchText=='' || searchText=='Search...'){
+				var searchText = $('.search3').val();
+				if(searchText=='' || searchText=='Search'){
+					$('.search3').val('');
 					alert('Please enter search keyword(s).');return false;
 				}
 				else return true;
