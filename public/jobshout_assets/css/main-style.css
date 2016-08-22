@@ -6183,8 +6183,8 @@ important;
 }
 .btn-inline >.btn-left-align {
 	position: absolute;
-	left: 0;
-	top: 0;
+	right: 0;
+	top: -4px;
 	margin: 8px 2px 0 0;
 }
 .btn-inline > .btn-left-align > i {
