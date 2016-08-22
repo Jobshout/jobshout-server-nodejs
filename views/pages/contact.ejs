@@ -1,4 +1,12 @@
 <%  include ../partials/main-header %>
+<% var locStr="uk", addressStr="", mapStr="";
+if (typeof queryStr.loc !== 'undefined' && queryStr.loc !== null) {
+	locStr=queryStr.loc;
+}
+if (typeof address_token !== 'undefined' && address_token !== null) {
+	addressStr=address_token;
+} %>
+
 </head>
 <body>
  	<!--header end-->
@@ -24,50 +32,87 @@
 	<div class="container">
     	<div class="row">
         	<div class="col-lg-5 col-sm-5 address">
-          		<section class="contact-infos">
-            		<h4>Head Office</h4>
+          		<% if (typeof addressStr !== 'undefined' && addressStr !== null) {
+          			var tokenContentStr = JSON.parse(addressStr.token_content);  
+          			var addrDetails= tokenContentStr[locStr];
+          			if (typeof addrDetails.map !== 'undefined' && addrDetails.map !== null) {
+          				mapStr=addrDetails.map;
+          			}
+          			var headingStr="Registered Office";
+          			if(locStr=="uk"){	
+          				var headingStr="Registered Office";
+          			}else if(locStr=="Sydney"){
+          				var headingStr="Sales Office";
+          			}else if(locStr=="ambala"){ 
+          				var headingStr="Technical Support Office";
+          			}	%>
+          			<% if (typeof addrDetails.head_office !== 'undefined' && addrDetails.head_office !== null) {	%>
+            			<section class="contact-infos">
+            				<h4>Head Office</h4>
+            				<address>
+            					<ul class="icons-list" STYLE="list-style:none;"><img src="images/head-ofce.jpg" class="img-responsive" style="padding:0 10px 10px 0;" alt="" align="left">
+									<li style="height:101px;"><i class="fa fa-globe">&nbsp;</i> <strong>Address:</strong>
+										<%= addrDetails.head_office %>
+									</li>
+								</ul>
+							</address>
+						</section>
+          			<% } %>
+          				<section class="contact-infos">
+            				<h4><%= headingStr %></h4>
+            				<% if (typeof addrDetails.address !== 'undefined' && addrDetails.address !== null) {	%>
+            				<address>
+            					<ul class="icons-list" STYLE="list-style:none;">
+									<li><i class="fa fa-globe">&nbsp;</i> <strong>Address:</strong>
+										<%= addrDetails.address %>
+									</li>
+								</ul>
+							</address>
+							<% } %>
+          				</section>
+						<section class="contact-infos">
+            				<h4>Contact Info</h4>
+           						<i class="icon-phone">  </i>
+              					<ul class="icons-list" style="padding-left:0px; list-style:none;">
+									<% if (typeof addrDetails.phone_number !== 'undefined' && addrDetails.phone_number !== null) { %><li><i class="fa fa-mobile"></i> <strong>Phone:</strong> <%= addrDetails.phone_number	%></li><% } %>
+									<% if (typeof addrDetails.email_address !== 'undefined' && addrDetails.email_address !== null) { %><li><i class="fa fa-envelope-o"></i> <strong>Email:</strong> <%= addrDetails.email_address	%></li><% } %>
+									<% if (typeof addrDetails.fax_number !== 'undefined' && addrDetails.fax_number !== null) { %><li><i class="fa fa-envelope-o"></i> <strong>Uk fax number:</strong> <%= addrDetails.fax_number	%></li><% } %>
+								</ul>
+						</section>
+            		<%	}else{ %>
             		<address>
               <ul class="icons-list" STYLE="list-style:none;"><img src="images/head-ofce.jpg" class="img-responsive" style="padding:0 10px 10px 0;" alt="" align="left">
-					<li style="height:101px;"><i class="fa fa-globe">&nbsp;</i> <strong>Address:</strong> Tenthmatrix Information Systems LTD 
-Suite 608, Hamilton House, 
-111 Marlowes, 
-Hemel Hempstead,
-Herts 
-HP1 1BB UK</li>
+					<li style="height:201px;"><i class="fa fa-globe">&nbsp;</i> <strong>Address:</strong>
+Tenthmatrix Information Systems LTD<br />
+The Coach House<br /> 
+77A MARLOWES<br />
+HEMEL HEMPSTEAD<br />
+HERTFORDSHIRE<br />
+ENGLAND<br />
+HP1 1LF UK<br />
+Company No. 06597469</li>
 </ul></address>
           </section>
-          <section class="contact-infos">
-            <h4>Registered Office</h4>
-           <ul class="icons-list" style="padding-left:0px; list-style:none;">
-					<li><i class="fa fa-globe">&nbsp;</i> <strong>Address:</strong> Tenthmatrix Information Systems LTD 
-The Coach House 
-77A MARLOWES 
-HEMEL HEMPSTEAD 
-HERTFORDSHIRE 
-ENGLAND 
-HP1 1LF UK<br>
 
-Company No. 06597469</li>
-</ul>
-          </section>
           <section class="contact-infos">
             <h4>Contact Info</h4>
            
               <i class="icon-phone">
               </i>
               <ul class="icons-list" style="padding-left:0px; list-style:none;">
-					<li><i class="fa fa-mobile"></i> <strong>Phone:</strong> 0207 118 7889</li>
+					<li><i class="fa fa-mobile"></i> <strong>Phone:</strong> 01442 384 149</li>
 <li><i class="fa fa-envelope-o"></i> <strong>Email:</strong> info@tenthmatrix.co.uk</li>
-<li><i class="fa fa-envelope-o"></i>  <strong>UK Fax Number</strong>: 01442 450451</li></ul>
+</ul>
 
           </section>
+          <% } %>
 		  <section class="contact-infos">
             <h4>Select Location</h4>
             <ul class="icons-list" style="padding-left:0px; list-style:none;">
-					<li><a href="contact.php">Head Office UK</a></li>
-<li><a href="contact-sydney.php">Sales Office Sydney</a></li>
-<li><a href="contact-mohali-chandigarh.php">Support Centre Ambala Cantt</a></li>
-</ul>
+				<li><a href="/contact?loc=uk">Head Office UK</a></li>
+				<li><a href="/contact?loc=Sydney">Sales Office Sydney</a></li>
+				<li><a href="/contact?loc=ambala">Support Centre Ambala Cantt</a></li>
+			</ul>
 
           </section>
 		  
@@ -93,6 +138,7 @@ Company No. 06597469</li>
             					}	%>
           <div class="contact-form">
             <form id="ajax-contact-form" role="form" method="post" action="/contact/save">
+            	<input name="location" type="hidden" value="<%= locStr %>">
               <div class="form-group">
                 <label for="name">
                   Name
@@ -136,9 +182,13 @@ Company No. 06597469</li>
       </div>
 
 
-<div style="position: relative; top: 34px;">
-<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2469.946453728743!2d-0.4723564999999884!3d51.75230269999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48764159202d5183%3A0xfd23dafc9353f466!2sHamilton+House%2C+111+Marlowes%2C+Hemel+Hempstead%2C+Hertfordshire+HP1+1BB%2C+UK!5e0!3m2!1sen!2sin!4v1422017137000" scrolling="no" marginheight="0" marginwidth="0" frameborder="0" height="300" width="100%"></iframe>
-</div>
+
+<% if (typeof mapStr !== 'undefined' && mapStr !== null && mapStr !== "") {	%>
+	<div style="position: relative; top: 34px;">
+	<iframe src="<%= mapStr %>" scrolling="no" marginheight="0" marginwidth="0" frameborder="0" height="300" width="100%"></iframe>
+	</div>
+<%	}	%>
+
    	<!--footer start-->
     <% include ../partials/footer %>
     <!--footer end-->
