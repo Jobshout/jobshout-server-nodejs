@@ -231,10 +231,10 @@ app.get('/news', function(req, res) {
 //contact page
 app.get('/contact', function(req, res) {
     returnNavigation(function(resultNav) {
-    	db.collection('tokens').findOne({"code" : "contact-page-address"}, function(err, document) {
+    	db.collection('tokens').findOne({"code" : "contact-page-address"}, function(errdoc, addressContent) {
 			res.render('pages/contact', {
       	 		navigation : resultNav ,
-      	 		address_token: document,
+      	 		address_token: addressContent,
       	 		queryStr : req.query
        		});
 		});
