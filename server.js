@@ -70,6 +70,78 @@ app.get('/client-testimonials', function(req, res) {
     });
 })
 
+//unsubscribe
+app.get('/unsubscribe', function(req, res) {
+	var email_to='', contact_uuid= '', uuid='', unsubscribed=1;
+	if(req.query.email_to){
+		email_to=req.query.email_to;
+	}
+	if(req.query.contact_uuid){
+		contact_uuid=req.query.contact_uuid;
+	}
+	if(req.query.uuid){
+		uuid=req.query.uuid;
+	}
+	if(req.query.s){
+		unsubscribed=req.query.s;
+	}
+	if(contact_uuid!="" && uuid!=""){
+		var queryStr='email_to='+email_to+'&contact_uuid='+contact_uuid+'&uuid='+uuid+'&s=0';
+		db.collection('mailing_preferences').findOne({"contact_uuid" : contact_uuid, "uuid" : uuid}, function(err, foundRecord) {
+			if (typeof foundRecord !== 'undefined' && foundRecord !== null && foundRecord.uuid!="") {
+    	  		var updateContent=new Object();
+    	  		updateContent["modified"]=nowTimestamp();
+    	  		updateContent["uuid"]=foundRecord.uuid;
+    	  		updateContent["contact_uuid"]=foundRecord.contact_uuid;
+    	  		updateContent["unsubscribed"]=unsubscribed;
+    	  		db.collection('mailing_preferences').update({"contact_uuid" : contact_uuid, "uuid" : uuid}, updateContent, (updateErr, result) => {
+    	  			var tokenFlag=false;
+    	  			if(result){
+    	  				tokenFlag=true;
+    	  			}
+    	  			returnNavigation(function(resultNav) {
+      					res.render('pages/unsubscribe', {
+      	 					navigation : resultNav,
+      	 					tokenBool : tokenFlag,
+      	 					emailAddress : email_to,
+      	 					queryString : queryStr,
+      	 					unsubscribed : unsubscribed
+       					});
+    				});
+    	  		});
+    	  	}else{
+    	  		var addContent=new Object();
+    	  		addContent["modified"]=nowTimestamp();
+    	  		addContent["uuid"]=uuid;
+    	  		addContent["contact_uuid"]=contact_uuid;
+    	  		addContent["unsubscribed"]=unsubscribed;
+    	  		db.collection("mailing_preferences").save(addContent, (insertErr, result) => {
+    	  			var tokenFlag=false;
+    	  			if(result){
+    	  				tokenFlag=true;
+    	  			}
+    	  			returnNavigation(function(resultNav) {
+      					res.render('pages/unsubscribe', {
+      	 					navigation : resultNav,
+      	 					tokenBool : tokenFlag,
+      	 					emailAddress : email_to,
+      	 					queryString : queryStr,
+      	 					unsubscribed : unsubscribed
+       					});
+    				});
+    			});
+    	  	}
+    	});
+    }else{
+    	returnNavigation(function(resultNav) {
+      		res.render('pages/unsubscribe', {
+      	 		navigation : resultNav,
+      	 		tokenBool : false
+       		});
+    	});
+    }
+})
+
 //projects undertaken
 app.get('/projects-undertaken', function(req, res) {
 	returnNavigation(function(resultNav) {
@@ -1208,6 +1280,10 @@ function fetchTableName(filename){
 		table_name="leads";
 	}
 	return table_name;
+}
+
+function nowTimestamp(){
+	return Math.round(new Date().getTime()/1000);
 }
 
 app.locals.backendDirectory = backendDirName;
