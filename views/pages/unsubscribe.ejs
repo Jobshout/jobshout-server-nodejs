@@ -1,4 +1,7 @@
-<% var pageTileStr= "Unsubscribe to mailing";	%>
+<% var pageTileStr= "Subscribe to mailing";
+if (typeof unsubscribed !== 'undefined' && unsubscribed !== null && (unsubscribed==1 || unsubscribed=="1")) {
+pageTileStr= "Unsubscribe to mailing";
+}	%>
 
 <%  include ../partials/main-header %>
 <style>
