@@ -85,16 +85,17 @@ app.get('/unsubscribe', function(req, res) {
 	if(req.query.s){
 		unsubscribed=req.query.s;
 	}
-	if(contact_uuid!="" && uuid!=""){
+	if(email_to!="" && uuid!=""){
 		var queryStr='email_to='+email_to+'&contact_uuid='+contact_uuid+'&uuid='+uuid+'&s=0';
-		db.collection('mailing_preferences').findOne({"contact_uuid" : contact_uuid, "uuid" : uuid}, function(err, foundRecord) {
+		db.collection('mailing_preferences').findOne({"email_address" : email_to, "uuid" : uuid}, function(err, foundRecord) {
 			if (typeof foundRecord !== 'undefined' && foundRecord !== null && foundRecord.uuid!="") {
     	  		var updateContent=new Object();
     	  		updateContent["modified"]=nowTimestamp();
     	  		updateContent["uuid"]=foundRecord.uuid;
     	  		updateContent["contact_uuid"]=foundRecord.contact_uuid;
+    	  		updateContent["email_address"]=email_to;
     	  		updateContent["unsubscribed"]=unsubscribed;
-    	  		db.collection('mailing_preferences').update({"contact_uuid" : contact_uuid, "uuid" : uuid}, updateContent, (updateErr, result) => {
+    	  		db.collection('mailing_preferences').update({"email_address" : email_to, "uuid" : uuid}, updateContent, (updateErr, result) => {
     	  			var tokenFlag=false;
     	  			if(result){
     	  				tokenFlag=true;
@@ -115,6 +116,7 @@ app.get('/unsubscribe', function(req, res) {
     	  		addContent["uuid"]=uuid;
     	  		addContent["contact_uuid"]=contact_uuid;
     	  		addContent["unsubscribed"]=unsubscribed;
+    	  		addContent["email_address"]=email_to;
     	  		db.collection("mailing_preferences").save(addContent, (insertErr, result) => {
     	  			var tokenFlag=false;
     	  			if(result){
