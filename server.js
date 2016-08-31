@@ -321,7 +321,7 @@ app.post('/contact/save', (req, res) => {
 	var postJson=req.body;
 	var currentTimestamp =Math.round(new Date().getTime()/1000)
 	postJson.Created=currentTimestamp;
-    db.collection("contacts").save(postJson, (err, result) => {
+    db.collection("website_enquiries").save(postJson, (err, result) => {
 		if (err){
     		return console.log(err);
     		link+="?msg=error";
