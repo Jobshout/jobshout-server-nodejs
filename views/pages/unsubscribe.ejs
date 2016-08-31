@@ -91,13 +91,11 @@ pageTileStr= "Unsubscribe to mailing";
       			emailAddressStr='"'+emailAddress+'"';
       		}	%>
       		<% if (typeof unsubscribed !== 'undefined' && unsubscribed !== null && (unsubscribed==1 || unsubscribed=="1")) {	%>
-      		<div class="unsub_pg_text">Your email <%= emailAddressStr %> has been unsubscribed successfully from the emailing list!</div>
+      		<div class="unsub_pg_text">Your email <%= emailAddressStr %> has been unsubscribed successfully from the mailing list.</div>
 			<% if (typeof queryString !== 'undefined' && queryString !== null && queryString!="") {	%>
-			<div class="unsub_pg_text1">
-				If you unsubscribed by mistake or rejoin us,
-			</div>
+			
 			<div class="unsub_pg_text">
-			please <a href="/unsubscribe?<%= queryString %>" class="unsub_pg_link">click here</a> to subscribe again.
+			If you've unsubscribed by mistake then you can <a href="/unsubscribe?<%= queryString %>" class="unsub_pg_link">click here</a> to subscribe again.
 			</div>
 			<% } %>
 			<% }else{	%>
