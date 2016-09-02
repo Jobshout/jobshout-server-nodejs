@@ -511,146 +511,180 @@ app.get('/'+backendDirName+'/web_route', requireLogin, function(req, res) {
 }); 
 
 app.get('/'+backendDirName+'/list_forms/', requireLogin, function(req, res) {
-	var itemsPerPage = 10, pageNum=1, templateStr="";
+	var itemsPerPage = 10, pageNum=1, templateStr="", collectionStr="";
 	var outputObj = new Object();
 	if(req.query.templateStr){
 		templateStr=req.query.templateStr;
 	}
-	if(templateStr!=""){
-		db.collection('system_templates').findOne({"code": templateStr , "status": { $in: [ 1, "1" ] } }, function(err, templateResponse) {
-			if(err){
-				outputObj["error"]   = "No such page exists!";
-				res.send(outputObj);
-			}
-			if(templateResponse){
-		
-				if(req.query.start){
-					pageNum=parseInt(req.query.start);
-				}
-				if(req.query.limit){
-					itemsPerPage=parseInt(req.query.limit);
-				}
-				if(pageNum==0){
-					pageNum=1;
-				}
-				
-				var query="{}", fetchFieldsObj="{}", table_name= templateResponse.table ;
-				
-				outputObj["table"]   = table_name;
-				
-				if (typeof templateResponse.search_columns !== 'undefined' && templateResponse.search_columns !== null && templateResponse.search_columns !== "")	{
-					outputObj["enable_search"]   = true;
-				}
-				if (typeof templateResponse.enable_editor !== 'undefined' && templateResponse.enable_editor !== null && typeof templateResponse.editor_filename !== 'undefined' && templateResponse.editor_filename !== null && templateResponse.enable_editor==1  && templateResponse.editor_filename!="") {
-						outputObj["editor"]   = templateResponse.editor_filename;
-				}
-				if(templateResponse.listing_columns){
-					var listArr= templateResponse.listing_columns.split(',');
-					if (typeof templateResponse.enable_editor !== 'undefined' && templateResponse.enable_editor !== null && typeof templateResponse.editor_field !== 'undefined' && templateResponse.editor_field !== null && templateResponse.enable_editor==1  && templateResponse.editor_field!="") {
-						outputObj["uniqueField"]   = templateResponse.editor_field;
-						listArr.push("Action");
-					}
-					outputObj["display_columns"]   = listArr;
-					
-					for(var l_count=0; l_count< listArr.length; l_count++){
-						if(l_count==0){
-							fetchFieldsObj="{";
-							fetchFieldsObj+="'"+listArr[l_count]+"' : 1";
-						}else{
-							fetchFieldsObj+=", '"+listArr[l_count]+"' : 1";
-						}
-					}
-					if (typeof templateResponse.enable_editor !== 'undefined' && templateResponse.enable_editor !== null && typeof templateResponse.editor_field !== 'undefined' && templateResponse.editor_field !== null && templateResponse.enable_editor==1  && templateResponse.editor_field!="") {
-						fetchFieldsObj+=", '"+templateResponse.editor_field+"' : 1";
-					}
-					fetchFieldsObj+="}";
-				}
-				
-				if(req.query.s){
-					query= '{'
-					var searchStr = req.query.s;
-					
-					if(templateResponse.search_columns){
-						var searchColumnArr=JSON.parse(templateResponse.search_columns);
-						if(searchColumnArr.length>=1){
-							
-							var subQueryStr="";
-							for(var s_count=0; s_count< searchColumnArr.length; s_count++){
-								var subObj=  searchColumnArr[s_count];
-								if(subQueryStr!=""){
-     					 			subQueryStr+=",";
-     					 		}
-								for (var key in subObj) {
-									if( subObj.hasOwnProperty(key) ) {
-										var regex = new RegExp(searchStr, "i");
-										var tempSeacrhStr=searchStr;
-										
-     					 				if(isNaN(searchStr)){
-											tempSeacrhStr="'"+searchStr+"'";
-										}
-										
-    									if(subObj[key]=="contains"){
-     					 					subQueryStr+="{'"+key+"' : "+regex+" }";
-     					 				}else if(subObj[key]=="="){
-     					 					subQueryStr+="{'"+key+"' : "+tempSeacrhStr+"}";
-     					 				}else if(subObj[key]=="!="){
-     					 					subQueryStr+="{'"+key+"' : { $ne: "+tempSeacrhStr+" } }";
-     					 				}else if(subObj[key]=="starts_with"){
-     					 					subQueryStr+="{'"+key+"' : '/^"+regex+"/' }";
-     					 				}else if(subObj[key]=="ends_with"){
-     					 					subQueryStr+="{'"+key+"' : '/"+regex+"$/' }";
-     					 				}
-     					 			} 
-    							} 
-							}
-							if(subQueryStr!=""){
-								if(templateResponse.search_condition=="and" || templateResponse.search_condition=="AND" ){
-									query+= '$and:[';
-								}else{
-									query+= '$or:[';
-								}
-								query+=subQueryStr;	
-								query+=']';
-							}
-						}
-					}
-					query+="}";
-				}
-				
-				if(templateResponse.listing_columns){
-					eval('var obj='+query);
-					eval('var fetchFieldsobj='+fetchFieldsObj);
-					var total_records=0;
-					var coll= db.collection(table_name);
-					coll.find(obj).count(function (e, count) {
-      					total_records= count;
-     				});
-     	
-					coll.find(obj, fetchFieldsobj).sort({Modified: -1}).skip(pageNum-1).limit(itemsPerPage).toArray(function(err, items) {
-						if (err) {
-							outputObj["total"]   = 0;
-      						outputObj["error"]   = 'not found';
-							res.send(outputObj);
-      					} else if (items) {
-      						outputObj["total"]   = total_records;
-      						outputObj["aaData"]   = items;
-							res.send(outputObj);
-     					}
-					});
-				}else{
-					outputObj["total"]   = 0;
-      				outputObj["error"]   = 'No columns to display!';
+	if(req.query.collection){
+		collectionStr=req.query.collection;
+	}
+	if(req.authenticationBool){
+		if(templateStr!=""){
+			db.collection('system_templates').findOne({"code": templateStr , "status": { $in: [ 1, "1" ] } }, function(err, templateResponse) {
+				if(err){
+					outputObj["error"]   = "No such page exists!";
 					res.send(outputObj);
 				}
-      		}else{
-				outputObj["total"]   = 0;
-      			outputObj["error"]   = "No such page exists!";
-				res.send(outputObj);
-			}
-      	});
+				if(templateResponse){
+		
+					if(req.query.start){
+						pageNum=parseInt(req.query.start);
+					}
+					if(req.query.limit){
+						itemsPerPage=parseInt(req.query.limit);
+					}
+					if(pageNum==0){
+						pageNum=1;
+					}
+				
+					var query="{}", fetchFieldsObj="{}", table_name= templateResponse.table ;
+				
+					outputObj["table"]   = table_name;
+				
+					if (typeof templateResponse.search_columns !== 'undefined' && templateResponse.search_columns !== null && templateResponse.search_columns !== "")	{
+						outputObj["enable_search"]   = true;
+					}
+					if (typeof templateResponse.enable_editor !== 'undefined' && templateResponse.enable_editor !== null && typeof templateResponse.editor_filename !== 'undefined' && templateResponse.editor_filename !== null && templateResponse.enable_editor==1  && templateResponse.editor_filename!="") {
+							outputObj["editor"]   = templateResponse.editor_filename;
+					}
+					if(templateResponse.listing_columns){
+						var listArr= templateResponse.listing_columns.split(',');
+						if (typeof templateResponse.enable_editor !== 'undefined' && templateResponse.enable_editor !== null && typeof templateResponse.editor_field !== 'undefined' && templateResponse.editor_field !== null && templateResponse.enable_editor==1  && templateResponse.editor_field!="") {
+							outputObj["uniqueField"]   = templateResponse.editor_field;
+							listArr.push("Action");
+						}
+						outputObj["display_columns"]   = listArr;
+					
+						for(var l_count=0; l_count< listArr.length; l_count++){
+							if(l_count==0){
+								fetchFieldsObj="{";
+								fetchFieldsObj+="'"+listArr[l_count]+"' : 1";
+							}else{
+								fetchFieldsObj+=", '"+listArr[l_count]+"' : 1";
+							}
+						}
+						if (typeof templateResponse.enable_editor !== 'undefined' && templateResponse.enable_editor !== null && typeof templateResponse.editor_field !== 'undefined' && templateResponse.editor_field !== null && templateResponse.enable_editor==1  && templateResponse.editor_field!="") {
+							fetchFieldsObj+=", '"+templateResponse.editor_field+"' : 1";
+						}
+						fetchFieldsObj+="}";
+					}
+				
+					if(req.query.s){
+						query= '{'
+						var searchStr = req.query.s;
+					
+						if(templateResponse.search_columns){
+							var searchColumnArr=JSON.parse(templateResponse.search_columns);
+							if(searchColumnArr.length>=1){
+							
+								var subQueryStr="";
+								for(var s_count=0; s_count< searchColumnArr.length; s_count++){
+									var subObj=  searchColumnArr[s_count];
+									if(subQueryStr!=""){
+     					 				subQueryStr+=",";
+     					 			}
+									for (var key in subObj) {
+										if( subObj.hasOwnProperty(key) ) {
+											var regex = new RegExp(searchStr, "i");
+											var tempSeacrhStr=searchStr;
+										
+     					 					if(isNaN(searchStr)){
+												tempSeacrhStr="'"+searchStr+"'";
+											}
+										
+    										if(subObj[key]=="contains"){
+     					 						subQueryStr+="{'"+key+"' : "+regex+" }";
+     					 					}else if(subObj[key]=="="){
+     					 						subQueryStr+="{'"+key+"' : "+tempSeacrhStr+"}";
+     					 					}else if(subObj[key]=="!="){
+     					 						subQueryStr+="{'"+key+"' : { $ne: "+tempSeacrhStr+" } }";
+     					 					}else if(subObj[key]=="starts_with"){
+     					 						subQueryStr+="{'"+key+"' : '/^"+regex+"/' }";
+     					 					}	else if(subObj[key]=="ends_with"){
+     					 						subQueryStr+="{'"+key+"' : '/"+regex+"$/' }";
+     					 					}
+     					 				} 
+    								} 
+								}
+								if(subQueryStr!=""){
+									if(templateResponse.search_condition=="and" || templateResponse.search_condition=="AND" ){
+										query+= '$and:[';
+									}else{
+										query+= '$or:[';
+									}
+									query+=subQueryStr;	
+									query+=']';
+								}
+							}
+						}
+						query+="}";
+					}
+				
+					if(templateResponse.listing_columns){
+						eval('var obj='+query);
+						eval('var fetchFieldsobj='+fetchFieldsObj);
+						var total_records=0;
+						var coll= db.collection(table_name);
+						coll.find(obj).count(function (e, count) {
+      						total_records= count;
+     					});
+     	
+						coll.find(obj, fetchFieldsobj).sort({Modified: -1}).skip(pageNum-1).limit(itemsPerPage).toArray(function(err, items) {
+							if (err) {
+								outputObj["total"]   = 0;
+      							outputObj["error"]   = 'not found';
+								res.send(outputObj);
+      						} else if (items) {
+      							outputObj["total"]   = total_records;
+      							outputObj["aaData"]   = items;
+								res.send(outputObj);
+     						}
+						});
+					}else{
+						outputObj["total"]   = 0;
+      					outputObj["error"]   = 'No columns to display!';
+						res.send(outputObj);
+					}
+      			}else{
+					outputObj["total"]   = 0;
+      				outputObj["error"]   = "No such page exists!";
+					res.send(outputObj);
+				}
+      		});
+		}else if(collectionStr!=""){
+			var query="{}";
+			var total_records=0;
+			var coll= db.collection(collectionStr);
+			if(req.query.s){
+     			//create text index
+     			coll.createIndex({ "$**": "text" },{ name: "TextIndex" });
+     			query="{ '$text': { '$search': '"+req.query.s+"' } }";
+     		}
+     		eval('var queryObj='+query);
+     		
+     		coll.find(queryObj).count(function (e, count) {
+      			total_records= count;
+     		});
+			coll.find(queryObj).sort({Modified: -1}).skip(pageNum-1).limit(itemsPerPage).toArray(function(err, items) {
+				if (err) {
+					outputObj["total"]   = 0;
+      				outputObj["error"]   = 'not found';
+					res.send(outputObj);
+      			} else if (items) {
+      				outputObj["total"]   = total_records;
+      				outputObj["aaData"]   = items;
+					res.send(outputObj);
+     			}
+			});
+		}else{
+			outputObj["total"]   = 0;
+      		outputObj["error"]   = "No such page exists!";
+			res.send(outputObj);
+		}
 	}else{
 		outputObj["total"]   = 0;
-      	outputObj["error"]   = "No such page exists!";
+      	outputObj["error"]   = "Authorization error!";
 		res.send(outputObj);
 	}
 }); 
@@ -1340,13 +1374,22 @@ function requireLogin (req, res, next) {
 	if(req.cookies[cookieName] != null && req.cookies[cookieName] != 'undefined' && req.cookies[cookieName]!=""){
    		authenticatedUser(req, function(user) {
    			if(user === null){
+   				req.authenticationBool=false;
    				res.redirect('/'+backendDirName+'/sign-in');
    			}else{
 				req.authenticatedUser = user;
+				req.authenticationBool=true;
 				next();
 			}
 		});
-	}else{
+	}/**else if(req.query.token != null && req.query.token != 'undefined' && (req.query.token=="1" || req.query.token==1)){
+		req.authenticationBool=true;
+		next();
+	}**/else if(req.headers['token'] != null && req.headers['token'] != 'undefined' && (req.headers['token']=="1" || req.headers['token']==1)){
+		req.authenticationBool=true;
+		next();
+	}else{	
+		req.authenticationBool=false;
    		res.redirect('/'+backendDirName+'/sign-in');
    	}
 }
