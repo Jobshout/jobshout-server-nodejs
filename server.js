@@ -72,7 +72,7 @@ app.get('/client-testimonials', function(req, res) {
 
 //unsubscribe
 app.get('/unsubscribe', function(req, res) {
-	var email_to='', contact_uuid= '', uuid='', unsubscribed=1;
+	var email_to='', contact_uuid= '', uuid='', unsubscribed=1, status="unsubscribe";
 	if(req.query.email_to){
 		email_to=req.query.email_to;
 	}
@@ -85,6 +85,9 @@ app.get('/unsubscribe', function(req, res) {
 	if(req.query.s){
 		unsubscribed=req.query.s;
 	}
+	if(unsubscribed==0){
+		status="subscribe";
+	}
 	if(email_to!="" && uuid!=""){
 		var queryStr='email_to='+email_to+'&contact_uuid='+contact_uuid+'&uuid='+uuid+'&s=0';
 		db.collection('mailing_preferences').findOne({"email_address" : email_to, "uuid" : uuid}, function(err, foundRecord) {
@@ -95,6 +98,7 @@ app.get('/unsubscribe', function(req, res) {
     	  		updateContent["contact_uuid"]=foundRecord.contact_uuid;
     	  		updateContent["email_address"]=email_to;
     	  		updateContent["unsubscribed"]=unsubscribed;
+    	  		updateContent["status"]=status;
     	  		db.collection('mailing_preferences').update({"email_address" : email_to, "uuid" : uuid}, updateContent, (updateErr, result) => {
     	  			var tokenFlag=false;
     	  			if(result){
@@ -117,6 +121,7 @@ app.get('/unsubscribe', function(req, res) {
     	  		addContent["contact_uuid"]=contact_uuid;
     	  		addContent["unsubscribed"]=unsubscribed;
     	  		addContent["email_address"]=email_to;
+    	  		addContent["status"]=status;
     	  		db.collection("mailing_preferences").save(addContent, (insertErr, result) => {
     	  			var tokenFlag=false;
     	  			if(result){
@@ -508,6 +513,44 @@ app.get('/'+backendDirName+'/web_route', requireLogin, function(req, res) {
     		});		
   	  	}
 	});   	
+}); 
+
+app.get('/'+backendDirName+'/mailing_status/', requireLogin, function(req, res) {
+	var uuidStr="", contact_uuid="";
+	var outputObj = new Object();
+	if(req.query.uuid){
+		uuidStr=req.query.uuid;
+	}
+	if(req.query.contact_uuid){
+		contact_uuid=req.query.contact_uuid;
+	}
+	if(req.authenticationBool){
+		if(uuidStr!="" && contact_uuid!=""){
+			db.collection('mailing_preferences').findOne({"uuid": uuidStr , "contact_uuid": contact_uuid }, function(err, tableResponse) {
+				if(tableResponse){
+					var statusStr="unsubscribe";
+					if(tableResponse.unsubscribed==0){
+						statusStr="subscribe";
+					}
+					if(tableResponse.status){
+						statusStr = tableResponse.status;
+					}
+					outputObj["status"]   = statusStr;
+					outputObj["unsubscribed"]   = tableResponse.unsubscribed;
+					res.send(outputObj);
+				}else{
+					outputObj["error"]   = "No such record found!";
+					res.send(outputObj);
+				}
+      		});
+		}else{
+			outputObj["error"]   = "Please pass all required parameters!";
+			res.send(outputObj);
+		}
+	}else{
+		outputObj["error"]   = "Authorization error!";
+		res.send(outputObj);
+	}
 }); 
 
 app.get('/'+backendDirName+'/list_forms/', requireLogin, function(req, res) {
