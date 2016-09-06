@@ -1,0 +1,161 @@
+<footer class="footer">
+	<div class="container">
+    	<div class="row">
+    		<div class="col-lg-6 col-sm-12 address wow fadeInUp" data-wow-duration="2s" data-wow-delay=".1s">
+    		<% if (typeof navigation !== 'undefined' && navigation !== null) {
+				for(var fnav=0; fnav<navigation.length; fnav++){
+					if(navigation[fnav].categories=='footer-nav'){ 
+						if(navigation[fnav].type=="url"){		%>
+						<p><a target="_blank" href="<%= navigation[fnav].content %>"><strong><%= navigation[fnav].label %></strong></a></p>
+			<%			}else if(navigation[fnav].type=="items"){
+							var bookmarkItems = JSON.parse(navigation[fnav].bookmark_items);
+							if(bookmarkItems.length>0){	%>
+								<p><% if(navigation[fnav].label!="" && navigation[fnav].label!=" "){	%>
+								<STRONG><%= navigation[fnav].label %>:</STRONG>
+								<% } %>
+								<% bookmarkItems.sort(dynamicSort("item_sort_order"));
+								 	for(var count=0; count< bookmarkItems.length; count++){
+								 		if(bookmarkItems[count].type=="url"){
+								 			var bsourceStr="";
+	  										if(bookmarkItems[count].target=="0" || bookmarkItems[count].target==0){	
+	  											bsourceStr="target='_blank'";
+	  										}
+								 			if(count!=0){	%>
+								 			&nbsp;|&nbsp;
+								 		<%	}  %>
+								 		 <a href="<%= bookmarkItems[count].content %>" <%= bsourceStr %> title="<%= bookmarkItems[count].label %>"><%= bookmarkItems[count].label %></a>
+								 	<% 	}else if(bookmarkItems[count].type=="html"){  %>
+								 			<%= bookmarkItems[count].content %>
+								 	<%	}
+								 	}	 %>
+								</p>
+					<%		}
+						}
+					} 
+				}	
+			} %>
+			</div>
+    		
+ 			<div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-duration="2s" data-wow-delay=".3s">
+ 				<div><IMG SRC="images/phone-icon.png" align="left" STYLE="padding-bottom:20px; padding-right:15px;" ALT=""/>
+					<h4> Call</h4>
+					<p>T: 01442 384 149<BR>
+						UK Fax Number: TBA
+					</p>
+				</div>
+				<div CLASS="margin-top-35" STYLE="padding-bottom:30px;">  <IMG SRC="images/email.png" align="left" STYLE="padding-bottom:20px; padding-right:15px;" ALT=""/>
+					<h4> Email</h4>
+					<p>info@tenthmatrix.co.uk</p>
+				</div>
+			</div>
+		  
+		 	<div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-duration="2s" data-wow-delay=".3s">
+     			<div>
+     				<IMG SRC="images/follow-us.png" align="left" STYLE="padding-bottom:20px; padding-right:15px;" ALT=""/>
+					<h4> Follow Us</h4>
+					<p>
+						<a target="_blank" href="https://www.facebook.com/Tenthmatrix-229638843781330/"><IMG SRC="images/facebok-icon.png"  ALT="Facebook"/></a>
+						<a target="_blank" href="https://plus.google.com/u/0/+BalinderWalia"><IMG SRC="images/gmail-icon.png"  ALT="Google Plus" STYLE="padding:0 10px;"/> </a>
+						<a target="_blank" href="https://www.linkedin.com/in/bwalia"><IMG SRC="images/linkdin.png"  ALT="Linkdin"/> </a> 
+						<a target="_blank" href="http://twitter.com/Tenthmatrix"><IMG SRC="images/skype.png" ALT="Skype" STYLE="padding-left:10px;"/></a>
+					</p>
+     			</div>
+
+				<div STYLE="margin-top:50px;">  <IMG SRC="images/copy-right.png" align="left" STYLE="padding-bottom:20px; padding-right:15px;" ALT=""/>
+					<p STYLE="font-size:12px;">Copyright 2016 - All rights reserved<BR>
+					Tenthmatrix Information Systems Ltd. </p> 
+				</div>
+			</div>
+		</div>
+	</div>
+</footer>
+
+<!--scripts-->
+
+    <script src="js/jquery-1.8.3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/hover-dropdown.js"></script>  
+    <script type="text/javascript" src="assets/bxslider/jquery.bxslider.js"></script>
+  
+    <script src="assets/owlcarousel/owl.carousel.js"> </script>
+    <script type="text/javascript" src="js/parallax-slider/jquery.cslider.js"> </script>
+	<script src="js/wow.min.js"></script>
+	<script type="text/javascript" src="js/parallax-slider/modernizr.custom.28468.js"></script>
+    <script type="text/javascript">
+$(document).ready(function(){ 
+	var touch 	= $('#resp-menu');
+	var menu 	= $('.menu');
+ 
+	$(touch).on('click', function(e) {
+		e.preventDefault();
+		menu.slideToggle();
+	});
+	
+	$(window).resize(function(){
+		var w = $(window).width();
+		if(w > 767 && menu.is(':hidden')) {
+			menu.removeAttr('style');
+		}
+	});
+	
+});
+		$(function() {
+			$.checkSearchBox = function checkSearchBox(){
+				var searchText = $('.search2').val();
+				if(searchText=='' || searchText=='Search'){
+					$('.search2').val('');
+					alert('Please enter search keyword(s).');return false;
+				}
+				else return true;
+			}
+			$.checkSearc2hBox = function checkSearc2hBox(){
+				var searchText = $('.search3').val();
+				if(searchText=='' || searchText=='Search'){
+					$('.search3').val('');
+					alert('Please enter search keyword(s).');return false;
+				}
+				else return true;
+			}
+			
+			$('#da-slider').cslider({
+         		autoplay    : true,
+          		bgincrement : 100
+        	});
+		
+        $('.bxslider1').bxSlider({
+          minSlides: 5,
+          maxSlides: 6,
+          slideWidth: 360,
+          slideMargin: 2,
+          moveSlides: 1,
+          responsive: true,
+          nextSelector: '#slider-next',
+          prevSelector: '#slider-prev',
+          nextText: 'Onward →',
+          prevText: '← Go back'
+        });
+
+      });
+
+
+      $('a.info').tooltip();
+
+      
+      $(document).ready(function() {
+
+        $("#owl-demo").owlCarousel({
+
+          items : 4
+
+        });
+
+		 $("#owl-demo1").owlCarousel({
+
+          items : 3
+
+        });
+
+      });
+      new WOW().init();
+	  
+	  </script>
