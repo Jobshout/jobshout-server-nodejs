@@ -1431,6 +1431,18 @@ function requireLogin (req, res, next) {
 	}**/else if(req.headers['token'] != null && req.headers['token'] != 'undefined' && (req.headers['token']=="1" || req.headers['token']==1)){
 		req.authenticationBool=true;
 		next();
+	}
+	else if(req.headers['token'] != null && req.headers['token'] != 'undefined' && req.headers['token']!=""){
+		var mongoIDField= new mongodb.ObjectID(req.headers['token']);
+		db.collection('system_tokens').findOne({_id: mongoIDField, "status" : true}, (err, session_result) => {
+   			if(session_result){
+				req.authenticationBool=true;
+				next();
+			}else{
+				req.authenticationBool=false;
+   				res.redirect('/'+backendDirName+'/sign-in');
+			}
+		});
 	}else{	
 		req.authenticationBool=false;
    		res.redirect('/'+backendDirName+'/sign-in');
