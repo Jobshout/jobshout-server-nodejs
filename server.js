@@ -32,9 +32,14 @@ app.use(bodyParser.urlencoded({extended: true}))
 
 app.set('view engine', 'ejs')
 
-app.use('/jobshout_server/list', express.static(__dirname + '/public'));
-app.use('/jobshout_server', express.static(__dirname + '/public'));
+//app.use('/jobshout_server/list', express.static(__dirname + '/public'));
+//app.use('/jobshout_server', express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/public'));
+
+//backend static files
+app.use('/jobshout_server/list/jobshout_assets', express.static(__dirname+'/views/jobshout_server/jobshout_assets'));
+app.use('/jobshout_server/jobshout_assets', express.static(__dirname+'/views/jobshout_server/jobshout_assets'));
+
 
 //connect to mongodb
 var db
