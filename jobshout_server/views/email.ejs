@@ -1,0 +1,133 @@
+<% include include/main-header %>
+<style>
+	#page-wrapper{
+		margin:0px!important;
+	}
+   label{
+	   max-width:195px!important;
+	   text-align:left!important;
+	   margin-bottom:5pximportant;
+	   color:#515151;
+   }
+   @media(min-width:768px){
+   input[type="text"], select,textarea, input[type="password"] {
+	   max-width:300px;
+   }
+   textarea{
+	   height:100px!important;
+   }
+   
+  
+   
+   }
+   @media(min-width:992px){
+    .submit-btn-setting{
+	   margin-left:195px;
+   }
+   }
+</style>
+</head>
+<body>
+	<!-- navbar top -->
+   	<div class="wrapper">
+   		<!-- Header Starts here-->
+  		<% include include/header %>
+  		<!-- Header Ends here-->
+  		
+  		<div class="content" >
+  			<!-- Sidebar Starts Here-->
+  			<% include include/sidebar %>
+    		<!-- Sidebar Ends Here-->
+    		
+    		<section>
+      			<article>
+      				<div id="page-wrapper">
+        				<div class="row">
+       						<!-- Page Header -->
+        					<div class="col-lg-12">
+								<div  CLASS="hidden-xs sidemenu"> <button id="menu" CLASS="btn btn-sm btn-danger" title="Menu"><i class="fa fa-bars fa-2x"></i></button></div>
+        						<h1 class="page-header">Email</h1>
+        					</div>
+       						<!--End Page Header -->
+        				</div>
+
+           				<div class="row">
+            				<div class="col-sm-12">
+            					<form class="form-horizontal" action="/email/save/" method="POST">
+            						<input type="hidden" class="form-control" id="table_name" name="table_name" value="email_queue">
+      								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="name">
+      								<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>">
+            						<input type="hidden" class="form-control" id="editorField" name="editorField" value="<% if (typeof editorField !== 'undefined' && editorField !== null) { %><%= editorField %><% }else{ %>_id<% } %>">
+      								<input type="hidden" class="form-control" id="editorValue" name="editorValue" value="<% if (typeof editorValue !== 'undefined' && editorValue !== null) { %><%= editorValue %><% } %>">
+                         			<div class="form-group">
+                  						<label class="control-label col-md-3" for="first-name">Sender Name<span class="required">*</span></label>
+                  						<div class="col-md-6 col-lg-4">
+                    						<input type="text" required="required" id="sender_name" name="sender_name" class="form-control col-md-5 col-xs-12" value="<% if (typeof contentObj.sender_name !== 'undefined' && contentObj.sender_name !== null) { %><%= contentObj.sender_name %><% } %>">
+                  						</div>
+                					</div>
+              						
+                					<div class="form-group" >
+                  						<label class="control-label col-md-3" for="">Sender Email<span class="required">*</span></label>
+                  						<div class="col-md-6 col-lg-4">
+                   							<input type="text" class="form-control col-md-5 col-xs-12" id="sender_email" name="sender_email" value="<% if (typeof contentObj.sender_email !== 'undefined' && contentObj.sender_email !== null) { %><%= contentObj.sender_email %><% } %>">
+                  						</div>
+                					</div>
+                					<div class="form-group" >
+                  						<label class="control-label col-md-3" for="">Recipient<span class="required">*</span></label>
+                  						<div class="col-md-6 col-lg-4">
+                   							<input type="text" class="form-control col-md-5 col-xs-12" id="recipient" name="recipient" value="<% if (typeof contentObj.recipient !== 'undefined' && contentObj.recipient !== null) { %><%= contentObj.recipient %><% } %>">
+                  						</div>
+                					</div>
+                					<div class="form-group" >
+                  						<label class="control-label col-md-3" for="">Subject<span class="required">*</span></label>
+                  						<div class="col-md-6 col-lg-4">
+                   							<input type="text" class="form-control col-md-5 col-xs-12" id="subject" name="subject" value="<% if (typeof contentObj.subject !== 'undefined' && contentObj.subject !== null) { %><%= contentObj.subject %><% } %>">
+                  						</div>
+                					</div>
+                					<div class="form-group" >
+                  						<label class="control-label col-md-3" for="">Email Content<span class="required">*</span></label>
+                  						<div class="col-md-6 col-lg-4">
+                   							<textarea rows="10" class="form-control col-md-5 col-xs-12" id="body" name="body" ><% if (typeof contentObj.body !== 'undefined' && contentObj.body !== null) { %><%= contentObj.body %><% } %></textarea>
+                  						</div>
+                					</div>
+                					<div class="form-group" >
+                  						<label class="control-label col-md-3" for="">Status<span class="required">*</span></label>
+                  						<div class="col-md-6 col-lg-4">
+                   							<input type="text" class="form-control col-md-5 col-xs-12" id="status" name="status" value="<% if (typeof contentObj.status !== 'undefined' && contentObj.status !== null) { %><%= contentObj.status %><% } %>">
+                  						</div>
+                					</div>
+                					
+                					<div class="form-group">
+                   						<div class="col-md-9 col-lg-6">
+               								<div class="submit-btn-setting"> <button type="submit" class="btn palette-belize-hole btn-color margn-right-15">Submit</button>
+               								<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) {	%>
+               									<a href="/list/emails" class="btn btn-primary">Cancel</a>
+               								<%	}else{	%>
+               									<button type="reset" class="btn btn-primary">Reset</button>
+               								<% } %>
+               							</div>
+                					</div>
+              					</form>
+              				</div>
+            			</div>
+      				</div>
+      			</article>
+    		</section>
+    		<!--//body content--> 
+  		</div>
+  		<!--//Main Content--> 
+	</div>
+
+<!-- Footer Starts Here-->
+	<% include include/footer %>
+<!-- Footer Ends Here-->
+
+<!-- Page-Level Plugin Scripts-->
+<script>
+	
+	$(document).ready(function()	{
+		
+	});
+</script>
+</body>
+</html>

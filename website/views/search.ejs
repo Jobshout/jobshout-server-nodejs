@@ -1,0 +1,186 @@
+<%  var searchTerm="";
+if (typeof queryString !== 'undefined' && queryString !== null) {
+searchTerm=queryString;
+} 
+%>
+
+<% include include/main-header %>
+<style>
+	.margnpdng ul{
+		padding:0px!important;
+		margin:0px!important;
+	}
+	
+	.tab-content{
+	border:none!important;
+		}
+</style>
+</head>
+<body>
+ 	<!--header end-->
+	<% include include/header %>
+	<!--header end-->
+ 	<div class="breadcrumbs">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4 col-sm-4">
+           <h1 class="mainheading"><span>Search Results</span></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+	<div class="container">
+		<div class="row content">
+	 		<div class="col-lg-12">
+	 			<input type="hidden" id="typeText" value="" />
+          		<!--tab start-->
+          		<section class="tab wow fadeInLeft margin-bottom-15">
+            		<header class="panel-heading margnpdng tab-bg-dark-navy-blue">
+              			<ul class="nav  nav-tabs nav-justified ">
+                			<li class="active">
+                  				<a data-toggle="tab" href="#tab1" onclick="$.doSearch('site','<%= searchTerm %>');">Site search result</a>
+                			</li>
+                			<li>
+                				<a data-toggle="tab" onclick="$.doSearch('blog','<%= searchTerm %>');"  href="#tab2">Blog</a>
+                			</li>
+                			<li class="">
+                  				<a data-toggle="tab" href="#tab3" onclick="$.doSearch('news','<%= searchTerm %>');" >News</a>
+                			</li>
+              			</ul>
+            		</header>
+            		<div class="panel-body">
+              			<div class="tab-content tasi-tab wow fadeInLeft" style="border:none;">
+                			<div id="tab1" class="tab-pane fade wow fadeInLeft in active">
+                  				<div id="tab-1"></div>
+                  				<div style="text-align:center;margin-top:20px;" >
+									<a style="width: 60%; margin-bottom: 10px;" class="btn btn-primary display_more_btn" title="Load more" onclick="load_more()" href="javascript:void(0);">
+									Load more
+									</a>
+        						</div>
+        						<div style="text-align:center;margin-top:20px;" class="img_loading_div">
+									Loading...<br /> <img id="imgAjaxLoading" src="images/loading.gif" width="109" height="25" style="border-width: 0px;">
+								</div>
+                  			</div>
+                			<div id="tab2" class="tab-pane fade fadeInRight">
+             					<div id="tab-2"></div>
+                  				<div style="text-align:center;margin-top:20px;" >
+									<a style="width: 60%; margin-bottom: 10px;" class="btn btn-primary display_more_btn" title="Load more" onclick="load_more()" href="javascript:void(0);">
+									Load more
+									</a>
+        						</div>
+        						<div style="text-align:center;margin-top:20px;" class="img_loading_div">
+									Loading...<br /> <img id="imgAjaxLoading" src="images/loading.gif" width="109" height="25" style="border-width: 0px;">
+								</div>
+                			</div>
+                			<div id="tab3" class="tab-pane fade wow fadeInLeft">
+                  				<div id="tab-3"></div>
+                  				<div style="text-align:center;margin-top:20px;" >
+									<a style="width: 60%; margin-bottom: 10px;" class="btn btn-primary display_more_btn" title="Load more" onclick="load_more()" href="javascript:void(0);">
+									Load more
+									</a>
+        						</div>
+        						<div style="text-align:center;margin-top:20px;" class="img_loading_div">
+									Loading...<br /> <img id="imgAjaxLoading" src="images/loading.gif" width="109" height="25" style="border-width: 0px;">
+								</div>
+                  			</div>
+              			</div>
+            		</div>
+          		</section>
+          	<!--tab end-->
+        	</div> 
+		</div>
+	</div>
+	<!--footer start-->
+    <% include include/footer %>
+    <!--footer end-->
+<script>
+var xhrStatus;
+var searchkeyword="", typeStr="site";
+var pageSize=10, totalNum=0;
+var start=0, end=pageSize;
+
+$(document).ready(function() {
+	var qryStr="";
+	<% if (typeof queryString !== 'undefined' && queryString !== null) {	%>
+		qryStr="<%= queryString %>";
+	<%	}	%>
+	$('.display_more_btn').hide();
+		$.doSearch('site',qryStr);
+});
+
+function load_more(){
+	$('.display_more_btn').hide();
+	$('.img_loading_div').show();
+	start=end+1;
+	end=start+pageSize;
+	load_data();
+}
+	$.updateContent = function updateContent(type,html){
+		$('.ImageLoadingDiv').hide();
+		if(type=='site'){
+			$("#tab-1").append(html);
+		}
+		if(type=='blog'){
+			$("#tab-2").append(html);
+		}
+		else if(type=='news'){
+			$("#tab-3").append(html);
+		}
+	}
+	
+	$.doSearch = function doSearch(type,searchText){
+		$("#tab-1").html('');$("#tab-2").html('');$("#tab-3").html('');
+		start=0, end=pageSize;
+
+		$('.display_more_btn').hide();
+		$('.img_loading_div').show();
+		searchkeyword=searchText;
+		typeStr=type;
+		$('#typeText').attr('value',type);
+		load_data();
+	}
+	
+	function load_data(){
+		$(".alert").remove();
+		totalNum=0;
+		var jsonRow="/search-results?start="+start+"&s="+searchkeyword+"&type="+typeStr+"&limit="+pageSize,
+		xhrStatus=$.getJSON(jsonRow,function(html){
+			if(html.error){
+				var msg='<div class="alert alert-danger">No search results found!</div>';
+				$.updateContent(typeStr,msg);
+			}else{
+				if(html.total){
+					totalNum=parseInt(html.total);
+				}
+				var contentHtml="";
+				$.each(html.aaData, function(i,row){
+					if(row.Code!=""){
+						contentHtml+='<article class="media">';
+                    	contentHtml+='<div class="media-body b-btm">';
+                    	contentHtml+='<p><a href="/'+row.Code+'" title="'+row.Document+'">'+row.Document+'</a></p>';
+                      	contentHtml+='<p>';
+                      	var bodyStr=row.Body;
+                      	bodyStr=bodyStr.replace(/<\/?[^>]+(>|$)/g, "");
+                      	bodyStr=bodyStr.substr(0, 250);
+                      	contentHtml+=bodyStr+'... <a href="/'+row.Code+'" title="'+row.Document+'">more</a>';
+                      	contentHtml+='</p>';
+                    	contentHtml+='</div>';
+                  		contentHtml+='</article>';
+					}
+				});
+				$.updateContent(typeStr,contentHtml);
+			}
+			if(end< totalNum){
+				if(totalNum==0){
+					$('.display_more_btn').hide();
+				}else{
+					$('.display_more_btn').show();
+				}
+			}
+			$('.img_loading_div').hide();
+		});
+	}
+
+</script>
+  </body>
+</html>

@@ -1,0 +1,158 @@
+<% include include/main-header %>
+<style>
+   label{
+	   max-width:195px!important;
+	   text-align:left!important;
+	   margin-bottom:5pximportant;
+	   color:#515151;
+   }
+   @media(min-width:768px){
+   input[type="text"], select,textarea, input[type="password"] {
+	   max-width:300px;
+   }
+   textarea{
+	   height:100px!important;
+   }
+   
+   }
+   @media(min-width:992px){
+    .submit-btn-setting{
+	   margin-left:195px;
+   }
+   }
+</style>
+</head>
+<body>
+	<!-- navbar top -->
+   	<div class="wrapper">
+   		<!-- Header Starts here-->
+  		<% include include/header %>
+  		<!-- Header Ends here-->
+  		
+  		<div class="content" >
+  			<!-- Sidebar Starts Here-->
+  			<% include include/sidebar %>
+    		<!-- Sidebar Ends Here-->
+    		
+    		<section>
+      			<article>
+      				<div id="page-wrapper">
+        				<div class="row">
+       						<!-- Page Header -->
+        					<div class="col-lg-12">
+								<div  CLASS="hidden-xs sidemenu"> <button id="menu" CLASS="btn btn-sm btn-danger" title="Menu"><i class="fa fa-bars fa-2x"></i></button></div>
+        						<h1 class="page-header">Module</h1>
+        					</div>
+       						<!--End Page Header -->
+        				</div>
+
+           				<div class="row">
+            				<div class="col-sm-12">
+            					<% if (typeof queryStr !== 'undefined' && queryStr !== null) {
+    								if(queryStr.error_msg) {	%>
+									<div class="alert alert-danger alert-dismissable">
+             							<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                						<%= queryStr.error_msg %>
+            						</div>
+            						<% }
+           							if(queryStr.success_msg) {	%>
+										<div class="alert alert-success alert-dismissable">
+             								<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                							<%= queryStr.success_msg %>
+            							</div>
+            						<%	}
+            					}	%>
+            					<form class="form-horizontal" action="/save/module" method="POST">
+            						<input type="hidden" class="form-control" id="table_name" name="table_name" value="modules">
+      								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="code">
+      								<input type="hidden" class="form-control" id="editorField" name="editorField" value="<% if (typeof editorField !== 'undefined' && editorField !== null) { %><%= editorField %><% }else{ %>_id<% } %>">
+      								<input type="hidden" class="form-control" id="editorValue" name="editorValue" value="<% if (typeof editorValue !== 'undefined' && editorValue !== null) { %><%= editorValue %><% } %>">
+      								<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>">
+            						<div class="form-group">
+                  						<label class="control-label col-md-3" for="first-name">Name<span class="required">*</span></label>
+                  						<div class="col-md-6 col-lg-3">
+                    						<input type="text" required="required" id="name" name="name" class="form-control col-md-5 col-xs-12" onblur="generate_code('name','code')" onkeyup="generate_code('name','code')" value="<% if (typeof contentObj.name !== 'undefined' && contentObj.name !== null) { %><%= contentObj.name %><% } %>">
+                  						</div>
+                					
+                  						<label class="control-label col-md-3" for="">Code<span class="required">*</span></label>
+                  						<div class="col-md-6 col-lg-3">
+                   							<input type="text"  required="required" class="form-control col-md-5 col-xs-12" id="code" name="code" readonly value="<% if (typeof contentObj.code !== 'undefined' && contentObj.code !== null) { %><%= contentObj.code %><% } %>">
+                  						</div>
+                					</div>
+                					<div class="form-group">
+                  						<label class="control-label col-md-3" for="">Icon Class </label>
+                  						<div class="col-md-6 col-lg-3">
+                  							<input type="text" id="icon_class" name="icon_class" class="form-control col-md-5 col-xs-12" value="<% if (typeof contentObj.icon_class !== 'undefined' && contentObj.icon_class !== null) { %><%= contentObj.icon_class %><% } %>">
+                   						</div>
+                   						<label class="control-label col-md-3" for="">Icon Image Path </label>
+                  						<div class="col-md-6 col-lg-4">
+                  							<input type="text" id="icon_path" name="icon_path" class="form-control col-md-5 col-xs-12" value="<% if (typeof contentObj.icon_path !== 'undefined' && contentObj.icon_path !== null) { %><%= contentObj.icon_path %><% } %>">
+                   						</div>
+                					</div>
+                					<div class="form-group">
+                  						<label class="control-label col-md-3" for="">Table</label>
+                  						<div class="col-md-6 col-lg-3">
+                  							<select id="table" name="table" class="form-control col-md-5 col-xs-12" required="required">
+                   								<option value="">--Select Table--</option>
+                  								<% if (typeof collectionsArr !== 'undefined' && collectionsArr !== null && collectionsArr.length>=1) {
+                  										for(var i=0; i< collectionsArr.length; i++){
+                  									%>
+                  									<option value="<%= collectionsArr[i] %>" <% if (typeof contentObj.table !== 'undefined' && contentObj.table !== null && contentObj.table == collectionsArr[i]) { %>selected<% } %>><%= collectionsArr[i] %></option>
+                  									<%	}
+                  								} %>
+                    						</select>
+                    					</div>
+                					</div>
+                					<div class="form-group">
+                  						<label class="control-label col-md-3" for="">Sort Order</label>
+                  						<div class="col-md-6 col-lg-3">
+                   							<input type="text" required="required" class="form-control col-md-5 col-xs-12" id="sort_order" name="sort_order" value="<% if (typeof contentObj.sort_order !== 'undefined' && contentObj.code !== null) { %><%= contentObj.sort_order %><% } %>">
+                  						</div>
+                				
+    									<div class="col-sm-3">
+    										<div class="checkbox" STYLE="float:left; margin-right:10px;">
+      		  									<label> <input type="checkbox" id="active" name="active" value="1" <% if (typeof contentObj.active !== 'undefined' && contentObj.active !== null && contentObj.active == 1) { %>checked<% } %> > <strong style="font-weight:600">Active</strong></label>
+    			  							</div>
+										</div>
+									</div>
+                					<div class="form-group">
+                   						<div class="col-md-9 col-lg-6">
+               								<div class="submit-btn-setting"> <button type="submit" class="btn palette-belize-hole btn-color margn-right-15">Submit</button>
+               								<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) {	%>
+               									<a href="/list/tokens" class="btn btn-primary">Cancel</a>
+               								<%	}else{	%>
+               									<button type="reset" class="btn btn-primary">Reset</button>
+               								<% } %>
+               								</div>
+               							</div>
+                					</div>
+              					</form>
+              				</div>
+            			</div>
+      				</div>
+      			</article>
+    		</section>
+    		<!--//body content--> 
+  		</div>
+  		<!--//Main Content--> 
+	</div>
+
+<!-- Footer Starts Here-->
+	<% include include/footer %>
+<!-- Footer Ends Here-->
+
+<!-- Page-Level Plugin Scripts-->
+<script>
+function generate_code(name,code){
+	var val=document.getElementById(name).value;
+	var patt=/[^A-Za-z0-9_-]/g;
+	var result=val.replace(patt,' ');
+	result=result.replace(/\s+/g, ' ');
+	result = result.replace(/^\s+|\s+$/g,'');
+	result=result.replace(/\s/g, '-');
+	result=result.toLowerCase();
+	document.getElementById(code).value=result;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<% include include/main-header %>
+<style>
+   label{
+	   max-width:195px!important;
+	   text-align:left!important;
+	   margin-bottom:5pximportant;
+	   color:#515151;
+   }
+   @media(min-width:768px){
+   input[type="text"], select,textarea, input[type="password"] {
+	   max-width:300px;
+   }
+   textarea{
+	   height:100px!important;
+   }
+   
+   }
+   @media(min-width:992px){
+    .submit-btn-setting{
+	   margin-left:195px;
+   }
+   }
+</style>
+</head>
+<body>
+	<!-- navbar top -->
+   	<div class="wrapper">
+   		<!-- Header Starts here-->
+  		<% include include/header %>
+  		<!-- Header Ends here-->
+  		
+  		<div class="content" >
+  			<!-- Sidebar Starts Here-->
+  			<% include include/sidebar %>
+    		<!-- Sidebar Ends Here-->
+    		
+    		<section>
+      			<article>
+      				<div id="page-wrapper">
+        				<div class="row">
+       						<!-- Page Header -->
+        					<div class="col-lg-12">
+								<div  CLASS="hidden-xs sidemenu"> <button id="menu" CLASS="btn btn-sm btn-danger" title="Menu"><i class="fa fa-bars fa-2x"></i></button></div>
+        						<h1 class="page-header">User</h1>
+        					</div>
+       						<!--End Page Header -->
+        				</div>
+
+           				<div class="row">
+            				<div class="col-sm-12">
+            					<% if (typeof queryStr !== 'undefined' && queryStr !== null) {
+    								if(queryStr.error_msg) {	%>
+									<div class="alert alert-danger alert-dismissable">
+             							<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                						<%= queryStr.error_msg %>
+            						</div>
+            						<% }
+           							if(queryStr.success_msg) {	%>
+										<div class="alert alert-success alert-dismissable">
+             								<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                							<%= queryStr.success_msg %>
+            							</div>
+            						<%	}
+            					}	%>
+            					
+            					<form class="form-horizontal" action="/save/user" method="POST">
+            						<input type="hidden" class="form-control" id="editorField" name="editorField" value="<% if (typeof editorField !== 'undefined' && editorField !== null) { %><%= editorField %><% }else{ %>_id<% } %>">
+      								<input type="hidden" class="form-control" id="editorValue" name="editorValue" value="<% if (typeof editorValue !== 'undefined' && editorValue !== null) { %><%= editorValue %><% } %>">
+      								
+            						<input type="hidden" class="form-control" id="table_name" name="table_name" value="users">
+      								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="email">
+      								<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>">
+            						<div class="form-group">
+                  						<label class="control-label col-md-3" for="first-name">First Name<span class="required">*</span></label>
+                  						<div class="col-md-6 col-lg-4">
+                    						<input type="text" required="required" id="firstname" name="firstname" class="form-control col-md-5 col-xs-12" value="<% if (typeof contentObj.firstname !== 'undefined' && contentObj.firstname !== null) { %><%= contentObj.firstname %><% } %>">
+                  						</div>
+                					</div>
+              						<div class="form-group">
+                  						<label class="control-label col-md-3" for="">Last Name<span class="required">*</span></label>
+                  						<div class="col-md-6 col-lg-4">
+                   							<input type="text"  required="required" class="form-control col-md-5 col-xs-12" id="lastname" name="lastname" value="<% if (typeof contentObj.lastname !== 'undefined' && contentObj.lastname !== null) { %><%= contentObj.lastname %><% } %>">
+                  						</div>
+                					</div>
+                					<div class="form-group">
+    									<label for="" class="col-sm-3 control-label">Gender</label>
+    									<div class="col-sm-9">
+    										<div class="radio" STYLE="float:left; margin-right:10px;">
+      		  									<label> <input type="radio" id="gender" name="gender" value="f" <% if (typeof contentObj.gender !== 'undefined' && contentObj.gender !== null && contentObj.gender == "f") { %>checked<% } %> > <strong style="font-weight:600">Female</strong></label>
+    			  							</div>
+				  							<div class="radio" STYLE="float:left;">
+      		  									<label> <input type="radio" id="gender" name="gender" value="m" <% if (typeof contentObj.gender !== 'undefined' && contentObj.gender !== null && contentObj.gender == "m") { %>checked<% } %> > <strong style="font-weight:600">Male</strong></label>
+    			  							</div>
+										</div>
+									</div>
+                					<div class="form-group">
+                  						<label class="control-label col-md-3" for="">Email Address<span class="required">*</span></label>
+                  						<div class="col-md-6 col-lg-4">
+                   							<input type="email"  required="required" class="form-control col-md-5 col-xs-12" id="email" name="email" value="<% if (typeof contentObj.email !== 'undefined' && contentObj.email !== null) { %><%= contentObj.email %><% } %>">
+                  						</div>
+                					</div>
+                					<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %>
+                						<div class="form-group">
+                  							<label class="control-label col-md-3" for="">Password<span class="required">*</span></label>
+                  							<div class="col-md-6 col-lg-4">
+                   								<input type="password"  required="required" class="form-control col-md-5 col-xs-12" id="password" name="password" value="" disabled>
+                  							</div>
+                  							<div class="checkbox" STYLE="float:left; margin-right:10px;">
+      		  									<label> <input type="checkbox" id="change_password" value="1" > <strong style="font-weight:600">Change Password</strong></label>
+    			  							</div>
+                						</div>
+                							
+                					<% }else{	%>
+                					<div class="form-group">
+                  						<label class="control-label col-md-3" for="">Password<span class="required">*</span></label>
+                  						<div class="col-md-6 col-lg-4">
+                   							<input type="password"  required="required" class="form-control col-md-5 col-xs-12" id="password" name="password" value="">
+                  						</div>
+                					</div>
+                					<% } %>
+                					<div class="form-group">
+    									<label for="" class="col-sm-3 control-label">Access Right Code</label>
+    									<div class="col-sm-9">
+    										<div class="radio" STYLE="float:left; margin-right:10px;">
+      		  									<label> <input type="radio" id="access_rights_code" name="access_rights_code" value="1" <% if (typeof contentObj.access_rights_code !== 'undefined' && contentObj.access_rights_code !== null && contentObj.access_rights_code == 1) { %>checked<% } %> > <strong style="font-weight:600">ReadWrite</strong></label>
+    			  							</div>
+				  							<div class="radio" STYLE="float:left;">
+      		  									<label> <input type="radio" id="access_rights_code" name="access_rights_code" value="0" <% if (typeof contentObj.access_rights_code !== 'undefined' && contentObj.access_rights_code !== null && contentObj.access_rights_code == 0) { %>checked<% } %> > <strong style="font-weight:600">ReadOnly</strong></label>
+    			  							</div>
+										</div>
+									</div>
+                					<div class="form-group">
+    									<label for="" class="col-sm-3 control-label">Status</label>
+    									<div class="col-sm-9">
+    										<div class="radio" STYLE="float:left; margin-right:10px;">
+      		  									<label> <input type="radio" id="status" name="status" value="1" <% if (typeof contentObj.status !== 'undefined' && contentObj.status !== null && contentObj.status == 1) { %>checked<% } %> > <strong style="font-weight:600">Active</strong></label>
+    			  							</div>
+				  							<div class="radio" STYLE="float:left;">
+      		  									<label> <input type="radio" id="status" name="status" value="0" <% if (typeof contentObj.status !== 'undefined' && contentObj.status !== null && contentObj.status == 0) { %>checked<% } %> > <strong style="font-weight:600">Inactive</strong></label>
+    			  							</div>
+										</div>
+									</div>
+									
+                					<div class="form-group">
+                   						<div class="col-md-9 col-lg-6">
+               								<div class="submit-btn-setting"> <button type="submit" class="btn palette-belize-hole btn-color margn-right-15">Submit</button>
+               								<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) {	%>
+               									<a href="/jobshout/list/users" class="btn btn-primary">Cancel</a>
+               								<%	}else{	%>
+               									<button type="reset" class="btn btn-primary">Reset</button>
+               								<% } %>
+               								</div>
+               							</div>
+                					</div>
+              					</form>
+              				</div>
+            			</div>
+      				</div>
+      			</article>
+    		</section>
+    		<!--//body content--> 
+  		</div>
+  		<!--//Main Content--> 
+	</div>
+
+<!-- Footer Starts Here-->
+	<% include include/footer %>
+<!-- Footer Ends Here-->
+
+<!-- Page-Level Plugin Scripts-->
+<script>
+function generate_code(name,code){
+	var val=document.getElementById(name).value;
+	var patt=/[^A-Za-z0-9_-]/g;
+	var result=val.replace(patt,' ');
+	result=result.replace(/\s+/g, ' ');
+	result = result.replace(/^\s+|\s+$/g,'');
+	result=result.replace(/\s/g, '-');
+	result=result.toLowerCase();
+	document.getElementById(code).value=result;
+}
+
+$(document).ready(function() {
+	$("#change_password").click(function() {
+    	if ($('#change_password').is(':checked')) {
+      		$('#password').removeAttr('disabled');
+      	} else {
+      		$('#password').attr('disabled', true);
+    	}
+    });
+});
+
+</script>
+</body>
+</html>

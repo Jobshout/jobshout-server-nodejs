@@ -1,0 +1,192 @@
+<% include include/main-header %>
+<style>
+.blog-item h1 {
+	margin-top:0px!important;
+}
+</style>
+</head>
+<body>
+ 	<!--header end-->
+	<% include include/header %>
+	<!--header end-->
+ 
+	<div class="breadcrumbs">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4 col-sm-4">
+           <h1 class="mainheading"><span>News</span></h1>
+          </div>
+          <div class="col-lg-8 col-sm-8">
+            <ol class="breadcrumb pull-right">
+              <li>
+                <a href="#">
+                  Home
+                </a>
+              </li>
+              
+              <li class="active">
+               News
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+	
+	<div class="container">
+		<div class="row">
+        	<!--blog start-->
+         	<div class="col-lg-9 ">
+				<div id="documents_data">
+            		
+				</div>
+				<div style="text-align:center" id="">
+					<a style="width: 60%; margin-bottom: 10px;" class="btn btn-primary" id="display_more_btn" title="Load more" onclick="load_more()" href="javascript:void(0);">
+					Load more
+					</a>
+        		</div>
+        		<div style="text-align:center" id="img_loading_div">
+					Loading...<br /> <img id="imgAjaxLoading" src="images/loading.gif" width="109" height="25" style="border-width: 0px;">
+				</div>
+        	</div>
+
+        	<div class="col-lg-3">
+          		<div class="blog-side-item">
+		  			<div class="blog-post" id="blogContent">
+              			
+              			
+            		</div>
+		        </div>
+        	</div>
+
+        <!--blog end-->
+      </div>
+    </div>
+	
+	
+
+   	<!--footer start-->
+    <% include include/footer %>
+    <!--footer end-->
+    <script>
+var xhrStatus;
+var searchkeyword="", typeStr="news";
+var pageSize=2, totalNum=0;
+var start=0, end=pageSize;
+
+$(document).ready(function() {
+	$.doSearch(typeStr);
+	load_blogs();
+});
+
+
+function timeConverter(UNIX_timestamp){
+  var a = new Date(UNIX_timestamp * 1000);
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var year = a.getFullYear();
+  var month = months[a.getMonth()];
+  var date = a.getDate();
+  var hour = a.getHours();
+  var min = a.getMinutes();
+  var sec = a.getSeconds();
+  var time = month + ' ' + date + ',' + year ;
+  return time;
+}
+
+
+function load_more(){
+	$('#display_more_btn').hide();
+	$('#img_loading_div').show();
+	start=end;
+	end=start+pageSize;
+	load_data();
+}
+	$.doSearch = function doSearch(type){
+		$('#display_more_btn').hide();
+		$('#img_loading_div').show();
+		load_data();
+	}
+	
+	function load_blogs(){
+		var jsonRow="/search-results?start=1&&type=blog&limit=5",
+		xhrStatus=$.getJSON(jsonRow,function(html){
+			if(html.error){
+				$("#newsContent").html('<li><i class="fa fa-angle-double-right pr-10"></i>No latest news available!</li>');
+				//$("#newsContent").hide();
+			}else{
+				if(html.total){
+					totalNum=parseInt(totalNum);
+				}
+				var contentHtml="<h3>Latest Blog Post</h3>";
+				$.each(html.aaData, function(i,row){
+					if(row.Code!=""){
+						var defaultImg="images/welcome.jpg";
+						if(row.virtualFields){
+							defaultImg=row.virtualFields['image_path'];
+						}
+						contentHtml+='<div class="media">';
+                		contentHtml+='<a class="pull-left" href="/'+row.Code+'" title="'+row.Document+'"><img width="80" height="81" onerror="this.src=\'images/welcome.jpg\'" src="'+defaultImg+'"></a>';
+                		contentHtml+='<div class="media-body">';
+                  		contentHtml+='<h5 class="media-heading">';
+                    	contentHtml+='<a href="/'+row.Code+'" title="'+row.Document+'">'+timeConverter(row.Created)+'</a>';
+                  		contentHtml+='</h5>';
+                  		contentHtml+='<p>'+row.Document+'</p>';
+                		contentHtml+='</div>';
+              			contentHtml+='</div>';
+					}
+				});
+				$("#blogContent").html(contentHtml);
+			}
+		});
+	}
+	function load_data(){
+		$(".alert").remove();
+		var jsonRow="/search-results?start="+start+"&s=&type="+typeStr+"&limit="+pageSize,
+		xhrStatus=$.getJSON(jsonRow,function(html){
+			if(html.error){
+				$("#documents_data").before('<div class="alert alert-danger">No recent news found!</div>');
+			}else{
+				if(html.total){
+					totalNum=parseInt(html.total);
+				}
+				var contentHtml="";
+				$.each(html.aaData, function(i,row){
+					if(row.Code!=""){
+						var bodyStr=row.Body;
+                      	bodyStr=bodyStr.replace(/<\/?[^>]+(>|$)/g, "");
+                      	bodyStr=bodyStr.substr(0, 250);
+                      	
+                      	var a = new Date(row.Created * 1000);
+  						var months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  						var year = a.getFullYear();
+  						var month = months[a.getMonth()];
+  						var date = a.getDate();
+  						
+                      	contentHtml+='<div class="blog-item">';
+            			contentHtml+='<div class="row">';
+              			contentHtml+='<div class="col-lg-2 col-sm-2">';
+                		contentHtml+='<div class="date-wrap">';
+                  		contentHtml+='<span class="date">'+date+' '+month+'</span><span class="month">'+year+'</span>';
+                		contentHtml+='</div>';
+						contentHtml+='</div>';
+              			contentHtml+='<div class="col-lg-10 col-sm-10">';
+                		contentHtml+='<h1><a href="/'+row.Code+'">'+row.Document+'</a></h1>';
+                		contentHtml+='<p>'+bodyStr+'</p>';
+               			contentHtml+='<a href="/'+row.Code+'" title="'+row.Document+'" class="btn btn-primary">Continue Reading</a>';
+                		contentHtml+='</div></div></div>';
+                    }
+				});
+				$("#documents_data").append(contentHtml);
+			}
+			
+			if(end< totalNum){
+				$('#display_more_btn').show();
+			}
+			$('#img_loading_div').hide();
+			
+		});
+	}
+
+</script>
+  </body>
+</html>

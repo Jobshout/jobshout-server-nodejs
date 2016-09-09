@@ -1,0 +1,517 @@
+<% include include/main-header %>
+<% 
+if (typeof contentObj.Published_timestamp !== 'undefined' && contentObj.Published_timestamp !== null) {  
+var a = new Date(contentObj.Published_timestamp * 1000);
+var year = a.getFullYear();
+var month = a.getMonth()+1;
+var dateNum = a.getDate();
+var hour = a.getHours();
+var min = a.getMinutes();
+var sec = a.getSeconds();
+var publishedDate = year + '-' + month + '-' + dateNum + ' ' + hour + ':' + min ;
+} %>
+<style>
+
+   label{
+	   max-width:195px!important;
+	   text-align:left!important;
+	   margin-bottom:5pximportant;
+	   color:#515151;
+   }
+   @media(min-width:768px){
+   input[type="text"], select,textarea, input[type="password"] {
+	   max-width:300px;
+   }
+   textarea{
+	   height:100px!important;
+   }
+   
+   }
+   @media(min-width:992px){
+    .submit-btn-setting{
+	   margin-left:195px;
+   }
+   }
+</style>
+
+    <!-- page specific css -->
+    <link href="plugins/datetime-picker/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+</head>
+<body>
+	<!-- navbar top -->
+   	<div class="wrapper">
+   		<!-- Header Starts here-->
+  		<% include include/header %>
+  		<!-- Header Ends here-->
+  		
+  		<div class="content" >
+  			<!-- Sidebar Starts Here-->
+  			<% include include/sidebar %>
+    		<!-- Sidebar Ends Here-->
+    		
+    		<section>
+      			<article>
+      				<div id="page-wrapper">
+        				<div class="row">
+       						<!-- Page Header -->
+        					<div class="col-lg-12">
+								<div  CLASS="hidden-xs sidemenu"> <button id="menu" CLASS="btn btn-sm btn-danger" title="Menu"><i class="fa fa-bars fa-2x"></i></button></div>
+        						<h1 class="page-header">Documents</h1>
+        					</div>
+       						<!--End Page Header -->
+        				</div>
+
+<div class="row">
+	<div class="col-md-12">
+	
+    	<div class="panel" style="padding-top:20px;">
+    		<% if (typeof queryStr !== 'undefined' && queryStr !== null) {
+    				if(queryStr.error_msg) {	%>
+			<div class="alert alert-danger alert-dismissable">
+             	<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                	<%= queryStr.error_msg %>
+            </div>
+            <% }
+           		if(queryStr.success_msg) {	%>
+					<div class="alert alert-success alert-dismissable">
+             		<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                		<%= queryStr.success_msg %>
+            		</div>
+            <%	}
+            }	%>
+      		<div class="panel-body no-padding-top bg-white"> 
+      			<form class="form-horizontal" action="/save/document" method="POST">
+      				<input type="hidden" class="form-control" id="table_name" name="table_name" value="documents">
+      				<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="Code">
+      				<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>">
+      				<input type="hidden" class="form-control" id="editorField" name="editorField" value="<% if (typeof editorField !== 'undefined' && editorField !== null) { %><%= editorField %><% }else{ %>_id<% } %>">
+      				<input type="hidden" class="form-control" id="editorValue" name="editorValue" value="<% if (typeof editorValue !== 'undefined' && editorValue !== null) { %><%= editorValue %><% } %>">
+     				<div data-example-id="togglable-tabs">
+    					<ul id="new-customer-tab" class="nav nav-tabs" role="tablist">
+      						<li role="presentation" class="active"><a href="#customerinfo" id="home-tab" role="tab" data-toggle="tab" aria-controls="customer-info" aria-expanded="true">Page Editor</a></li>
+     						<li role="presentation"><a href="#licenceno" role="tab" id="profile-tab" data-toggle="tab" aria-controls="licenceno">Search Optimisation</a></li>  
+     						<li role="presentation"><a href="#tab3" role="tab" id="profile-tab" data-toggle="tab" aria-controls="tab3">Objects</a></li>  
+     						<li role="presentation" class="blogComments" <% if (typeof contentObj.Type !== 'undefined' && contentObj.Type !== null && contentObj.Type == "blog") {  }else{	%>style="display:none"<% } %>><a href="#tab4" role="tab" id="profile-tab" data-toggle="tab" aria-controls="tab4">Blog Comments</a></li>  
+     					</ul>
+    					<div id="myTabContent" class="tab-content" style="padding-top:25px; border-left: 1px solid #ddd; border-right: 1px solid #ddd;  border-bottom: 1px solid #ddd; padding-bottom:25px; padding-left:15px; padding-right:15px;">
+      						<div role="tabpanel" class="tab-pane fade in active" id="customerinfo" aria-labelledby="home-tab">
+     							<div class="row">
+           		  					<div class=" col-sm-12 col-lg-9">
+  										<div class="form-group">
+    										<label for="" class="col-sm-3 control-label">Heading<sup class="required">*</sup></label>
+    										<div class="col-sm-9  ">
+    											<input type="text" required class="form-control" id="Document" name="Document" onblur="generate_code('chk_manual','Document','Code'); generate_metaTags();" onkeyup="generate_code('chk_manual','Document','Code');generate_metaTags();"  value="<% if (typeof contentObj.Document !== 'undefined' && contentObj.Document !== null) { %><%= contentObj.Document %><% } %>">
+    										</div>
+  										</div>
+  
+  										<div class="form-group">
+    										<label for="firstname" class="col-sm-3  control-label">Sub heading </label>
+    										<div class="col-sm-9">
+      											<input type="text" class="form-control" id="Title" name="Title" onblur="generate_metaTags();" onkeyup="generate_metaTags();" value="<% if (typeof contentObj.Title !== 'undefined' && contentObj.Title !== null) { %><%= contentObj.Title %><% } %>">
+    										</div>
+  										</div>
+  										<div class="form-group">
+    										<label for="" class="col-sm-3 control-label">Body </label>
+    										<div class="col-sm-9">
+     											<TEXTAREA CLASS="form-control" STYLE="height:500px;" name="Body" id="Body"><% if (typeof contentObj.Body !== 'undefined' && contentObj.Body !== null) { %><%= contentObj.Body %><% } %></TEXTAREA>
+    										</div>
+										</div>
+										<div class="form-group">
+    										<label for="firstname" class="col-sm-3  control-label">Type </label>
+    										<div class="col-sm-9">
+    											<select  required="required" class="form-control col-md-5 col-xs-12" name="type" id="type">
+                  									<option value="page" <% if (typeof contentObj.Type !== 'undefined' && contentObj.Type !== null && contentObj.Type == "page") { %>selected<% } %>>Page</option>
+                  									<option value="blog" <% if (typeof contentObj.Type !== 'undefined' && contentObj.Type !== null && contentObj.Type == "blog") { %>selected<% } %>>Blog</option>
+                  									<option value="news" <% if (typeof contentObj.Type !== 'undefined' && contentObj.Type !== null && contentObj.Type == "news") { %>selected<% } %>>News</option>
+                  									<option value="clients-testimonial" <% if (typeof contentObj.Type !== 'undefined' && contentObj.Type !== null && contentObj.Type == "clients-testimonial") { %>selected<% } %>>Clients testimonial</option>
+                    								<option value="resource-centre" <% if (typeof contentObj.Type !== 'undefined' && contentObj.Type !== null && contentObj.Type == "resource-centre") { %>selected<% } %>>Resource Centre</option>
+                    							</select>
+      										</div>
+  										</div>
+  										<div class="form-group">
+    										<label for="firstname" class="col-sm-3  control-label">Image Path </label>
+    										<div class="col-sm-9">
+      											<input type="text" class="form-control" id="image_path" name="image_path" value="<% if (typeof contentObj.virtualFields !== 'undefined' && contentObj.virtualFields !== null) {  var virtualFields= contentObj.virtualFields; var image_path= virtualFields['image_path'] %><%= image_path %><% } %>">
+    										</div>
+  										</div>
+  										<div class="form-group no-margn-bottom">
+              								<label for="dtp_input1" class="col-md-3 control-label" >Published On  <span class="required">*</span></label>
+                  							<div class="col-md-6 col-lg-4" >
+                								<div class="input-group date form_datetime " style="max-width:300px;" >
+                    								<input class="form-control col-md-5 col-xs-12" required type="text" id="Published_timestamp" name="Published_timestamp" value="<% if (typeof publishedDate !== 'undefined' && publishedDate !== null) {  %><%= publishedDate %><% } %>" readonly>
+                    								<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                								</div>
+                  							</div>
+            							</div>
+  										
+  										<div class="form-group">
+    										<label for="" class="col-sm-3 control-label">Status</label>
+    										<div class="col-sm-9">
+    											<div class="radio" STYLE="float:left; margin-right:10px;">
+      		  										<label> <input type="radio" id="Status" name="Status" value="1" <% if (typeof contentObj.Status !== 'undefined' && contentObj.Status !== null && (contentObj.Status == 1 || contentObj.Status=="1")) { %>checked<% } %> > <strong style="font-weight:600">Active</strong></label>
+    			  								</div>
+				  								<div class="radio" STYLE="float:left;">
+      		  										<label> <input type="radio" id="Status" name="Status" value="0" <% if (typeof contentObj.Status !== 'undefined' && contentObj.Status !== null && contentObj.Status == 0) { %>checked<% } %> > <strong style="font-weight:600">Inactive</strong></label>
+    			  								</div>
+											</div>
+										</div>
+  										
+   									</div>
+       							</div>
+      						</div>
+      						<div role="tabpanel" class="tab-pane fade" id="licenceno" aria-labelledby="profile-tab">
+       							<div class="row">
+                					<div class="col-sm-10  col-md-12 col-lg-9">
+                       					<div class="form-group">
+                              				<label for="" class="col-sm-3 control-label">Code<sup class="required">*</sup></label>
+                             				<div class="col-sm-9">
+                              					<input type="text" required class="form-control" id="Code" name="Code" placeholder="" value="<% if (typeof contentObj.Code !== 'undefined' && contentObj.Code !== null) { %><%= contentObj.Code %><% } %>" <% if (typeof contentObj.AutoFormat !== 'undefined' && contentObj.AutoFormat !== null && contentObj.AutoFormat == 1) {  }else { %>readonly<% } %>>
+							  					<span STYLE="font-size:12px; color:#737373;">URL (SEO friendly)</span>
+							  					<span class="help-block" STYLE="font-size:12px;">
+													<input name="chk_manual" id="chk_manual" value="0" type="checkbox" <% if (typeof contentObj.AutoFormat !== 'undefined' && contentObj.AutoFormat !== null && contentObj.AutoFormat == 1) { %>checked<% } %> >
+													I want to manually enter code</span>
+                             				</div>
+                        				</div>
+                        				
+                        				<div class="form-group">
+                             				<label for="" class="col-sm-3 control-label">Window Title</label>
+                             				<div class="col-sm-9">
+                              					<input type="text" class="form-control" id="PageTitle" name="PageTitle" placeholder="" value="<% if (typeof contentObj.PageTitle !== 'undefined' && contentObj.PageTitle !== null) { %><%= contentObj.PageTitle %><% } %>" <% if (typeof contentObj.AutoFormatMetaData !== 'undefined' && contentObj.AutoFormatMetaData !== null && contentObj.AutoFormatMetaData == 1) {  }else { %>readonly<% } %>>
+                            				</div>
+                        				</div>
+                        				<div class="form-group">
+                              				<label for="" class="col-sm-3 control-label">Meta Data Keywords</label>
+                             				<div class="col-sm-9">
+                             					<TEXTAREA CLASS="form-control" STYLE="height:220px;" id="MetaTagKeywords" name="MetaTagKeywords" <% if (typeof contentObj.AutoFormatMetaData !== 'undefined' && contentObj.AutoFormatMetaData !== null && contentObj.AutoFormatMetaData == 1) {  }else { %>readonly<% } %>><% if (typeof contentObj.MetaTagKeywords !== 'undefined' && contentObj.MetaTagKeywords !== null) { %><%= contentObj.MetaTagKeywords %><% } %></TEXTAREA>
+							 					<span STYLE="font-size:11px;">Search terms relevant to this page to find content of this page easily</span>
+                             				</div>
+                        				</div>
+                        				<div class="form-group">
+                              				<label for="" class="col-sm-3 control-label">Meta Data Description</label>
+                             				<div class="col-sm-9">
+                             					<TEXTAREA CLASS="form-control" STYLE="height:220px;" id="MetaTagDescription" name="MetaTagDescription" <% if (typeof contentObj.AutoFormatMetaData !== 'undefined' && contentObj.AutoFormatMetaData !== null && contentObj.AutoFormatMetaData == 1) {  }else { %>readonly<% } %>><% if (typeof contentObj.MetaTagDescription !== 'undefined' && contentObj.MetaTagDescription !== null) { %><%= contentObj.MetaTagDescription %><% } %></TEXTAREA>
+							 					<span STYLE="font-size:11px;">Overview which describes this page (About 300 words)</span>
+							 					<span class="help-block" STYLE="font-size:12px;">
+													<input name="chk_manual_metatags" id="chk_manual_metatags" value="0" type="checkbox" <% if (typeof contentObj.AutoFormatMetaData !== 'undefined' && contentObj.AutoFormatMetaData !== null && contentObj.AutoFormatMetaData == 1) { %>checked<% } %>>
+													 I want to manually enter meta tags</span>
+							 				</div>
+                        				</div>
+                     				</div>
+                				</div>
+      						</div>
+      						<div role="tabpanel" class="tab-pane fade" id="tab3" aria-labelledby="profile-tab">
+      							<% if (typeof contentObj.Objects !== 'undefined' && contentObj.Object !== null) {
+      								var objectArr=contentObj.Objects;
+      								for(var i=0; i < objectArr.length; i++){
+      								%>
+      								<div class="row" style="background-color: aliceblue; padding: 20px; margin: 5px 5px 20px; border-radius: 5px;">
+                					<div class="col-sm-10  col-md-12 col-lg-7">
+                						<input type="hidden" class="span10" name="obj_id[]" id="obj_id_<%=  objectArr[i].uuid %>" value="<%=  objectArr[i].uuid %>" />
+										
+										<div class="form-group">
+                              				<label for="" class="col-sm-3 control-label">Object Heading<sup class="required">*</sup></label>
+                             				<div class="col-sm-9">
+                              					<input type="text" class="form-control" id="obj_heading_<%=  objectArr[i].uuid %>" name="obj_heading_<%=  objectArr[i].uuid %>" onblur="generate_code('obj_chk_manual_<%=  objectArr[i].uuid %>','obj_heading_<%=  objectArr[i].uuid %>','obj_code_<%=  objectArr[i].uuid %>')" onkeyup="generate_code('obj_chk_manual_<%=  objectArr[i].uuid %>','obj_heading_<%=  objectArr[i].uuid %>','obj_code_<%=  objectArr[i].uuid %>')" value="<%=  objectArr[i].name %>">
+                             				</div>
+                        				</div>
+                       					<div class="form-group">
+                              				<label for="" class="col-sm-3 control-label">Code<sup class="required">*</sup></label>
+                             				<div class="col-sm-9">
+                              					<input type="text" class="form-control" id="obj_code_<%=  objectArr[i].uuid %>" name="obj_code_<%=  objectArr[i].uuid %>" placeholder="" <% if (objectArr[i].chk_manual == 0) { %>readonly<% } %> value="<%=  objectArr[i].code %>">
+							  					<span class="help-block" STYLE="font-size:12px;">
+													<input name="obj_chk_manual__<%=  objectArr[i].uuid %>" id="obj_chk_manual_<%=  objectArr[i].uuid %>" value="0" onChange="generate_code('obj_chk_manual_<%=  objectArr[i].uuid %>','obj_heading_<%=  objectArr[i].uuid %>','obj_code_<%=  objectArr[i].uuid %>')" type="checkbox" <% if (typeof objectArr[i].chk_manual !== 'undefined' && objectArr[i].chk_manual !== null && objectArr[i].chk_manual == 1) { %>checked<% } %>>
+													I want to manually enter code</span>
+                             				</div>
+                        				</div>
+                        				                      				
+                        				<div class="form-group">
+                              				<label for="" class="col-sm-3 control-label">Object Content</label>
+                             				<div class="col-sm-9">
+                             					<TEXTAREA CLASS="form-control" STYLE="height:220px;" id="obj_content__<%=  objectArr[i].uuid %>" name="obj_content__<%=  objectArr[i].uuid %>"><%=  objectArr[i].content %></TEXTAREA>
+							 				</div>
+                        				</div>
+                        				
+                     				</div>
+                     				<div class="col-lg-5">
+                     					<div class="form-group">
+                              				<label for="" class="col-sm-3 control-label">Order By<sup class="required">*</sup></label>
+                             				<div class="col-sm-9">
+                              					<input type="text" class="form-control" id="obj_order__<%=  objectArr[i].uuid %>" name="obj_order__<%=  objectArr[i].uuid %>" placeholder="" value="<%=  objectArr[i].order_by %>">
+                             				</div>
+                        				</div>
+                        				<div class="form-group">
+    										<label for="" class="col-sm-3 control-label">Status</label>
+    										<div class="col-sm-9">
+    											<div class="radio" STYLE="float:left; margin-right:10px;">
+      		  										<label> <input type="radio" id="obj_status__<%=  objectArr[i].uuid %>" name="obj_status_<%=  objectArr[i].uuid %>" value="1" <% if (objectArr[i].status == 1 || objectArr[i].status == "1") { %>checked<% } %> > <strong style="font-weight:600">Active</strong></label>
+    			  								</div>
+				  								<div class="radio" STYLE="float:left;">
+      		  										<label> <input type="radio" id="obj_status_<%=  objectArr[i].uuid %>" name="obj_status_<%=  objectArr[i].uuid %>" value="0" <% if (objectArr[i].status == 0 || objectArr[i].status == "0") { %>checked<% } %>> <strong style="font-weight:600">Inactive</strong></label>
+    			  								</div>
+											</div>
+										</div>
+                     				</div>
+                     				
+                				</div>
+                				<% } 
+                				}	%>
+                				
+       							<div class="row" style="background-color: aliceblue; padding: 20px; margin: 5px 5px 20px; border-radius: 5px;">
+                					<div class="col-sm-10  col-md-12 col-lg-7">
+                						<div class="form-group">
+                              				<label for="" class="col-sm-3 control-label">Object Heading<sup class="required">*</sup></label>
+                             				<div class="col-sm-9">
+                              					<input type="text" class="form-control" id="new_obj_heading" name="new_obj_heading" onblur="generate_code('new_obj_chk_manual','new_obj_heading','new_obj_code')" onkeyup="generate_code('new_obj_chk_manual','new_obj_heading','new_obj_code')" value="">
+                             				</div>
+                        				</div>
+                       					<div class="form-group">
+                              				<label for="" class="col-sm-3 control-label">Code<sup class="required">*</sup></label>
+                             				<div class="col-sm-9">
+                              					<input type="text" class="form-control" id="new_obj_code" name="new_obj_code" placeholder="" readonly value="">
+							  					<span class="help-block" STYLE="font-size:12px;">
+													<input name="new_obj_chk_manual" id="new_obj_chk_manual" value="0" type="checkbox" onClick="generate_code('new_obj_chk_manual','new_obj_heading','new_obj_code')">
+													I want to manually enter code</span>
+                             				</div>
+                        				</div>
+                        				                      				
+                        				<div class="form-group">
+                              				<label for="" class="col-sm-3 control-label">Object Content</label>
+                             				<div class="col-sm-9">
+                             					<TEXTAREA CLASS="form-control" STYLE="height:220px;" id="new_obj_content" name="new_obj_content"></TEXTAREA>
+							 				</div>
+                        				</div>
+                        				
+                     				</div>
+                     				<div class="col-lg-5">
+                     					<div class="form-group">
+                              				<label for="" class="col-sm-3 control-label">Order By<sup class="required">*</sup></label>
+                             				<div class="col-sm-9">
+                              					<input type="text" class="form-control" id="new_obj_order" name="new_obj_order" placeholder="" value="">
+                             				</div>
+                        				</div>
+                        				<div class="form-group">
+    										<label for="" class="col-sm-3 control-label">Status</label>
+    										<div class="col-sm-9">
+    											<div class="radio" STYLE="float:left; margin-right:10px;">
+      		  										<label> <input type="radio" id="new_obj_status" name="new_obj_status" value="1"  > <strong style="font-weight:600">Active</strong></label>
+    			  								</div>
+				  								<div class="radio" STYLE="float:left;">
+      		  										<label> <input type="radio" id="new_obj_status" name="new_obj_status" value="0" checked> <strong style="font-weight:600">Inactive</strong></label>
+    			  								</div>
+											</div>
+										</div>
+                     				</div>
+                     				
+                				</div>
+      						</div>
+      						<div role="tabpanel" class="tab-pane fade blogComments" id="tab4" aria-labelledby="profile-tab" <% if (typeof contentObj.Type !== 'undefined' && contentObj.Type !== null && contentObj.Type == "blog") {  }else{	%>style="display:none"<% } %>>
+      							<% if (typeof contentObj.BlogComments !== 'undefined' && contentObj.BlogComments !== null) {
+      								var objectArr=contentObj.BlogComments;
+      								for(var i=0; i < objectArr.length; i++){
+      								%>
+      								<div class="row" style="background-color: aliceblue; padding: 20px; margin: 5px 5px 20px; border-radius: 5px;">
+                					<div class="col-sm-10  col-md-12 col-lg-7">
+                						<input type="hidden" class="span10" name="blog_id[]" id="blog_id_<%=  objectArr[i].uuid %>" value="<%=  objectArr[i].uuid %>" />
+										
+										<div class="form-group">
+                              				<label for="" class="col-sm-3 control-label">Name<sup class="required">*</sup></label>
+                             				<div class="col-sm-9">
+                              					<input type="text" class="form-control" id="blog_name_<%=  objectArr[i].uuid %>" name="blog_name_<%=  objectArr[i].uuid %>" value="<%=  objectArr[i].name %>">
+                             				</div>
+                        				</div>
+                       					<div class="form-group">
+                              				<label for="" class="col-sm-3 control-label">Email<sup class="required">*</sup></label>
+                             				<div class="col-sm-9">
+                              					<input type="text" class="form-control" id="blog_email_<%=  objectArr[i].uuid %>" name="blog_email_<%=  objectArr[i].uuid %>" placeholder="" value="<%=  objectArr[i].email %>">
+							  				</div>
+                        				</div>
+                        				<div class="form-group">
+                              				<label for="" class="col-sm-3 control-label">Website<sup class="required">*</sup></label>
+                             				<div class="col-sm-9">
+                              					<input type="text" class="form-control" id="blog_website_<%=  objectArr[i].uuid %>" name="blog_website_<%=  objectArr[i].uuid %>" placeholder="" value="<%=  objectArr[i].website %>">
+							  				</div>
+                        				</div>                     				
+                        				<div class="form-group">
+                              				<label for="" class="col-sm-3 control-label">Comment</label>
+                             				<div class="col-sm-9">
+                             					<TEXTAREA CLASS="form-control" STYLE="height:220px;" id="blog_comment_<%=  objectArr[i].uuid %>" name="blog_comment_<%=  objectArr[i].uuid %>"><%=  objectArr[i].comment %></TEXTAREA>
+							 				</div>
+                        				</div>
+                        				
+                     				</div>
+                     				<div class="col-lg-5">
+                     					<div class="form-group">
+                              				<label for="" class="col-sm-3 control-label">Posted On<sup class="required">*</sup></label>
+                             				<div class="col-sm-9">
+                              					<input type="hidden" class="form-control" id="blog_created__<%=  objectArr[i].uuid %>" name="blog_created__<%=  objectArr[i].uuid %>" readonly value="<%=  objectArr[i].created %>">
+                              					<input type="text" class="form-control" readonly value="<%=  timeConverter(objectArr[i].created) %>">
+                             				</div>
+                        				</div>
+                        				<div class="form-group">
+    										<label for="" class="col-sm-3 control-label">Status</label>
+    										<div class="col-sm-9">
+    											<div class="radio" STYLE="float:left; margin-right:10px;">
+      		  										<label> <input type="radio" id="blog_status__<%=  objectArr[i].uuid %>" name="blog_status__<%=  objectArr[i].uuid %>" value="1" <% if (objectArr[i].status == 1 || objectArr[i].status == "1") { %>checked<% } %> > <strong style="font-weight:600">Active</strong></label>
+    			  								</div>
+				  								<div class="radio" STYLE="float:left;">
+      		  										<label> <input type="radio" id="blog_status__<%=  objectArr[i].uuid %>" name="blog_status__<%=  objectArr[i].uuid %>" value="0" <% if (objectArr[i].status == 0 || objectArr[i].status == "0") { %>checked<% } %>> <strong style="font-weight:600">Inactive</strong></label>
+    			  								</div>
+											</div>
+										</div>
+                     				</div>
+                     				
+                				</div>
+                				<% } 
+                				}else{	%>
+                					<div class="alert alert-danger">No blog comments posted!</div>
+                				<% } %>
+      						</div>
+      					</div>
+  					</div>
+   					<div class="col-sm-12 margin-top-15 " ALIGN="CENTER">	
+   						<button class="btn  palette-belize-hole btn-color margin-right-5 btn-sm "> Save Changes</button>
+                	</div>
+        		</form>
+      		</div>
+		</div>
+  <!-- /.col --> 
+</div>     
+      				</div>
+      			</article>
+    		</section>
+    		<!--//body content--> 
+  		</div>
+  		<!--//Main Content--> 
+	</div>
+
+<!-- Footer Starts Here-->
+	<% include include/footer %>
+<!-- Footer Ends Here-->
+<script SRC="plugins/tinymce/tinymce.min.js">
+
+<script>tinymce.init({ selector:'textarea' });</script>
+<script>
+var tiny_options=new Array();
+tiny_options['selector']= "textarea#Body";
+tiny_options['theme']= "modern";
+tiny_options['plugins']= "advlist autolink link image lists charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking save table contextmenu directionality emoticons template paste textcolor moxiemanager";
+tiny_options['theme_advanced_buttons1']= "save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect";
+tiny_options['theme_advanced_buttons2']= "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor";
+tiny_options['theme_advanced_buttons3']= "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media,advhr,|,print,|,ltr,rtl,|,fullscreen";
+tiny_options['theme_advanced_buttons4']= "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking,template,pagebreak";
+tiny_options['theme_advanced_toolbar_location']= "top";
+tiny_options['theme_advanced_toolbar_align']= "left";
+tiny_options['theme_advanced_statusbar_location']= "bottom";
+tiny_options['theme_advanced_resizing']= true;
+tinymce.init(tiny_options);
+
+function generate_code(chkd,name,code){
+	var status=document.getElementById(chkd).checked;
+	if(status!=true){
+		var val=document.getElementById(name).value;
+		var patt=/[^A-Za-z0-9_-]/g;
+		var result=val.replace(patt,' ');
+		result=result.replace(/\s+/g, ' ');
+		result = result.replace(/^\s+|\s+$/g,'');
+		result=result.replace(/\s/g, '-');
+		result=result.toLowerCase();
+		document.getElementById(code).value=result;
+	}else{
+		document.getElementById(code).value="";
+		$('#'+code).prop("readonly",false);
+	}
+}
+function removeEmptyStrings(tempMetaTags){
+	var returnMetaTags= tempMetaTags != "";
+	return returnMetaTags;
+}
+
+function stopWords(tempMetaTags){
+	var FORGETABLE_WORDS = ',the,of,an,and,that,which,is,was,';
+	for(var i = 0, word; word = tempMetaTags[i++]; ) {
+		if (FORGETABLE_WORDS.indexOf(',' + word + ',') > -1 || word.length <= 3) {
+			tempMetaTags[i-1] = "";
+    	}
+	}
+	tempMetaTags = tempMetaTags.filter(removeEmptyStrings);
+	return tempMetaTags;
+}
+
+function generate_metaTags(){
+	var doc=$("#Document").val();
+	var Title=$("#Title").val();
+	var Body=$("#Body").val();
+	if($("#PageTitle").val()==""){
+		$("#PageTitle").val(Title);
+	}
+	Body=Body.replace(/<\/?[^>]+(>|$)/g, "");
+	if(Body.length>=250){
+		var metaDescription=Body.substr(0, 250);
+		$("#MetaTagDescription").val(metaDescription);
+	}	
+	
+	var tempMetaTags=doc+" "+Title+" "+Body;
+	tempMetaTags=tempMetaTags.split(" ");
+	tempMetaTags=stopWords(tempMetaTags);
+	
+	$.unique(tempMetaTags);
+	$("#MetaTagKeywords").val(tempMetaTags);
+}
+
+$(document).ready(function(){
+	
+	$("#type").change(function(){
+		if($(this).val()=="blog"){
+			$(".blogComments").show();
+		}else{
+			$(".blogComments").hide();
+		}
+	});
+	
+	$("#chk_manual").click(function(){
+		if(document.getElementById('chk_manual').checked) {
+			$('#Code').prop("readonly",false);
+			$('#Code').val("");
+		}else{
+			$('#Code').prop("readonly",true);
+			$('#Code').val("");
+			generate_code('chk_manual','Document','Code');
+		}
+	});
+	
+	$("#chk_manual_metatags").click(function(){
+		if(document.getElementById('chk_manual_metatags').checked) {
+			$('#PageTitle').prop("readonly",false);
+			$('#MetaTagDescription').prop("readonly",false);
+			$('#MetaTagKeywords').prop("readonly",false);
+			$('#PageTitle').val("");
+			$('#MetaTagDescription').val("");
+			$('#MetaTagKeywords').val("");
+		}else{
+			$('#PageTitle').prop("readonly",true);
+			$('#MetaTagDescription').prop("readonly",true);
+			$('#MetaTagKeywords').prop("readonly",true);
+			$('#PageTitle').val("");
+			$('#MetaTagDescription').val("");
+			$('#MetaTagKeywords').val("");
+			generate_metaTags();
+		}
+	});
+});
+</script>
+<script type="text/javascript" src="plugins/datetime-picker/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script type="text/javascript">
+	$('.form_datetime').datetimepicker({
+		weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		forceParse: 0,
+		pickerPosition: "bottom-left",		
+        showMeridian: 1,
+		pickTime: 0
+	});
+</script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<% include include/main-header %>
+<style>
+.blog-item h1 {
+	margin-top:0px!important;
+}
+</style>
+</head>
+<body>
+ 	<!--header end-->
+	<% include include/header %>
+	<!--header end-->
+ 
+	<div class="breadcrumbs">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4 col-sm-4">
+           <h1 class="mainheading"><span>Sitemap</span></h1>
+          </div>
+          <div class="col-lg-8 col-sm-8">
+            <ol class="breadcrumb pull-right">
+              <li>
+                <a href="/">
+                  Home
+                </a>
+              </li>
+              <li class="active">
+               Sitemap
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+	
+	<div class="container">
+     	<div CLASS="row">
+	  		<div CLASS="col-md-12">
+	  			<div class="content">
+	  				<% if (typeof resultData !== 'undefined' && resultData !== null ) {
+	  					for(var i=0; i< resultData.length; i++){
+	  						if(resultData[i].type=="url"){	
+	  							var sourceStr="";
+	  							if(resultData[i].source=="0" || resultData[i].source==0){	
+	  								sourceStr="target='_blank'";
+	  							}
+	  						%>
+      						<h2 class="site-map-cat-hding" STYLE="margin-top:5px;" ><a <%= sourceStr %> href="<%= resultData[i].content %>" title="<%= resultData[i].label %>"><%= resultData[i].label %></a></h2>
+      						<% }else if(resultData[i].type=="html"){	%>
+      						<h2 class="site-map-cat-hding" STYLE="margin-top:5px;" ><%= resultData[i].label %></h2>
+      							<div class="clearfix">
+      								<%= resultData[i].content %>
+      							</div>
+      						<%	}else if(resultData[i].type=="items"){	
+      						if (typeof resultData[i].bookmark_items !== 'undefined' && resultData[i].bookmark_items !== null  && resultData[i].bookmark_items != "") { 	
+								var bookmark_items = JSON.parse(resultData[i].bookmark_items);
+							%>
+							<h2 class="site-map-cat-hding" STYLE="margin-top:5px;" ><%= resultData[i].label %></h2>
+	  						<div class="clearfix">
+		        				<ul class="site-map-list">
+		        					<% bookmark_items.sort(dynamicSort("item_sort_order"));
+		        					for(var count=0; count< bookmark_items.length; count++){
+		        						var bsourceStr="";
+	  									if(bookmark_items[count].target=="0" || bookmark_items[count].target==0){	
+	  									bsourceStr="target='_blank'";
+	  									}  %>
+                    				<li><a href="<%= bookmark_items[count].content %>" <%= bsourceStr %> title="<%= bookmark_items[count].label %>"><%= bookmark_items[count].label %></a></li>
+                    				<% } %>
+                    			</ul>   								
+							</div>
+							<% } 
+							}	%>
+					<% }
+					}else{ %>
+					<div class="alert alert-danger">Sorry,sitemap is under construction!</div>
+					<% } %>
+               		<div class="clearfix"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+   	<!--footer start-->
+    <% include include/footer %>
+    <!--footer end-->
+
+  </body>
+</html>

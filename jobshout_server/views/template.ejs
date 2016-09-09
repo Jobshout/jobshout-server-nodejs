@@ -1,0 +1,233 @@
+<% include include/main-header %>
+<style>
+   label{
+	   max-width:195px!important;
+	   text-align:left!important;
+	   margin-bottom:5pximportant;
+	   color:#515151;
+   }
+   @media(min-width:768px){
+   input[type="text"], select,textarea, input[type="password"] {
+	   max-width:300px;
+   }
+   textarea{
+	   height:100px!important;
+   }
+   
+   }
+   @media(min-width:992px){
+    .submit-btn-setting{
+	   margin-left:195px;
+   }
+   }
+    .dragitems{width: 20%; float: left; background: #f1f1f1;}
+        .dropitems{width: 70%;float: left;background: #f1f1f1;
+                   margin-left: 20px;padding:5px 5px 5px 5px;}
+        .dragitems ul{list-style-type: none;padding-left: 5px;
+                   display: block;}
+</style>
+</head>
+<body>
+	<!-- navbar top -->
+   	<div class="wrapper">
+   		<!-- Header Starts here-->
+  		<% include include/header %>
+  		<!-- Header Ends here-->
+  		
+  		<div class="content" >
+  			<!-- Sidebar Starts Here-->
+  			<% include include/sidebar %>
+    		<!-- Sidebar Ends Here-->
+    		
+    		<section>
+      			<article>
+      				<div id="page-wrapper">
+        				<div class="row">
+       						<!-- Page Header -->
+        					<div class="col-lg-12">
+								<div  CLASS="hidden-xs sidemenu"> <button id="menu" CLASS="btn btn-sm btn-danger" title="Menu"><i class="fa fa-bars fa-2x"></i></button></div>
+        						<h1 class="page-header">Template</h1>
+        					</div>
+       						<!--End Page Header -->
+        				</div>
+
+           				<div class="row">
+            				<div class="col-sm-8">
+            					<% if (typeof queryStr !== 'undefined' && queryStr !== null) {
+    								if(queryStr.error_msg) {	%>
+									<div class="alert alert-danger alert-dismissable">
+             							<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                						<%= queryStr.error_msg %>
+            						</div>
+            						<% }
+           							if(queryStr.success_msg) {	%>
+										<div class="alert alert-success alert-dismissable">
+             								<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                							<%= queryStr.success_msg %>
+            							</div>
+            						<%	}
+            					}	%>
+            					<form class="form-horizontal" action="/save/template/" method="POST">
+            						<input type="hidden" class="form-control" id="editorField" name="editorField" value="<% if (typeof editorField !== 'undefined' && editorField !== null) { %><%= editorField %><% }else{ %>_id<% } %>">
+      								<input type="hidden" class="form-control" id="editorValue" name="editorValue" value="<% if (typeof editorValue !== 'undefined' && editorValue !== null) { %><%= editorValue %><% } %>">
+            						<input type="hidden" class="form-control" id="table_name" name="table_name" value="templates">
+      								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="code">
+      								<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>">
+            						<div class="form-group">
+                  						<label class="control-label col-md-3" for="first-name">Name<span class="required">*</span></label>
+                  						<div class="col-md-6 col-lg-4">
+                    						<input type="text" required="required" id="name" name="name" class="form-control col-md-5 col-xs-12" onblur="generate_code('name','code')" onkeyup="generate_code('name','code')" value="<% if (typeof contentObj.name !== 'undefined' && contentObj.name !== null) { %><%= contentObj.name %><% } %>">
+                  						</div>
+                					</div>
+              						<div class="form-group">
+                  						<label class="control-label col-md-3" for="">Code<span class="required">*</span></label>
+                  						<div class="col-md-6 col-lg-4">
+                   							<input type="text"  required="required" class="form-control col-md-5 col-xs-12" id="code" name="code" readonly value="<% if (typeof contentObj.code !== 'undefined' && contentObj.code !== null) { %><%= contentObj.code %><% } %>">
+                  						</div>
+                					</div>
+                					<div class="form-group">
+                  						<label class="control-label col-md-3" for="">Content<span class="required">*</span></label>
+                  						<div class="col-md-6 col-lg-4">
+                   							<textarea required="required" class="form-control col-md-5 col-xs-12" id="template_content" name="template_content"><% if (typeof contentObj.template_content !== 'undefined' && contentObj.template_content !== null) { %><%= contentObj.template_content %><% } %></textarea>
+                  						</div>
+                					</div>
+                					<div class="form-group">
+                  						<label class="control-label col-md-3" for="">Type </label>
+                  						<div class="col-md-6 col-lg-4">
+                  							<select id="type" name="type" class="form-control col-md-5 col-xs-12" required="required">
+                  								<option value="" <% if (typeof contentObj.type !== 'undefined' && contentObj.type !== null && contentObj.type == "") { %>selected<% } %>>Basic</option>
+                  								<option value="email" <% if (typeof contentObj.type !== 'undefined' && contentObj.type !== null && contentObj.type == "email") { %>selected<% } %>>Email</option>
+                    						</select>
+                   						</div>
+                					</div>
+                					<div class="form-group">
+    									<label for="" class="col-sm-3 control-label"></label>
+    									<div class="col-sm-9">
+    										<div class="checkbox" STYLE="float:left; margin-right:10px;">
+      		  									<label> <input type="checkbox" id="enable_editor" name="enable_editor" value="1" <% if (typeof contentObj.enable_editor !== 'undefined' && contentObj.enable_editor !== null && contentObj.enable_editor == 1) { %>checked<% } %> > <strong style="font-weight:600">Enable TinyMCE</strong></label>
+    			  							</div>
+										</div>
+									</div>
+                					<div class="form-group">
+    									<label for="" class="col-sm-3 control-label">Status</label>
+    									<div class="col-sm-9">
+    										<div class="radio" STYLE="float:left; margin-right:10px;">
+      		  									<label> <input type="radio" id="Status" name="Status" value="1" <% if (typeof contentObj.Status !== 'undefined' && contentObj.Status !== null && contentObj.Status == 1) { %>checked<% } %> > <strong style="font-weight:600">Active</strong></label>
+    			  							</div>
+				  							<div class="radio" STYLE="float:left;">
+      		  									<label> <input type="radio" id="Status" name="Status" value="0" <% if (typeof contentObj.Status !== 'undefined' && contentObj.Status !== null && contentObj.Status == 0) { %>checked<% } %> > <strong style="font-weight:600">Inactive</strong></label>
+    			  							</div>
+										</div>
+									</div>
+                					<div class="form-group">
+                   						<div class="col-md-9 col-lg-6">
+               								<div class="submit-btn-setting"> <button type="submit" class="btn palette-belize-hole btn-color margn-right-15">Submit</button>
+               								<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) {	%>
+               									<a href="/list/templates" class="btn btn-primary">Cancel</a>
+               								<%	}else{	%>
+               									<button type="reset" class="btn btn-primary">Reset</button>
+               								<% } %>
+               								</div>
+               							</div>
+                					</div>
+              					</form>
+              				</div>
+              				<div class="col-sm-3  pull-right">
+              					<ul id="DragWordList" runat="server">
+              					<% 	if (typeof tokens !== 'undefined' && tokens !== null) {
+                  						for(var i=0; i< tokens.length; i++){	%>
+                  						<li><%= tokens[i].code %></li>
+                  					<%	}
+                  					}
+                  				%>
+                  				</ul>
+              				</div>
+            			</div>
+      				</div>
+      			</article>
+    		</section>
+    		<!--//body content--> 
+  		</div>
+  		<!--//Main Content--> 
+	</div>
+
+<!-- Footer Starts Here-->
+	<% include include/footer %>
+<!-- Footer Ends Here-->
+
+<!-- Page-Level Plugin Scripts-->
+
+<script src="plugins/jquery-ui.min.js"></script>
+<script SRC="plugins/tinymce/tinymce.min.js">
+<script>tinymce.init({ selector:'textarea' });</script>
+<script>
+function setup() {
+   tinyMCE.init({
+      selector : "textarea#template_content",
+      theme : "modern",
+      plugins : "advlist autolink link image lists charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking save table contextmenu directionality emoticons template paste textcolor",
+      theme_advanced_buttons1 : "save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect",
+      theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor",
+      theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media,advhr,|,print,|,ltr,rtl,|,fullscreen",
+      theme_advanced_buttons4 : "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking,template,pagebreak",
+      theme_advanced_toolbar_location : "top",
+      theme_advanced_toolbar_align : "left",
+      theme_advanced_statusbar_location : "bottom",
+      theme_advanced_resizing : true
+   });
+}
+
+
+$(function() {
+	$("#DragWordList li").draggable({
+		appendTo: "body",
+        helper: "clone",
+        cursor: "select",
+        revert: "invalid"
+    });
+          
+    $("#enable_editor").click(function(){
+		if(this.checked) {
+			setup();
+		}else{
+			tinymce.execCommand( 'mceRemoveEditor', false, "template_content" );
+		}
+	});
+      
+    initDroppable($("#template_content"));
+    function initDroppable($elements) {
+    	$elements.droppable({
+        	hoverClass: "textarea",
+            accept: ":not(.ui-sortable-helper)",
+            drop: function(event, ui) {
+               var $this = $(this);
+ 
+                var tempid = ui.draggable.text();
+                var dropText;
+            	dropText = "<*--" + tempid + "--*>";
+                var droparea = document.getElementById('template_content');
+                var range1 = droparea.selectionStart;
+                var range2 = droparea.selectionEnd;
+                var val = droparea.value;
+                var str1 = val.substring(0, range1);
+                var str3 = val.substring(range1, val.length);
+                droparea.value = str1 + dropText + str3;
+            }
+    	});
+    }
+});
+
+function generate_code(name,code){
+	var val=document.getElementById(name).value;
+	var patt=/[^A-Za-z0-9_-]/g;
+	var result=val.replace(patt,' ');
+	result=result.replace(/\s+/g, ' ');
+	result = result.replace(/^\s+|\s+$/g,'');
+	result=result.replace(/\s/g, '-');
+	result=result.toLowerCase();
+	document.getElementById(code).value=result;
+}
+
+</script>
+</body>
+</html>

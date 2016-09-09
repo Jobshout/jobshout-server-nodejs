@@ -1,0 +1,143 @@
+<% include include/main-header 
+%>
+<style>
+	#page-wrapper{
+		margin:0px!important;
+	}
+   label{
+	   max-width:195px!important;
+	   text-align:left!important;
+	   margin-bottom:5pximportant;
+	   color:#515151;
+   }
+   @media(min-width:768px){
+   input[type="text"], select,textarea, input[type="password"] {
+	   max-width:300px;
+   }
+   textarea{
+	   height:100px!important;
+   }
+   
+  
+   
+   }
+   @media(min-width:992px){
+    .submit-btn-setting{
+	   margin-left:195px;
+   }
+   }
+</style>
+</head>
+<body>
+	<!-- navbar top -->
+   	<div class="wrapper">
+   		<!-- Header Starts here-->
+  		<% include include/header %>
+  		<!-- Header Ends here-->
+  		
+  		<div class="content" >
+  			<!-- Sidebar Starts Here-->
+  			<% include include/sidebar %>
+    		<!-- Sidebar Ends Here-->
+    		
+    		<section>
+      			<article>
+      				<div id="page-wrapper">
+        				<div class="row">
+       						<!-- Page Header -->
+        					<div class="col-lg-12">
+								<div  CLASS="hidden-xs sidemenu"> <button id="menu" CLASS="btn btn-sm btn-danger" title="Menu"><i class="fa fa-bars fa-2x"></i></button></div>
+        						<h1 class="page-header">Define Web Route</h1>
+        					</div>
+       						<!--End Page Header -->
+        				</div>
+
+           				<div class="row">
+            				<div class="col-sm-12">
+            					<form class="form-horizontal" action="/save/web_route" method="POST">
+            						<input type="hidden" class="form-control" id="table_name" name="table_name" value="web_routes">
+      								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="route_url">
+      								<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>">
+      								
+      								<input type="hidden" class="form-control" id="editorField" name="editorField" value="<% if (typeof editorField !== 'undefined' && editorField !== null) { %><%= editorField %><% }else{ %>_id<% } %>">
+      								<input type="hidden" class="form-control" id="editorValue" name="editorValue" value="<% if (typeof editorValue !== 'undefined' && editorValue !== null) { %><%= editorValue %><% } %>">
+      								
+            						<div class="form-group">
+                 						<label class="control-label col-md-3" for="">Select Table</label>
+                  						<div class="col-md-6 col-lg-4">
+                  							<select  required="required" class="form-control col-md-5 col-xs-12" name="table_selected" id="table_selected">
+                  							<option value="">-- Select Table --</option>
+                  							<% 	if (typeof collectionName !== 'undefined' && collectionName !== null) {
+                  									for(var i=0; i< collectionName.length; i++){
+                  								%>
+                  								<option value="<%= collectionName[i] %>" <% if (typeof contentObj.table_selected !== 'undefined' && contentObj.table_selected !== null && contentObj.table_selected == collectionName[i]) { %>selected<% } %>><%= collectionName[i] %></option>
+                  								<%	}
+                  								}
+                  							%>
+                    						</select>
+                  						</div>
+                					</div>
+                         			<div class="form-group">
+                  						<label class="control-label col-md-3" for="first-name">Route URL<span class="required">*</span></label>
+                  						<div class="col-md-6 col-lg-4">
+                    						<input type="text" required="required" id="route_url" name="route_url" class="form-control col-md-5 col-xs-12" value="<% if (typeof contentObj.route_url !== 'undefined' && contentObj.route_url !== null) { %><%= contentObj.route_url %><% } %>">
+                  						</div>
+                					</div>
+              						<div class="form-group">
+                  						<label class="control-label col-md-3" for="">Select Page<span class="required">*</span></label>
+                  						<div class="col-md-6 col-lg-4">
+                   							<input type="text" class="form-control col-md-5 col-xs-12" id="document" name="document" value="<% if (typeof contentObj.document !== 'undefined' && contentObj.document !== null) { %><%= contentObj.document %><% } %>">
+                  						</div>
+                					</div>
+                					OR
+                					<div class="form-group" >
+                  						<label class="control-label col-md-3" for="">Select Template<span class="required">*</span></label>
+                  						<div class="col-md-6 col-lg-4">
+                   							<input type="text" class="form-control col-md-5 col-xs-12" id="template" name="template" value="<% if (typeof contentObj.template !== 'undefined' && contentObj.template !== null) { %><%= contentObj.template %><% } %>">
+                  						</div>
+                					</div>
+                					<div class="form-group">
+    									<label for="" class="col-sm-3 control-label">Status</label>
+    									<div class="col-sm-9">
+    										<div class="radio" STYLE="float:left; margin-right:10px;">
+      		  									<label> <input type="radio" id="Status" name="Status" value="1" <% if (typeof contentObj.Status !== 'undefined' && contentObj.Status !== null && contentObj.Status == 1) { %>checked<% } %> > <strong style="font-weight:600">Active</strong></label>
+    			  							</div>
+				  							<div class="radio" STYLE="float:left;">
+      		  									<label> <input type="radio" id="Status" name="Status" value="0" <% if (typeof contentObj.Status !== 'undefined' && contentObj.Status !== null && contentObj.Status == 0) { %>checked<% }else if(typeof contentObj.Status !== 'undefined' && contentObj.Status !== null && contentObj.Status == 1){ }else{	%>checked<% } %> > <strong style="font-weight:600">Inactive</strong></label>
+    			  							</div>
+										</div>
+									</div>
+                					<div class="form-group">
+                   						<div class="col-md-9 col-lg-6">
+               								<div class="submit-btn-setting"> <button type="submit" class="btn palette-belize-hole btn-color margn-right-15">Submit</button>
+               								<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) {	%>
+               									<a href="/list/web_routes" class="btn btn-primary">Cancel</a>
+               								<%	}else{	%>
+               									<button type="reset" class="btn btn-primary">Reset</button>
+               								<% } %>
+               							</div>
+                					</div>
+              					</form>
+              				</div>
+            			</div>
+      				</div>
+      			</article>
+    		</section>
+    		<!--//body content--> 
+  		</div>
+  		<!--//Main Content--> 
+	</div>
+
+<!-- Footer Starts Here-->
+	<% include include/footer %>
+<!-- Footer Ends Here-->
+
+<!-- Page-Level Plugin Scripts-->
+<script>
+	
+	$(document).ready(function()	{
+		
+	});
+</script>
+</body>
+</html>

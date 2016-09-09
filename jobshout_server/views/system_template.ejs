@@ -1,0 +1,370 @@
+<% include include/main-header %>
+<style>
+   label{
+	   max-width:195px!important;
+	   text-align:left!important;
+	   margin-bottom:5pximportant;
+	   color:#515151;
+   }
+   @media(min-width:768px){
+   input[type="text"], select,textarea, input[type="password"] {
+	   max-width:300px;
+   }
+   textarea{
+	   height:100px!important;
+   }
+   
+   }
+   @media(min-width:992px){
+    .submit-btn-setting{
+	   margin-left:195px;
+   }
+   }
+    .dragitems{width: 20%; float: left; background: #f1f1f1;}
+        .dropitems{width: 70%;float: left;background: #f1f1f1;
+                   margin-left: 20px;padding:5px 5px 5px 5px;}
+        .dragitems ul{list-style-type: none;padding-left: 5px;
+                   display: block;}
+</style>
+</head>
+<body>
+	<!-- navbar top -->
+   	<div class="wrapper">
+   		<!-- Header Starts here-->
+  		<% include include/header %>
+  		<!-- Header Ends here-->
+  		
+  		<div class="content" >
+  			<!-- Sidebar Starts Here-->
+  			<% include include/sidebar %>
+    		<!-- Sidebar Ends Here-->
+    		
+    		<section>
+      			<article>
+      				<div id="page-wrapper">
+        				<div class="row">
+       						<!-- Page Header -->
+        					<div class="col-lg-12">
+								<div  CLASS="hidden-xs sidemenu"> <button id="menu" CLASS="btn btn-sm btn-danger" title="Menu"><i class="fa fa-bars fa-2x"></i></button></div>
+        						<h1 class="page-header">System Template</h1>
+        					</div>
+       						<!--End Page Header -->
+        				</div>
+
+           				<div class="row">
+            				<div class="col-sm-8">
+            					<% if (typeof queryStr !== 'undefined' && queryStr !== null) {
+    								if(queryStr.error_msg) {	%>
+									<div class="alert alert-danger alert-dismissable">
+             							<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                						<%= queryStr.error_msg %>
+            						</div>
+            						<% }
+           							if(queryStr.success_msg) {	%>
+										<div class="alert alert-success alert-dismissable">
+             								<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                							<%= queryStr.success_msg %>
+            							</div>
+            						<%	}
+            					}	%>
+            					<form class="form-horizontal" action="/save/system_template" method="POST">
+            						<input type="hidden" class="form-control" id="table_name" name="table_name" value="system_templates">
+      								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="code">
+      								<input type="hidden" class="form-control" id="editorField" name="editorField" value="<% if (typeof editorField !== 'undefined' && editorField !== null) { %><%= editorField %><% }else{ %>_id<% } %>">
+      								<input type="hidden" class="form-control" id="editorValue" name="editorValue" value="<% if (typeof editorValue !== 'undefined' && editorValue !== null) { %><%= editorValue %><% } %>">
+      								<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>">
+            						
+              						<div class="form-group">
+                  						<label class="control-label col-md-3" for="">Code<span class="required">*</span></label>
+                  						<div class="col-md-6 col-lg-4">
+                   							<input type="text"  required="required" class="form-control col-md-5 col-xs-12" id="code" name="code" value="<% if (typeof contentObj.code !== 'undefined' && contentObj.code !== null) { %><%= contentObj.code %><% } %>">
+                  						</div>
+                  						
+                  						<% if (typeof contentObj.code !== 'undefined' && contentObj.code !== null) { %>
+                  						<div class="col-md-6 col-lg-4">
+                  							<a class="btn btn-info" href="/list/<%= contentObj.code %>" target="_blank">View Page</a>
+                  						</div>
+                  						<% } %>
+                					</div>
+                					<div class="form-group">
+                  						<label class="control-label col-md-3" for="">Content<span class="required">*</span></label>
+                  						<div class="col-md-6 col-lg-4">
+                   							<select id="table" name="table" class="form-control col-md-5 col-xs-12" required="required">
+                   								<option value="">--Select Table--</option>
+                  								<% if (typeof collectionsArr !== 'undefined' && collectionsArr !== null && collectionsArr.length>=1) {
+                  									for(var i=0; i< collectionsArr.length; i++){
+                  								%>
+                  								<option value="<%= collectionsArr[i] %>" <% if (typeof contentObj.table !== 'undefined' && contentObj.table !== null && contentObj.table == collectionsArr[i]) { %>selected<% } %>><%= collectionsArr[i] %></option>
+                  								<%	}
+                  								} %>
+                    						</select>
+                   						</div>
+                   						<div class="col-md-6 col-lg-4">
+    										<div class="checkbox" STYLE="float:left; margin-right:10px;">
+      		  									<label> <input type="checkbox" id="status" name="status" value="1" <% if (typeof contentObj.status !== 'undefined' && contentObj.status !== null && contentObj.status == 1) { %>checked<% } %> > <strong style="font-weight:600">Active</strong></label>
+    			  							</div>
+				  						</div>
+                					</div>
+                					<div class="form-group">
+                  						<label class="control-label col-md-3" for="">Type <span class="required">*</span></label>
+                  						<div class="col-md-6 col-lg-4">
+                   							<select class="form-control col-md-5 col-xs-12" id="template_type" name="template_type" required="required" onChange="__chooseDetailView()">
+												<option value="list_view" <% if (typeof contentObj.table !== 'undefined' && contentObj.table !== null && contentObj.table == "list_view") { %>selected<% } %>	>List View</option>
+											</select>
+                  						</div>
+                					</div>
+                					<div class="form-group">
+                  						<label class="control-label col-md-3" for="first-name">Add filename for Detail View/Editor <span class="required">*</span></label>
+                  						<div class="col-md-6 col-lg-4">
+                   							<input type="text" required="required" value="<% if (typeof contentObj.editor_filename !== 'undefined' && contentObj.editor_filename !== null) { %><%= contentObj.editor_filename %><% } %>" class="form-control col-md-5 col-xs-12" id="editor_filename" name="editor_filename">
+                  						</div>
+                  						<div class="col-md-6 col-lg-4">
+    										<div class="checkbox" STYLE="float:left; margin-right:10px;">
+      		  									<label> <input type="checkbox" id="enable_editor" name="enable_editor" value="1" <% if (typeof contentObj.enable_editor !== 'undefined' && contentObj.enable_editor !== null && contentObj.enable_editor == 1) { %>checked<% } %> > <strong style="font-weight:600">Enable Editor</strong></label>
+    			  							</div>
+				  						</div>
+                					</div>
+                		<div class="form-group displayColumnsClass" style="display:none;">
+                			<label class="control-label col-md-3" for="first-name">Open Detail View by</label>
+                  			<div class="col-md-6 col-lg-4">
+                   				<select class="form-control col-md-5 col-xs-12" id="editor_field" name="editor_field" >
+                   					<option value="">-- Choose Field --</option>
+									
+								</select>
+                  			</div> 
+                  		</div>
+                  				
+                		<div class="form-group displayColumnsClass" style="display:none;">
+                			<input type="hidden" class="form-control col-md-5 col-xs-12" id="search_columns" name="search_columns">
+                			<input type="hidden" class="form-control col-md-5 col-xs-12" id="listing_columns" name="listing_columns">
+                 			<label class="control-label col-md-3 tablefieldClass" for="">Display Columns</label>
+                  			<div class="col-md-6 col-lg-4 tablefieldClass" id="tablefieldClass">
+                  				
+                    		</div>
+                		
+                 			<label class="control-label col-md-3 searchColumnClass" for="">Search Columns</label>
+                  			<div class="col-md-6 col-lg-4 searchColumnClass" id="searchColumnClass">
+                  				
+                    		</div>
+                		</div>
+                		<div class="form-group displayColumnsClass" style="display:none;">
+                  			<label class="control-label col-md-3 " for="first-name">Search Condition</label>
+                  			<div class="col-md-6 col-lg-4">
+                  				<select class="form-control col-md-5 col-xs-12 createQueryClass" id="search_condition" name="search_condition">
+									<option value="and" <% if (typeof contentObj.search_condition !== 'undefined' && contentObj.search_condition !== null && contentObj.search_condition == "and") { %>selected<% } %>	>AND</option>
+									<option value="or" <% if (typeof contentObj.search_condition !== 'undefined' && contentObj.search_condition !== null && contentObj.search_condition == "or") { %>selected<% } %>	>OR</option>
+                    			</select>
+                   			</div>
+                		</div>
+                					<div class="form-group">
+                   						<div class="col-md-9 col-lg-6">
+               								<div class="submit-btn-setting"> <button type="submit" class="btn palette-belize-hole btn-color margn-right-15 save_exit">Submit</button>
+               								<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) {	%>
+               									<a href="/list/system_templates" class="btn btn-primary">Cancel</a>
+               								<%	}else{	%>
+               									<button type="reset" class="btn btn-primary">Reset</button>
+               								<% } %>
+               								</div>
+               							</div>
+                					</div>
+              					</form>
+              				</div>
+              				<div class="col-sm-3  pull-right">
+              					<ul id="DragWordList" runat="server">
+              					<% 	if (typeof tokens !== 'undefined' && tokens !== null) {
+                  						for(var i=0; i< tokens.length; i++){	%>
+                  						<li><%= tokens[i].code %></li>
+                  					<%	}
+                  					}
+                  				%>
+                  				</ul>
+              				</div>
+            			</div>
+      				</div>
+      			</article>
+    		</section>
+    		<!--//body content--> 
+  		</div>
+  		<!--//Main Content--> 
+	</div>
+
+<!-- Footer Starts Here-->
+	<% include include/footer %>
+<!-- Footer Ends Here-->
+
+<!-- Page-Level Plugin Scripts-->
+
+<script src="plugins/jquery-ui.min.js"></script>
+<script>
+function __chooseDetailView(){
+	var e=$("#template_type").val();
+	if(e=="list_view"){
+		$(".ChooseDetailView").show();
+	}else{
+		$(".ChooseDetailView").hide();
+	}
+}
+
+function table_options(){
+	if($('#table').val()!=""){
+		$.getJSON("/fetchTableColumns?e="+$('#table').val(),function(response){
+			if(response.error){
+				$(".displayColumnsClass").hide();
+				$("#tablefieldClass").html("");
+				$("#editor_field").html("");
+				$("#searchColumnClass").html("");
+			}else{
+				var table_fieldhtmlStr="", searchColumnsStr="", selectedEditField="" , editorFieldsStr="<option value=''> --Select Field-- </option>";
+				var selectedListArr= new Array(), selectedSearchArr= new Array(), searchClauseArr= new Array();
+				
+				table_fieldhtmlStr='<div class="checkbox"><label ><input type="checkbox" class="createQueryClass" value="" id="all_list_field"> <strong style="font-weight:600">Select all</strong></label></div>';
+				searchColumnsStr='<div class="checkbox"><label ><input type="checkbox" class="createQueryClass" value="" id="all_search_field" > <strong style="font-weight:600">Select all</strong></label></div>';
+					
+				<% if (typeof contentObj.listing_columns !== 'undefined' && contentObj.listing_columns !== null && contentObj.listing_columns !== "") { %>
+					var listing_columns="<%= contentObj.listing_columns %>";
+					selectedListArr= listing_columns.split(',');
+				<% } %>
+				
+				<% if (typeof contentObj.search_columns !== 'undefined' && contentObj.search_columns !== null && contentObj.search_columns !== "") { %>
+					var tempselectedSearchArr=<%- JSON.stringify(contentObj.search_columns) %>;
+					var selectedSearchArr = JSON.parse(tempselectedSearchArr);
+				<% } %>
+				
+				<% if (typeof contentObj.editor_field !== 'undefined' && contentObj.editor_field !== null && contentObj.editor_field !== "") { %>
+					selectedEditField="<%= contentObj.editor_field %>";
+				<% } %>
+				
+				$.each(response, function(i,col){
+					editorFieldsStr+="<option value='"+col+"'"
+					if(col==selectedEditField){
+						editorFieldsStr+=' selected ';
+					}
+					editorFieldsStr+=">"+col+"</option>";
+					var listcheckedStr="", searchcheckedStr="", searchClauseStr="";
+					if ((selectedListArr.length)>0 && ($.inArray(col, selectedListArr) >=0)) {
+         				listcheckedStr="checked";
+        			}
+        			        			
+        			if (selectedSearchArr.length>0) {
+						for(var i=0; i< selectedSearchArr.length; i++){
+							$.each( selectedSearchArr[i], function( key, value ) {
+								if(key==col){
+									searchcheckedStr="checked";
+									searchClauseStr=value;
+								}
+  								//console.log( key + ": " + value );
+							});
+						}
+					}
+        			
+					table_fieldhtmlStr+='<div class="checkbox"><label ><input type="checkbox" '+listcheckedStr+' id="list_fields_'+col+'" value="'+col+'" class="list_fields createQueryClass" > <strong style="font-weight:600">'+col+'</strong></label></div>';
+					searchColumnsStr+='<div class="checkbox col-md-4"><label ><input type="checkbox" '+searchcheckedStr+' value="'+col+'" id="search_fields_'+col+'" class="search_fields createQueryClass" > <strong style="font-weight:600">'+col+'</strong></label></div>';
+					searchColumnsStr+='<select  class="form-control col-md-2 col-xs-12 createQueryClass" id="'+col+'_clause">';
+					searchColumnsStr+='<option value="contains"';
+					if(searchClauseStr=="contains"){
+						searchColumnsStr+=' selected ';
+					}
+					searchColumnsStr+='>Contains</option>';
+					searchColumnsStr+='<option value="="';
+					if(searchClauseStr=="="){
+						searchColumnsStr+=' selected ';
+					}
+					searchColumnsStr+='>Is</option>';
+					searchColumnsStr+='<option value="!="';
+					if(searchClauseStr=="!="){
+						searchColumnsStr+=' selected ';
+					}
+					searchColumnsStr+='>!=</option>';
+					searchColumnsStr+='<option value="starts_with"';
+					if(searchClauseStr=="starts_with"){
+						searchColumnsStr+=' selected ';
+					}
+					searchColumnsStr+='>Starts with</option>';
+					searchColumnsStr+='<option value="ends_with"';
+					if(searchClauseStr=="ends_with"){
+						searchColumnsStr+=' selected ';
+					}
+					searchColumnsStr+='>Ends with</option>';
+                	searchColumnsStr+='</select>';
+				});
+				
+				$(".displayColumnsClass").show();
+				$("#tablefieldClass").html(table_fieldhtmlStr);
+				$("#editor_field").html(editorFieldsStr);
+				$("#searchColumnClass").html(searchColumnsStr);
+			}
+			
+		});
+	}
+}
+
+$(document).ready(function() {
+	$("#template_type").trigger('change');
+	
+	$('.save_exit').on("click", function(){
+		var selectedSearchFieldsArr=new Array;
+		var i=0, j=0;
+		$('.search_fields').each(function(){
+			var valStr= $(this).val();
+			if( $('#search_fields_'+valStr+':checked').length ){
+				var searchClause= $("#"+valStr+"_clause").val();
+				var searchObj={};
+				searchObj[valStr]= searchClause;
+				selectedSearchFieldsArr[i]= searchObj;
+				i++;
+			}
+		});
+		var selectedSearchFieldsStr= JSON.stringify(selectedSearchFieldsArr);
+		$("#search_columns").val(selectedSearchFieldsStr);
+		
+		var selectedListFieldsArr=new Array();
+		$('.list_fields').each(function(){
+			var valStr= $(this).val();
+			if( $('#list_fields_'+valStr+':checked').length ){
+				selectedListFieldsArr[j]= valStr;
+				j++;
+			}
+		});
+		var selectedListFieldsStr= selectedListFieldsArr.join();
+		$("#listing_columns").val(selectedListFieldsStr);
+	});
+	
+	$(document).on("click","#all_list_field",function(e){
+		if( $('#all_list_field:checked').length ){
+			$('.list_fields').prop('checked', true);
+		}else{
+			$('.list_fields').prop('checked', false);
+		}
+	});
+	
+	$(document).on("click","#all_search_field",function(e){
+		if( $('#all_search_field:checked').length ){
+			$('.search_fields').prop('checked', true);
+		}else{
+			$('.search_fields').prop('checked', false);
+		}
+	});	
+	
+	$(document).on("click",".search_fields",function(e){
+		$('.search_fields').each(function(){
+			var valStr= $(this).val();
+			if( $('#search_fields_'+valStr+':checked').length ){
+
+			}else{
+				$('#all_search_field').prop('checked', false);
+			}
+		});
+	});	
+	<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %>
+		table_options();
+	<% } %>
+	
+	
+	$('#table').change(function(){
+		table_options();
+	});		
+});
+
+</script>
+</body>
+</html>

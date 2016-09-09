@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenthmatrix CRM</title>
+    <!-- Core CSS - Include with every page -->
+    <link href="assets/plugins/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="assets/plugins/combobox/bootstrap-combobox.css" rel="stylesheet">
+    <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="assets/css/animate.min.css" rel="stylesheet">
+    <link href="assets/plugins/pace/pace.css" rel="stylesheet">
+    
+   <link href="assets/css/main-style.css" rel="stylesheet" />
+    <!-- page specific css -->
+    <link href="assets/plugins/datetime-picker/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+    <link href="assets/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css" rel="stylesheet" />
+  <style>
+@media (min-width: 1200px) and (max-width:1450px){
+	
+	.col-sm-3{
+		width:33%!important;
+	}
+		.col-sm-6{
+		width:67%!important;
+	}
+	
+}
+</style>
+   
+   </head>
+<body>
+ <!-- navbar top -->
+        <nav class="navbar navbar-default" role="navigation" id="navbar">
+            <!-- navbar-header -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">
+                    <img src="assets/img/cms-logo.png" alt="" />
+                </a>
+            </div>
+            <!-- end navbar-header -->
+            <!-- navbar-top-links -->
+            <ul class="nav navbar-top-links navbar-right">
+                <!-- main dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <span class="top-label label label-danger">3</span><i class="fa fa-envelope-o"></i>
+                    </a>
+                    <!-- dropdown-messages -->
+                    <ul class="dropdown-menu dropdown-messages  animated fadeInDown">
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <strong><span class=" label label-danger">Andrew Smith</span></strong>
+                                    <span class="pull-right text-muted">
+                                        <em>Yesterday</em>
+                                    </span>
+                                </div>
+                                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <strong><span class=" label label-info">Jonney Depp</span></strong>
+                                    <span class="pull-right text-muted">
+                                        <em>Yesterday</em>
+                                    </span>
+                                </div>
+                                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <strong><span class=" label label-success">Jonney Depp</span></strong>
+                                    <span class="pull-right text-muted">
+                                        <em>Yesterday</em>
+                                    </span>
+                                </div>
+                                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="text-center" href="#">
+                                <strong>Read All Messages</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- end dropdown-messages -->
+                </li>
+
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <span class="top-label label label-success">4</span>  <i class="fa fa-tasks"></i>
+                    </a>
+                    <!-- dropdown tasks -->
+                    <ul class="dropdown-menu dropdown-tasks  animated fadeInDown">
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Task 1</strong>
+                                        <span class="pull-right text-muted">40% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                                            <span class="sr-only">40% Complete (success)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Task 2</strong>
+                                        <span class="pull-right text-muted">20% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+                                            <span class="sr-only">20% Complete</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Task 3</strong>
+                                        <span class="pull-right text-muted">60% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                            <span class="sr-only">60% Complete (warning)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Task 4</strong>
+                                        <span class="pull-right text-muted">80% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
+                                            <span class="sr-only">80% Complete (danger)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="text-center" href="#">
+                                <strong>See All Tasks</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- end dropdown-tasks -->
+                </li>
+
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <span class="top-label label label-warning">5</span>  <i class="fa fa-bell-o "></i>
+                    </a>
+                    <!-- dropdown alerts-->
+                    <ul class="dropdown-menu dropdown-alerts  animated fadeInDown">
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-comment fa-fw"></i>New Comment
+                                    <span class="pull-right text-muted small">4 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-twitter fa-fw"></i>3 New Followers
+                                    <span class="pull-right text-muted small">12 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-envelope fa-fw"></i>Message Sent
+                                    <span class="pull-right text-muted small">4 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-tasks fa-fw"></i>New Task
+                                    <span class="pull-right text-muted small">4 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-upload fa-fw"></i>Server Rebooted
+                                    <span class="pull-right text-muted small">4 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="text-center" href="#">
+                                <strong>See All Alerts</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- end dropdown-alerts -->
+                </li>
+
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user"></i>
+                    </a>
+                    <!-- dropdown user-->
+                    <ul class="dropdown-menu dropdown-user animated fadeInDown" >
+                        <li><a href="#"><i class="fa fa-user fa-fw"></i>User Profile</a>
+                        </li>
+                        <li><a href="#"><i class="fa fa-gear fa-fw"></i>Settings</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i>Logout</a>
+                        </li>
+                    </ul>
+                    <!-- end dropdown-user -->
+                </li>
+                <!-- end main dropdown -->
+            </ul>
+            <!-- end navbar-top-links -->
+
+        </nav>
+        <!-- end navbar top -->
+    <!--  wrapper -->
+    <div id="wrapper">
+    <div class="sidebar">
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <!-- sidebar-collapse -->
+            <div class="sidebar-collapse" >
+                <!-- side-menu -->
+                <ul class="nav" id="side-menu">
+                    <li>
+                        <!-- user image section-->
+                        <div class="user-section">
+                            <div class="user-section-inner">
+                                <img src="assets/img/user.jpg" alt="">
+                            </div>
+                            <div class="user-info">
+                                <div>Jonny <strong>Deen</strong></div>
+                                <div class="user-text-online">
+                                    <span class="user-circle-online btn btn-success btn-circle "></span>&nbsp;Online
+                                </div>
+                            </div>
+                        </div>
+                        <!--end user image section-->
+                    </li>
+                    <li class="sidebar-search">
+                        <!-- search section-->
+                        <div class="input-group custom-search-form">
+                            <input class="form-control" placeholder="Search..." type="text">
+                            <span class="input-group-btn">
+                                <button class="btn palette-belize-hole btn-color" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                        <!--end search section-->
+                    </li>
+                    <li class="active">
+                        <a href="index.html"><i class="fa fa-dashboard fa-fw"></i>Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-calendar"></i> Time Slips<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li>
+                                <a href="enter-timeslip.html">Enter New Timeslip</a>
+                            </li>
+							
+							<li> <a href="#">Timeslips</a> </li>
+								<li> <a href="#">Calendar View</a> </li>
+							
+                            <li>
+                                <a href="morris.html">View Timeslips <span class="fa arrow"></span></a>
+                                 <ul class="nav nav-third-level collapse">
+                                    <li>
+                                        <a href="#">Today's </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">This Week's </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">This Month's</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Calender View</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+					
+					
+					
+					
+					
+					
+					<li>
+                        <a href="#"><i class="fa fa-tree"></i> Holidays <span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li>
+                                <a href="#">Holidays</a>
+                            </li>
+                            <li>
+                                <a href="#">Request New Holiday</a>
+                            </li>
+                            <li>
+                                <a href="#">Add New Company Holiday</a>
+                            </li>
+                          
+                        </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+					
+					<li>
+                        <a href="#"><i class="fa fa-tasks"></i> Tasks<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="#">Tasks</a> </li>
+							<li><a href="#">Enter New Task</a></li>
+                            </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+					
+					
+					
+					<li>
+                        <a href="#"><i class="fa fa-file-text"></i> Analysis Account<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="#">List Analysis Account</a> </li>
+							<li><a href="#">Enter Analysis Account</a></li>
+                            </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+					
+					
+					<li>
+                        <a href="#"><i class="fa fa-users"></i> Customers<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li>
+                                <a href="customer-listing.html">Customers</a>
+                            </li>
+							
+							<li> <a href="add-new-customer.html">Enter New Customer</a> </li>
+								<li> <a href="#">Suppliers</a> </li>
+							
+                            <li>
+                                <a href="#">Sets <span class="fa arrow"></span></a>
+                                 <ul class="nav nav-third-level collapse">
+                                    <li>
+                                        <a href="#">Jobshout_Customers </a>
+                                    </li>
+                            </ul>
+                            </li>
+                        </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+						<li>
+                        <a href="#"><i class="fa fa-file-code-o"></i> Script Runner<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="#">Enter FR Script</a> </li>
+						
+                            </ul>
+                        <!-- second-level-items -->
+                    </li>
+	
+
+
+					<li>
+                        <a href="#"><i class="fa fa-th"></i> Purchase Orders<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="#"> List Purchase Orders</a> </li>
+							 <li> <a href="#"> Enter Purchase Order</a> </li>
+						
+                            </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+					
+					
+					<li>
+                        <a href="#"><i class="fa fa-file-text"></i> Purchase Invoices<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="#"> List Purchase Invoices</a> </li>
+							 <li> <a href="#"> Enter New Purchase Invoice</a> </li>
+						
+                            </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+					
+					
+					
+					<li>
+                        <a href="#"><i class="fa fa-file-text-o"></i> Invoices<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li>
+                                <a href="enter-timeslip.html">Invoices</a>
+                            </li>
+							
+							<li> <a href="#">Enter New Invoice</a> </li>
+								<li> <a href="#">Outstanding Invoices</a> </li>
+							
+                            <li>
+                                <a href="morris.html">Sets <span class="fa arrow"></span></a>
+                                 <ul class="nav nav-third-level collapse">
+                                    <li><a href="#">ELSVIERMAY2013 </a> </li>
+									
+    <li><a href="#">Payement570000542</a> </li>
+    <li><a href="#">HCLPending2012-July2013</a> </li>
+   <li><a href="#"> NovMonthly2013</a> </li>
+   <li><a href="#"> iModerni_Review_Dec2014</a> </li>
+   <li><a href="#"> Lexis Nexis</a> </li>
+                            </ul>
+                            </li>
+                        </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+					
+					<li>
+                        <a href="#"><i class="fa fa-users"></i> Employees<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="#"> Employees</a> </li>
+							 <li> <a href="#"> Enter New Employee</a> </li>
+							 	 <li> <a href="#">  Employees Holidays</a> </li>
+						
+                            </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+					
+					<li>
+                        <a href="#"><i class="fa fa-file-text"></i> Documents<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="#"> Documents</a> </li>
+							 <li> <a href="#"> Enter New Document</a> </li>
+							
+						
+                            </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+					
+					
+						<li>
+				
+                        <a href="#" ><span CLASS="contact-icon"> Contacts</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="contact-listing.html"> Contacts</a> </li>
+							 <li> <a href="add-new-contact.html"> Enter New Contact</a> </li>
+							
+                            </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+					
+					
+					<li>
+                        <a href="#"><i class="fa fa-edit"></i>	Add Mileage Expenses<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="#"> Travel Expense Sheet</a> </li>
+							 <li> <a href="#"> Enter New Travel Expense Sheet</a> </li>
+							
+                            </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+					
+					<li>
+                        <a href="#"><i class="fa fa-users"></i>	Groups<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="#">Groups</a> </li>
+							 <li> <a href="#"> Enter New Group</a> </li>
+							
+                            </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+					
+						
+					<li>
+					
+					  <a href="#" ><span CLASS="analysis-icon"> Analysis Ledger</span><span class="fa arrow"></span></a>
+					  
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="#"> List Analysis Ledger</a> </li>
+							 <li> <a href="#"> Enter Analysis Ledger</a> </li>
+							
+                            </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+					
+					
+					<li>
+                        <a href="#"><i class="fa fa-reorder"></i>	Work Orders<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="#"> Orders</a> </li>
+							 <li> <a href="#"> Enter New Work Order</a> </li>
+							
+                            </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+					<li>
+                        <a href="#"><i class="fa fa-file-text"></i>	Receipts<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="#"> List Receipts</a> </li>
+
+							 <li> <a href="#">   Enter New Receipt</a> </li>
+							
+                            </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+					<li>
+                        <a href="#"><i class="fa fa-book"></i>	Projects<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="#"> Projects</a> </li>
+							 <li> <a href="#">   Enter New Projects</a> </li>
+							
+                            </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+						<li>
+                        <a href="#"><i class="fa fa-reorder"></i>	Payments<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="#"> List Payments</a> </li>
+							 <li> <a href="#">   Enter New Payment</a> </li>
+							
+                            </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+					
+					
+						<li>
+                        <a href="#"><i class="fa fa-group"></i>	Leads<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="#"> Leads</a> </li>
+							   <li> <a href="#"> Enter New Lead</a> </li>
+							      <li> <a href="#"> Lead Contacts</a> </li>
+								     <li> <a href="#"> Enter New Lead Contact</a> </li>
+							 
+							
+                            </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+					  
+				
+					<li>
+                        <a href="#"><i class="fa fa-folder-o"></i>	Emails Queue<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="#"> Email queue</a> </li>
+							   <li> <a href="#"> New Mail</a> </li>
+							 
+                            </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+					
+					<li>
+					
+					  <a href="#" ><span CLASS="domains-icon"> Domains</span><span class="fa arrow"></span></a>
+                      
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="#"> Domains</a> </li>
+							   <li> <a href="#">  Enter New Domain</a> </li>
+					        </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+					
+					
+					<li>
+					
+					
+					  <a href="#" ><span CLASS="bank-statement-icon"> Bank Statement Entries</span><span class="fa arrow"></span></a>
+					   
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="enter-timeslip.html">List Bank Entries</a>
+                            </li>
+							
+							<li> <a href="#">Enter New Bank Entry</a> </li>
+							
+                            <li>
+                                <a href="morris.html">Sets <span class="fa arrow"></span></a>
+                                 <ul class="nav nav-third-level collapse">
+                                    <li><a href="#">StatementWithoutBills </a> </li>
+	
+                            </ul>
+                            </li>
+                        </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+					
+					
+					<li>
+                        <a href="#"><i class="fa fa-globe"></i> Sites<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="#"> Sites</a> </li>
+							 <li> <a href="#"> Enter New Site</a> </li>
+							  <li> <a href="#"> FTP Details</a> </li>
+							   <li> <a href="#"> Enter New FTP Detail</a> </li>
+							
+					        </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+					<li>
+                        <a href="#"><i class="fa fa-book"></i>	VT CashBook Activities<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="#"> List Activities</a> </li>
+							 <li> <a href="#"> Enter New Activity</a> </li>
+							
+					        </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+					
+					<li>
+                        <a href="#"><i class="fa fa-file-text"></i>	Products<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="product-listing.html">Products</a> </li>
+							 <li> <a href="add-product.html">  Enter New Product</a> </li>
+							
+					        </ul>
+                        <!-- second-level-items -->
+                    </li>
+					
+					
+						
+					<li>
+                        <a href="#"><i class="fa fa-cubes"></i>	Modules<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="#">Modules</a> </li>
+							 <li> <a href="#">  Enter New Module</a> </li>
+							
+					        </ul>
+                        <!-- second-level-items -->
+						 
+                    </li>
+					
+					
+					<li>
+                        <a href="#"><i class="fa fa-server"></i>	Servers<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="#">Servers</a> </li>
+							 <li> <a href="#">   Enter New Server</a> </li>
+							
+					        </ul>
+                        <!-- second-level-items -->
+						 
+                    </li>
+    
+                    
+                </ul>
+                <!-- end side-menu -->
+            </div>
+            <!-- end sidebar-collapse -->
+        </nav>
+
+        <!-- navbar side -->
+        </div>
+        
+        <!-- end navbar side -->
+       
+        <!--  page-wrapper -->
+        
+        <div id="page-wrapper">
+            <div class="row">
+                <!-- Page Header -->
+                <div class="col-lg-12">
+                    <h1 class="page-header">Document Entry Page</h1>
+                </div>
+                <!--End Page Header -->
+            </div>
+            
+           
+         
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel" style="padding-top:20px;"> 
+      
+      
+      <div class="panel-body no-padding-top bg-white"> 
+     <div data-example-id="togglable-tabs">
+    <ul id="new-customer-tab" class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active"><a href="#customerinfo" id="home-tab" role="tab" data-toggle="tab" aria-controls="customer-info" aria-expanded="true">Page Editor</a></li>
+      <li role="presentation"><a href="#licenceno" role="tab" id="profile-tab" data-toggle="tab" aria-controls="licenceno">Search Optimisation</a></li>  
+     </ul>
+    <div id="myTabContent" class="tab-content" style="padding-top:25px; border-left: 1px solid #ddd; border-right: 1px solid #ddd;  border-bottom: 1px solid #ddd; padding-bottom:25px; padding-left:15px; padding-right:15px;">
+      <div role="tabpanel" class="tab-pane fade in active" id="customerinfo" aria-labelledby="home-tab">
+      <form class="form-horizontal">
+       		 <div class="row">
+           		  <div class=" col-sm-12 col-lg-9">
+             
+  <div class="form-group">
+    <label for="" class="col-sm-3 control-label">Heading<sup class="required">*</sup></label>
+    <div class="col-sm-9  ">
+      <input type="text" class="form-control" id="" placeholder="">
+    </div>
+  </div>
+  
+  
+  <div class="form-group">
+    <label for="firstname" class="col-sm-3  control-label">Sub heading </label>
+    <div class="col-sm-9">
+      <input type="text" class="form-control" id="" placeholder="">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="" class="col-sm-3 control-label">Body </label>
+    <div class="col-sm-9">
+     <TEXTAREA CLASS="form-control" STYLE="height:500px;"></TEXTAREA>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="" class="col-sm-3 control-label">Status</label>
+    <div class="col-sm-9">
+    
+								<div class="radio" STYLE="float:left; margin-right:10px;">
+      		  		<label> <input type="radio"> <strong style="font-weight:600">Active</strong></label>
+    			  </div>
+				  
+				  <div class="radio" STYLE="float:left;">
+      		  		<label> <input type="radio"> <strong style="font-weight:600">Inactive</strong></label>
+    			  </div>
+											
+										
+    </div>
+  </div>
+  
+  
+  
+  <div class="form-group">
+    <label for="" class="col-sm-3 control-label">Reference</label>
+    <div class="col-sm-9">
+	<input type="text" class="form-control" id="" placeholder="">
+	 </div>
+  </div>
+   
+  
+  
+    
+    
+    
+    
+    
+    
+    
+      
+      
+    
+ 
+ 
+             </div>
+       			 
+             
+       		 </div>
+             
+             </form>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="licenceno" aria-labelledby="profile-tab">
+       		 <form class="form-horizontal">
+             	<div class="row">
+                	<div class="col-sm-10  col-md-12 col-lg-9">
+                        <div class="form-group">
+                              <label for="" class="col-sm-3 control-label">Code<sup class="required">*</sup></label>
+                             <div class="col-sm-9">
+                              <input type="text" class="form-control" id="" placeholder="" >
+							  <span STYLE="font-size:12px; color:#737373;">URL (SEO friendly)</span>
+							  <span class="help-block" STYLE="font-size:12px;">
+													<input name="chk_manual" id="chk_manual" value="0" type="checkbox">
+													I want to manually enter code</span>
+                             </div>
+                        </div>
+                        <div class="form-group">
+                              <label for="" class="col-sm-3 control-label">Short URL</label>
+                             <div class="col-sm-9">
+                              <input type="text" class="form-control" id="" placeholder="">
+                             </div>
+                        </div>
+                        <div class="form-group">
+                              <label for="" class="col-sm-3 control-label">Window Title</label>
+                             <div class="col-sm-9">
+                              <input type="text" class="form-control" id="" placeholder="">
+                             </div>
+                        </div>
+                        <div class="form-group">
+                              <label for="" class="col-sm-3 control-label">Meta Data Keywords</label>
+                             <div class="col-sm-9">
+                             <TEXTAREA CLASS="form-control" STYLE="height:220px;"></TEXTAREA>
+							 <span STYLE="font-size:11px;">Search terms relevant to this page to find content of this page easily</span>
+                             </div>
+                        </div>
+                        <div class="form-group">
+                              <label for="" class="col-sm-3 control-label">Meta Data Description</label>
+                             <div class="col-sm-9">
+                             <TEXTAREA CLASS="form-control" STYLE="height:220px;"></TEXTAREA>
+							 <span STYLE="font-size:11px;">Overview which describes this page (About 300 words)</span>
+							 <span class="help-block" STYLE="font-size:12px;">
+													<input name="chk_manual" id="chk_manual" value="0" type="checkbox">
+													 I want to manually enter meta tags</span>
+							 
+                             </div>
+                        </div>
+                        
+                        
+                         
+                        
+                	</div>
+                   
+                
+                </div>
+                    
+             </form>   
+      </div>
+      
+         
+     
+    </div>
+     
+  </div>
+   <div class="col-sm-12 margin-top-15 " ALIGN="CENTER">
+                <button class="btn  palette-belize-hole btn-color margin-right-5 btn-sm "> Save Changes</button>
+                </div>
+        
+      </div>
+	  
+    </div>
+	 
+   
+  </div>
+  
+  
+
+  
+  <!-- /.col --> 
+</div>            
+
+         </div>   
+          
+       
+        <!-- end page-wrapper -->
+
+    </div>
+    <!-- end wrapper -->
+    <div id="myModal" class="modal  fade in" role="dialog"  data-backdrop="true">
+       
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header top-right-bdr-radius palette-belize-hole">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h3 class="modal-title" style="font-size:18px; color:#fff; line-height:normal;">License Manager</h3>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal">
+  <div class="form-group">
+    <label for="" class="col-sm-3 control-label">Version</label>
+    <div class="col-sm-9">
+      
+      <select name="Version" id="Version" class="form-control">
+										<option value="7.0">7.0</option>
+										<option value="6.7">6.7</option>
+									</select>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="" class="col-sm-3 control-label">Vertical</label>
+    <div class="col-sm-9">
+           <select name="Vertical" id="Vertical" class="form-control">
+										<option value="Generic">Generic</option>
+										<option value="Catalog">Catalog</option>
+										<option value="Directory">Directory</option>
+										<option value="Classifieds">Classifieds</option>
+										<option value="Price_list">Price List</option>
+										<option value="Course_Guide">Course Guide</option>
+										<option value="Yearbook">Yearbook</option>
+									</select>
+    </div>
+  </div>
+  <div class="form-group">
+   <label for="is" class="col-sm-3 control-label">Platform</label>
+    <div class=" col-sm-9">
+      <div class="radio">
+        <label >
+          <input type="radio" name="platform"> Mac
+        </label>
+        <label>
+          <input type="radio" name="platform"> Windows
+        </label>
+        <label>
+          <input type="radio" name="platform"> Multi-user
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+   <label for="inputPassword3" class="col-sm-3 control-label">Type of License</label>
+    <div class=" col-sm-9">
+      <div class="radio">
+        <label >
+          <input type="radio" name="licensetype"> Enterprise
+        </label>
+        <label>
+          <input type="radio" name="licensetype"> Standard
+        </label>
+        <label>
+          <input type="radio" name="licensetype"> Chameleon
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="" class="col-sm-3 control-label">Number Of Users</label>
+    <div class="col-sm-9">
+          <input type="text" class="form-control">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="" class="col-sm-3 control-label">License Number</label>
+    <div class="col-sm-9">
+          <input type="text" class="form-control">
+    </div>
+  </div>
+</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn palette-belize-hole btn-color btn-sm no-margin-left">Generate New License</button>
+				<button type="button" class="btn palette-belize-hole btn-color btn-sm no-margin-left">Activate</button>				
+				<button type="button" class="btn palette-belize-hole  btn-color btn-sm no-margin-left">Email</button>
+                <button type="button" class="btn btn-primary btn-color  btn-sm no-margin-left" data-dismiss="modal">Done</button>
+                
+			</div>
+		</div>
+	</div>
+</div>
+    <div id="activeLic" class="modal  fade in" role="dialog"  data-backdrop="true">
+       
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header top-right-bdr-radius palette-belize-hole">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h3 class="modal-title" style="font-size:18px; color:#fff; line-height:normal;">License Manager</h3>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal">
+  <div class="form-group">
+    <label for="" class="col-sm-3 control-label">Version</label>
+    <div class="col-sm-9">
+      
+      <select name="Version" id="Version" class="form-control">
+										<option value="7.0">7.0</option>
+										<option value="6.7">6.7</option>
+									</select>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="" class="col-sm-3 control-label">Vertical</label>
+    <div class="col-sm-9">
+           <select name="Vertical" id="Vertical" class="form-control">
+										<option value="Generic">Generic</option>
+										<option value="Catalog">Catalog</option>
+										<option value="Directory">Directory</option>
+										<option value="Classifieds">Classifieds</option>
+										<option value="Price_list">Price List</option>
+										<option value="Course_Guide">Course Guide</option>
+										<option value="Yearbook">Yearbook</option>
+									</select>
+    </div>
+  </div>
+  <div class="form-group">
+   <label for="is" class="col-sm-3 control-label">Platform</label>
+    <div class=" col-sm-9">
+      <div class="radio">
+        <label >
+          <input type="radio" name="platform"> Mac
+        </label>
+        <label>
+          <input type="radio" name="platform"> Windows
+        </label>
+        <label>
+          <input type="radio" name="platform"> Multi-user
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+   <label for="inputPassword3" class="col-sm-3 control-label">Type of License</label>
+    <div class=" col-sm-9">
+      <div class="radio">
+        <label >
+          <input type="radio" name="licensetype"> Enterprise
+        </label>
+        <label>
+          <input type="radio" name="licensetype"> Standard
+        </label>
+        <label>
+          <input type="radio" name="licensetype"> Chameleon
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="" class="col-sm-3 control-label">Number Of Users</label>
+    <div class="col-sm-9">
+          <input type="text" class="form-control">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="" class="col-sm-3 control-label">License Number</label>
+    <div class="col-sm-9">
+          <input type="text" class="form-control">
+    </div>
+  </div>
+</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn palette-belize-hole btn-color btn-sm no-margin-left">Generate New License</button>
+				<button type="button" class="btn palette-belize-hole btn-color btn-sm no-margin-left">Activate</button>				
+				<button type="button" class="btn palette-belize-hole  btn-color btn-sm no-margin-left">Email</button>
+                <button type="button" class="btn btn-primary btn-color  btn-sm no-margin-left" data-dismiss="modal">Done</button>
+                
+			</div>
+		</div>
+	</div>
+</div>
+
+
+    <!-- Core Scripts - Include with every page -->
+    <script src="assets/plugins/jquery-1.10.2.js"></script>
+    <script src="assets/plugins/bootstrap/bootstrap.min.js"></script>
+    <script src="assets/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="assets/plugins/pace/pace.js" type="text/javascript"></script>
+    <script src="assets/scripts/custom.js"></script>
+    <!-- Page-Level Plugin Scripts-->
+    
+    <script src="assets/plugins/combobox/bootstrap-combobox.js"></script>
+       <script type="text/javascript">
+      //<![CDATA[
+        $(document).ready(function(){
+          $('.combobox').combobox()
+        });
+      //]]>
+    </script>
+    <script type="text/javascript" src="assets/plugins/datetime-picker/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+
+<script type="text/javascript">
+    $('.form_datetime').datetimepicker({
+        //language:  'fr',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		forceParse: 0,
+		 pickerPosition: "bottom-left",		
+        showMeridian: 1,
+		 pickTime: 0
+		
+		    });
+	
+</script>
+<script src="assets/plugins/bootstrap/bootstrap-tabcollapse.js"></script>
+ <script type="text/javascript">
+    	    $('#new-customer-tab').tabCollapse();
+	    </script>
+        <script>
+        $('#new-customer-tab').on('click', function(e){
+			$('#new-customer-tab').toggleClass('glyphicon glyphicon-chevron-down , glyphicon glyphicon-chevron-up', 200);
+});
+<!-- END JAVASCRIPTS -->
+</script>
+
+
+	
+    
+
+</body>
+
+</html>

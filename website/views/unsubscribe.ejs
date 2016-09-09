@@ -1,0 +1,117 @@
+<% var pageTileStr= "Subscribe to mailing";
+if (typeof unsubscribed !== 'undefined' && unsubscribed !== null && (unsubscribed==1 || unsubscribed=="1")) {
+pageTileStr= "Unsubscribe to mailing";
+}	%>
+
+<%  include include/main-header %>
+<style>
+.unsub_pg_wrapper{
+	text-align:center;
+	max-width:766px;
+	margin:0 auto;
+	font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;	
+	padding: 0 15px;
+}
+.unsub_pg_logo{
+	border-bottom:1px solid #ccc;
+	margin-bottom:25px;
+	text-align:left;
+	margin-top:15px;
+	padding-bottom:10px;
+}
+.unsub_pg_text {
+    text-align: center;
+    padding: 10px;
+    font-size: 24px;
+	margin-bottom:15px;
+   }
+.unsub_pg_text1 {
+    text-align: center;
+    padding-top: 16px;
+    font-size: 24px;
+    color: #999;
+	
+}
+.unsub_pg_button {
+    color: #FFF;
+    background-color: #33C3F0;
+    border-color: #33C3F0;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+	text-decoration:none;
+}
+.unsub_pg_button:hover {
+	background-color: #1EAEDB;
+	border-color: #1Ecolor: #FFF;
+	text-decoration:none;
+	
+	}
+	
+.unsub_pg_link {
+    text-decoration: none;
+    color:  #33C3F0;
+}
+
+.unsub_pg_link:hover {
+    text-decoration: underline;
+    color:  #33C3F0;
+}
+
+</style>   
+</head>
+<body>
+ 	<!--header end-->
+	<% include include/header %>
+	<!--header end-->
+ 	<div class="breadcrumbs">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-sm-8">
+           <h1 class="mainheading"><span><%= pageTileStr %></span></h1>
+          </div>
+          <div class="col-lg-4 col-sm-4">
+            <ol class="breadcrumb pull-right">
+              <li><a href="/" title="Home">Home</a></li>
+              <li class="active" title="<%= pageTileStr %>"><%= pageTileStr %></li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+	<div class="container">
+      	<div class="row">
+      		<% if (typeof tokenBool !== 'undefined' && tokenBool !== null && (tokenBool==true || tokenBool=="true")) {	%>
+      		
+
+      		<% 	var emailAddressStr="";
+      		if (typeof emailAddress !== 'undefined' && emailAddress !== null && emailAddress!="") {
+      			emailAddressStr='"'+emailAddress+'"';
+      		}	%>
+      		<% if (typeof unsubscribed !== 'undefined' && unsubscribed !== null && (unsubscribed==1 || unsubscribed=="1")) {	%>
+      		<div class="unsub_pg_text">Your email <%= emailAddressStr %> has been unsubscribed successfully from the mailing list.</div>
+			<% if (typeof queryString !== 'undefined' && queryString !== null && queryString!="") {	%>
+			
+			<div class="unsub_pg_text">
+			If you've unsubscribed by mistake then you can <a href="/unsubscribe?<%= queryString %>" class="unsub_pg_link">click here</a> to subscribe again.
+			</div>
+			<% } %>
+			<% }else{	%>
+				<div class="unsub_pg_text">Your email <%= emailAddressStr %> has been successfully subscribed for the mailing list!</div>
+			<% } %>
+			<% } else { %>
+				<div class="unsub_pg_text">Your token has been expired, please feel free to <a href="/contact" class="unsub_pg_link" title="contact us">contact us</a>!</div>
+			<% } %>
+      	</div>
+	</div>
+	
+	
+
+   	<!--footer start-->
+    <% include include/footer %>
+    <!--footer end-->
+	</script>
+</body>
+</html>
