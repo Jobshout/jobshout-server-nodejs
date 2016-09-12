@@ -63,7 +63,7 @@ module.exports = function(init, app, db){
 		
 	//web mail
 	app.get('/webmail', function(req, res) {
-		res.render('pages/webmail');
+		res.render('webmail');
 	}); 
 	
 	//our clients
