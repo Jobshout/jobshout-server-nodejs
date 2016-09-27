@@ -23,5 +23,7 @@
     	MongoClient : MongoClient,
     	mongoConnUrl : url,
     	port : 3001,
-		cookieName : "jobshout_login"
+		cookieName : "jobshout_login",
+		backendDirectoryPath : "/rootcms",
+		backendDirectoryName : "rootcms"
 	};

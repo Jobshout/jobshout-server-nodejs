@@ -42,7 +42,9 @@ init.MongoClient.connect(init.mongoConnUrl, function (err, database) {
 });
 
 // Logging initialization
-console.log('root-crm application started on port ' + init.port);
+console.log('rootcms application started on port ' + init.port);
+
+app.locals.backendDirectory = init.backendDirectoryPath;
 
 app.locals.timeConverter = function(UNIX_timestamp) {
   var a = new Date(UNIX_timestamp * 1000);

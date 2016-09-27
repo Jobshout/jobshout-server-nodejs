@@ -39,9 +39,9 @@ module.exports = function(init) {
 	app.use(cookieParser());
 	
 	/// Setting the app router and static folder
-	app.use(express.static(path.resolve('./views/assets')));
+	app.use('/'+init.backendDirectoryName, express.static(path.resolve('./views/'+init.backendDirectoryName+'/assets')));
 	
-	app.use('/list', express.static(path.resolve('./views/assets')));
+	app.use('/'+init.backendDirectoryName+'/list', express.static(path.resolve('./views/'+init.backendDirectoryName+'/assets')));
 	
 	// Return Express server instance
 	return app;

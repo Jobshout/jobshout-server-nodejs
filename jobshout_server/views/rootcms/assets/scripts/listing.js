@@ -82,7 +82,7 @@ function load_more(){
 	
 	function load_data(){
 		$(".alert").remove();
-		var jsonRow="/list_forms?start="+start+"&limit="+pageSize+"&templateStr="+templateStr+"&s="+searchStr,
+		var jsonRow=backendDirectory+"/list_forms?start="+start+"&limit="+pageSize+"&templateStr="+templateStr+"&s="+searchStr,
 		xhrStatus=$.getJSON(jsonRow,function(html){
 			if(html.error){
 				$(".topOptionsClass").hide();
@@ -107,7 +107,7 @@ function load_more(){
 					$(".form-inline").show();
 				}
 				if (typeof html.editor !== 'undefined' && html.editor !== null && html.editor!=""){
-					editorPage="/"+html.editor;
+					editorPage=backendDirectory+"/"+html.editor;
 					
 					$(".editorLink").attr("href", editorPage);
 					$(".editorLink").show();

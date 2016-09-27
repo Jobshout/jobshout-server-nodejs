@@ -9,7 +9,7 @@
 	**/
 
 	/**********************************************************************
-	*  server.js handles the whole website
+	*  website.js handles the whole website
 	**/
 	
 'use strict';

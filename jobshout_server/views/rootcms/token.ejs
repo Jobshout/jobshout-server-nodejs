@@ -41,7 +41,7 @@
        						<!-- Page Header -->
         					<div class="col-lg-12">
 								<div  CLASS="hidden-xs sidemenu"> <button id="menu" CLASS="btn btn-sm btn-danger" title="Menu"><i class="fa fa-bars fa-2x"></i></button></div>
-        						<h1 class="page-header">Category</h1>
+        						<h1 class="page-header">Token</h1>
         					</div>
        						<!--End Page Header -->
         				</div>
@@ -62,12 +62,12 @@
             							</div>
             						<%	}
             					}	%>
-            					<form class="form-horizontal" action="/save/category" method="POST">
-            						<input type="hidden" class="form-control" id="table_name" name="table_name" value="categories">
+            					<form class="form-horizontal" action="<%= backendDirectory %>/save/token" method="POST">
+            						<input type="hidden" class="form-control" id="table_name" name="table_name" value="tokens">
       								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="code">
-      								<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>">
       								<input type="hidden" class="form-control" id="editorField" name="editorField" value="<% if (typeof editorField !== 'undefined' && editorField !== null) { %><%= editorField %><% }else{ %>_id<% } %>">
       								<input type="hidden" class="form-control" id="editorValue" name="editorValue" value="<% if (typeof editorValue !== 'undefined' && editorValue !== null) { %><%= editorValue %><% } %>">
+      								<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>">
             						<div class="form-group">
                   						<label class="control-label col-md-3" for="first-name">Name<span class="required">*</span></label>
                   						<div class="col-md-6 col-lg-4">
@@ -81,21 +81,15 @@
                   						</div>
                 					</div>
                 					<div class="form-group">
-                  						<label class="control-label col-md-3" for="">Order</label>
+                  						<label class="control-label col-md-3" for="">Content<span class="required">*</span></label>
                   						<div class="col-md-6 col-lg-4">
-                   							<input type="text"  class="form-control col-md-5 col-xs-12" id="order_by_num" name="order_by_num" value="<% if (typeof contentObj.order_by_num !== 'undefined' && contentObj.order_by_num !== null) { %><%= contentObj.order_by_num %><% } %>">
+                   							<textarea required="required" class="form-control col-md-5 col-xs-12" id="token_content" name="token_content"><% if (typeof contentObj.token_content !== 'undefined' && contentObj.token_content !== null) { %><%= contentObj.token_content %><% } %></textarea>
                   						</div>
                 					</div>
                 					<div class="form-group">
-                  						<label class="control-label col-md-3" for="">Meta Description</label>
+                  						<label class="control-label col-md-3" for="">Description </label>
                   						<div class="col-md-6 col-lg-4">
-                   							<textarea class="form-control col-md-5 col-xs-12" id="meta_description" name="meta_description"><% if (typeof contentObj.meta_description !== 'undefined' && contentObj.meta_description !== null) { %><%= contentObj.meta_description %><% } %></textarea>
-                  						</div>
-                					</div>
-                					<div class="form-group">
-                  						<label class="control-label col-md-3" for="">Meta Keywords </label>
-                  						<div class="col-md-6 col-lg-4">
-                   							<textarea class="form-control col-md-5 col-xs-12" id="meta_keywords" name="meta_keywords"><% if (typeof contentObj.meta_keywords !== 'undefined' && contentObj.meta_keywords !== null) { %><%= contentObj.meta_keywords %><% } %></textarea>
+                   							<textarea required="required" class="form-control col-md-5 col-xs-12" id="description" name="description"><% if (typeof contentObj.description !== 'undefined' && contentObj.description !== null) { %><%= contentObj.description %><% } %></textarea>
                   						</div>
                 					</div>
                 					<div class="form-group">
@@ -113,7 +107,7 @@
                    						<div class="col-md-9 col-lg-6">
                								<div class="submit-btn-setting"> <button type="submit" class="btn palette-belize-hole btn-color margn-right-15">Submit</button>
                								<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) {	%>
-               									<a href="/list/categories" class="btn btn-primary">Cancel</a>
+               									<a href="<%= backendDirectory %>/list/tokens" class="btn btn-primary">Cancel</a>
                								<%	}else{	%>
                									<button type="reset" class="btn btn-primary">Reset</button>
                								<% } %>

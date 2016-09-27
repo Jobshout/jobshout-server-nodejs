@@ -18,50 +18,51 @@ var passwordHash = require('password-hash'),
 	
 module.exports = function(init, app,db){
 var mongodb=init.mongodb;
-
+var backendDirectoryNameStr=init.backendDirectoryName;
+var backendDirectoryPath=init.backendDirectoryPath;
 //sign in page
-app.get('/sign-in', function(req, res) {
-	res.render('sign-in', {
+app.get(backendDirectoryPath+'/sign-in', function(req, res) {
+	res.render(backendDirectoryNameStr+'/sign-in', {
       	 queryStr : req.query
     });   
 })
 
 //jobshout_server pages
-app.get('/', requireLogin, function(req, res) {
+app.get(backendDirectoryPath+'/', requireLogin, function(req, res) {
 	if(req.authenticationBool){
-		res.render('index', {
+		res.render(backendDirectoryNameStr+'/index', {
       		 authenticatedUser : req.authenticatedUser
    		});
     }else{
-    	res.redirect('/sign-in');
+    	res.redirect(backendDirectoryPath+'/sign-in');
 	}
 }); 
 
-app.get('/index', requireLogin, function(req, res) {
+app.get(backendDirectoryPath+'/index', requireLogin, function(req, res) {
 	if(req.authenticationBool){
-		res.render('index', {
+		res.render(backendDirectoryNameStr+'/index', {
       		 authenticatedUser : req.authenticatedUser
    		});
     }else{
-		res.redirect('/sign-in');
+		res.redirect(backendDirectoryPath+'/sign-in');
 	}
 }); 
 
 //jobshout_server logout
-app.get('/logout', function(req, res) {
+app.get(backendDirectoryPath+'/logout', function(req, res) {
 	if(req.cookies[init.cookieName] != null && req.cookies[init.cookieName] != 'undefined' && req.cookies[init.cookieName]!=""){
 		var mongoIDField= new mongodb.ObjectID(req.cookies[init.cookieName]);
 		res.clearCookie(init.cookieName);
 		db.collection('sessions').remove({"_id":mongoIDField},function(err,result){
-    		res.redirect('/sign-in');
+    		res.redirect(backendDirectoryPath+'/sign-in');
     	});
    	}else{
-   		res.redirect('/sign-in');
+   		res.redirect(backendDirectoryPath+'/sign-in');
    	}	
 }); 
 
 //validate user
-app.post('/validlogin', (req, res) => {
+app.post(backendDirectoryPath+'/validlogin', (req, res) => {
 	var postJson=req.body;
 	
 	var checkForExistence= '{"email": \''+postJson.email+'\', "status": { $in: [ 1, "1" ] }}';
@@ -72,24 +73,24 @@ app.post('/validlogin', (req, res) => {
 				db.collection('sessions').save({"user_id": document._id, "status" : true}, (err, result) => {
 					if (result){
       					res.cookie(init.cookieName , result["ops"][0]["_id"])
-      					res.redirect('/index');
+      					res.redirect(backendDirectoryPath+'/index');
       				}else{
-      					res.redirect('/sign-in?error=no');
+      					res.redirect(backendDirectoryPath+'/sign-in?error=no');
     				}
   				});
 				
 			}else{
-      			res.redirect('/sign-in?error=password');
+      			res.redirect(backendDirectoryPath+'/sign-in?error=password');
       		}
       	} else {
-      		res.redirect('/sign-in?error=no');
+      		res.redirect(backendDirectoryPath+'/sign-in?error=no');
         }
       
 	});
 	
 })
 
-app.get('/mailing_status/', requireLogin, function(req, res) {
+app.get(backendDirectoryPath+'/mailing_status/', requireLogin, function(req, res) {
 	
 	var uuidStr="", contact_uuid="";
 	var outputObj = new Object();
@@ -127,7 +128,7 @@ app.get('/mailing_status/', requireLogin, function(req, res) {
 		res.send(outputObj);
 	}
 }); 
-app.get('/list_forms/', requireLogin, function(req, res) {
+app.get(backendDirectoryPath+'/list_forms/', requireLogin, function(req, res) {
 	var itemsPerPage = 10, pageNum=1, templateStr="", collectionStr="";
 	var outputObj = new Object();
 	if(req.query.templateStr){
@@ -178,7 +179,7 @@ app.get('/list_forms/', requireLogin, function(req, res) {
 	}
 }); 
 
-app.get('/collection_details/', requireLogin, function(req, res) {
+app.get(backendDirectoryPath+'/collection_details/', requireLogin, function(req, res) {
 	var templateStr="", collectionStr="", search_id="";
 	var outputObj = new Object();
 	if(req.query.templateStr){
@@ -219,7 +220,7 @@ app.get('/collection_details/', requireLogin, function(req, res) {
 	}
 }); 
 
-app.get('/list/:id', requireLogin, function(req, res) {
+app.get(backendDirectoryPath+'/list/:id', requireLogin, function(req, res) {
 	if(req.authenticationBool){
 		var pageRequested = req.params.id;
 		var queryString= req.query;
@@ -229,17 +230,17 @@ app.get('/list/:id', requireLogin, function(req, res) {
 			keywordStr=queryString.keyword;
 		}
 	
-		res.render('standard_listing', {
+		res.render(backendDirectoryNameStr+'/standard_listing', {
        	 	currentTemplate : pageRequested,
         	searched_keyword : keywordStr,
         	authenticatedUser : req.authenticatedUser
     	});
     }else{
-		res.redirect('/sign-in');
+		res.redirect(backendDirectoryNameStr+'/sign-in');
 	}
 })
 
-app.get('/fetchTableColumns', requireLogin, function(req, res) {
+app.get(backendDirectoryPath+'/fetchTableColumns', requireLogin, function(req, res) {
 	if(req.authenticationBool){
 		initFunctions.fetchTableColumns(db, req.query.e, function(result) {	
 			res.send(result);
@@ -251,12 +252,16 @@ app.get('/fetchTableColumns', requireLogin, function(req, res) {
 	}
 });
 
-app.get('/:id', requireLogin, function(req, res) {
+app.get(backendDirectoryPath+'/:id', requireLogin, function(req, res) {
 	if(req.authenticationBool){
 	var pageRequested = req.params.id;
+	
 	var queryString= req.url;
-	var removeUrl='/'+req.params.id+'?';
+	console.log(queryString);
+	var removeUrl=backendDirectoryPath+'/'+req.params.id+'?';
+	console.log(removeUrl);
 	queryString= queryString.substr(removeUrl.length);
+	
 	if(queryString.indexOf("&")>-1){
 		queryString= queryString.substr(0,queryString.indexOf("&"));
 	}
@@ -270,7 +275,7 @@ app.get('/:id', requireLogin, function(req, res) {
 	
 	var contentObj= "";
 	var table_name =initFunctions.fetchTableName(pageRequested);
-	
+	console.log(editFieldName+" "+editFieldVal);
 	if(table_name!=""){
 		var tokensArr= new Array();
 		if (typeof editFieldVal !== 'undefined' && editFieldVal !== null) {
@@ -284,7 +289,7 @@ app.get('/:id', requireLogin, function(req, res) {
       				} 
       				if(table_name=="templates"){
       					initFunctions.returnActivetokens(db, function(result) {
-      						res.render(pageRequested, {
+      						res.render(backendDirectoryNameStr+'/'+pageRequested, {
       	 						editorField : editFieldName,
       	 						editorValue : editFieldVal,
        							queryStr : req.query,
@@ -295,7 +300,7 @@ app.get('/:id', requireLogin, function(req, res) {
     					});
       				}else if(table_name=="bookmarks"){
       					initFunctions.returnActiveCategories(db,function(result) {
-      						res.render(pageRequested, {
+      						res.render(backendDirectoryNameStr+'/'+pageRequested, {
       	 						editorField : editFieldName,
       	 						editorValue : editFieldVal,
        							queryStr : req.query,
@@ -306,7 +311,7 @@ app.get('/:id', requireLogin, function(req, res) {
     					});
       				}else if(table_name=="system_templates"  || table_name=="modules"){
       					initFunctions.returnAllCollections(db, function(result) {	
-							res.render(pageRequested, {
+							res.render(backendDirectoryNameStr+'/'+pageRequested, {
       	 						editorField : editFieldName,
       	 						editorValue : editFieldVal,
       	 						collectionsArr : result,
@@ -317,7 +322,7 @@ app.get('/:id', requireLogin, function(req, res) {
     						});
 						});
       				}else{
-      					res.render(pageRequested, {
+      					res.render(backendDirectoryNameStr+'/'+pageRequested, {
       	 					editorField : editFieldName,
       	 					editorValue : editFieldVal,
        						queryStr : req.query,
@@ -339,7 +344,7 @@ app.get('/:id', requireLogin, function(req, res) {
       				//console.log(contentObj);
       				if(table_name=="templates"){
       					initFunctions.returnActivetokens(db, function(result) {
-      						res.render(pageRequested, {
+      						res.render(backendDirectoryNameStr+'/'+pageRequested, {
       	 						editorField : editFieldName,
       	 						editorValue : editFieldVal,
        							queryStr : req.query,
@@ -350,7 +355,7 @@ app.get('/:id', requireLogin, function(req, res) {
     					});
       				}else if(table_name=="bookmarks"){
       					initFunctions.returnActiveCategories(db,function(result) {
-      						res.render(pageRequested, {
+      						res.render(backendDirectoryNameStr+'/'+pageRequested, {
       	 						editorField : editFieldName,
       	 						editorValue : editFieldVal,
        							queryStr : req.query,
@@ -361,7 +366,7 @@ app.get('/:id', requireLogin, function(req, res) {
     					});
       				}else if(table_name=="system_templates" || table_name=="modules"){
       					initFunctions.returnAllCollections(db, function(result) {	
-							res.render(pageRequested, {
+							res.render(backendDirectoryNameStr+'/'+pageRequested, {
       	 						editorField : editFieldName,
       	 						editorValue : editFieldVal,
       	 						collectionsArr : result,
@@ -372,7 +377,7 @@ app.get('/:id', requireLogin, function(req, res) {
     						});
 						});
       				}else{
-      					res.render(pageRequested, {
+      					res.render(backendDirectoryNameStr+'/'+pageRequested, {
       	 					editorField : editFieldName,
       	 					editorValue : editFieldVal,
        						queryStr : req.query,
@@ -386,7 +391,7 @@ app.get('/:id', requireLogin, function(req, res) {
 		}else{
 			if(table_name=="templates"){
       			initFunctions.returnActivetokens(db, function(result) {
-      				res.render(pageRequested, {
+      				res.render(backendDirectoryNameStr+'/'+pageRequested, {
       	 				queryStr : req.query,
        					contentObj : contentObj,
        					tokens : result,
@@ -395,7 +400,7 @@ app.get('/:id', requireLogin, function(req, res) {
     			});
       		}else if(table_name=="system_templates" || table_name=="modules"){
       			initFunctions.returnAllCollections(db, function(result) {	
-					res.render(pageRequested, {
+					res.render(backendDirectoryNameStr+'/'+pageRequested, {
       	 				collectionsArr : result,
        					queryStr : req.query,
        					contentObj : contentObj,
@@ -405,7 +410,7 @@ app.get('/:id', requireLogin, function(req, res) {
 				});
       		}else if(table_name=="bookmarks"){
       			initFunctions.returnActiveCategories(db,function(result) {
-      				res.render(pageRequested, {
+      				res.render(backendDirectoryNameStr+'/'+pageRequested, {
       	 				queryStr : req.query,
        					contentObj : contentObj,
        					categoriesdropdown : result,
@@ -413,7 +418,7 @@ app.get('/:id', requireLogin, function(req, res) {
        				});
     			});
       		}else{
-      			res.render(pageRequested, {
+      			res.render(backendDirectoryNameStr+'/'+pageRequested, {
       	 			queryStr : req.query,
        				contentObj : contentObj,
        				tokens : tokensArr,
@@ -422,15 +427,15 @@ app.get('/:id', requireLogin, function(req, res) {
     		}	
   	  	}
   	}else {
-    	res.redirect('/index');
+    	res.redirect(backendDirectoryPath+'/index');
     }
     
     }else {
-    	res.redirect('/sign-in');
+    	res.redirect(backendDirectoryPath+'/sign-in');
     }	
 }); 
 
-app.post('/save/:id', requireLogin, (req, res) => {
+app.post(backendDirectoryPath+'/save/:id', requireLogin, (req, res) => {
 	if(req.authenticationBool){
 	var postJson=req.body;
 	var idField="", editorFieldName="", editorFieldVal="", checkForExistence="";
@@ -439,7 +444,7 @@ app.post('/save/:id', requireLogin, (req, res) => {
 	var table_nameStr=postJson.table_name;
 	var unique_fieldStr=postJson.unique_field;
 	var unique_fieldVal="";
-	var link ="/"+req.params.id;
+	var link =backendDirectoryPath+"/"+req.params.id;
 	
 	for(var key in postJson) {
 		if(key==unique_fieldStr){
@@ -731,7 +736,7 @@ app.post('/save/:id', requireLogin, (req, res) => {
 	}
 	
 	}else{
-		res.redirect('/sign-in');
+		res.redirect(backendDirectoryPath+'/sign-in');
 	}
 })
 

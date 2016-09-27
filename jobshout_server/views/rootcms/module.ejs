@@ -62,7 +62,7 @@
             							</div>
             						<%	}
             					}	%>
-            					<form class="form-horizontal" action="/save/module" method="POST">
+            					<form class="form-horizontal" action="<%= backendDirectory %>/save/module" method="POST">
             						<input type="hidden" class="form-control" id="table_name" name="table_name" value="modules">
       								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="code">
       								<input type="hidden" class="form-control" id="editorField" name="editorField" value="<% if (typeof editorField !== 'undefined' && editorField !== null) { %><%= editorField %><% }else{ %>_id<% } %>">
@@ -119,7 +119,7 @@
                    						<div class="col-md-9 col-lg-6">
                								<div class="submit-btn-setting"> <button type="submit" class="btn palette-belize-hole btn-color margn-right-15">Submit</button>
                								<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) {	%>
-               									<a href="/list/tokens" class="btn btn-primary">Cancel</a>
+               									<a href="<%= backendDirectory %>/list/tokens" class="btn btn-primary">Cancel</a>
                								<%	}else{	%>
                									<button type="reset" class="btn btn-primary">Reset</button>
                								<% } %>

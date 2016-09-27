@@ -27,7 +27,7 @@
                         <h3 class="panel-title">Sign In</h3>
                     </div>
                     <div class="panel-body">
-                        <form class="form-horizontal" action="/validlogin" method="POST">
+                        <form class="form-horizontal" action="<%= backendDirectory %>/validlogin" method="POST">
                             <fieldset>
                             	<% if (typeof queryStr.error !== 'undefined' && queryStr.error !== null) {
     								if(queryStr.error=="no") {	%>

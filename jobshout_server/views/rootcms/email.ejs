@@ -53,7 +53,7 @@
 
            				<div class="row">
             				<div class="col-sm-12">
-            					<form class="form-horizontal" action="/email/save/" method="POST">
+            					<form class="form-horizontal" action="<%= backendDirectory %>/email/save/" method="POST">
             						<input type="hidden" class="form-control" id="table_name" name="table_name" value="email_queue">
       								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="name">
       								<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>">
@@ -101,7 +101,7 @@
                    						<div class="col-md-9 col-lg-6">
                								<div class="submit-btn-setting"> <button type="submit" class="btn palette-belize-hole btn-color margn-right-15">Submit</button>
                								<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) {	%>
-               									<a href="/list/emails" class="btn btn-primary">Cancel</a>
+               									<a href="<%= backendDirectory %>/list/emails" class="btn btn-primary">Cancel</a>
                								<%	}else{	%>
                									<button type="reset" class="btn btn-primary">Reset</button>
                								<% } %>

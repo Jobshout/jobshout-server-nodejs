@@ -67,7 +67,7 @@
             							</div>
             						<%	}
             					}	%>
-            					<form class="form-horizontal" action="/save/system_template" method="POST">
+            					<form class="form-horizontal" action="<%= backendDirectory %>/save/system_template" method="POST">
             						<input type="hidden" class="form-control" id="table_name" name="table_name" value="system_templates">
       								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="code">
       								<input type="hidden" class="form-control" id="editorField" name="editorField" value="<% if (typeof editorField !== 'undefined' && editorField !== null) { %><%= editorField %><% }else{ %>_id<% } %>">
@@ -82,7 +82,7 @@
                   						
                   						<% if (typeof contentObj.code !== 'undefined' && contentObj.code !== null) { %>
                   						<div class="col-md-6 col-lg-4">
-                  							<a class="btn btn-info" href="/list/<%= contentObj.code %>" target="_blank">View Page</a>
+                  							<a class="btn btn-info" href="<%= backendDirectory %>/list/<%= contentObj.code %>" target="_blank">View Page</a>
                   						</div>
                   						<% } %>
                 					</div>
@@ -160,7 +160,7 @@
                    						<div class="col-md-9 col-lg-6">
                								<div class="submit-btn-setting"> <button type="submit" class="btn palette-belize-hole btn-color margn-right-15 save_exit">Submit</button>
                								<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) {	%>
-               									<a href="/list/system_templates" class="btn btn-primary">Cancel</a>
+               									<a href="<%= backendDirectory %>/list/system_templates" class="btn btn-primary">Cancel</a>
                								<%	}else{	%>
                									<button type="reset" class="btn btn-primary">Reset</button>
                								<% } %>
@@ -207,7 +207,7 @@ function __chooseDetailView(){
 
 function table_options(){
 	if($('#table').val()!=""){
-		$.getJSON("/fetchTableColumns?e="+$('#table').val(),function(response){
+		$.getJSON("<%= backendDirectory %>/fetchTableColumns?e="+$('#table').val(),function(response){
 			if(response.error){
 				$(".displayColumnsClass").hide();
 				$("#tablefieldClass").html("");

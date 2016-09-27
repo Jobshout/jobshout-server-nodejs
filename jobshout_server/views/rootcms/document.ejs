@@ -80,7 +80,7 @@ var publishedDate = year + '-' + month + '-' + dateNum + ' ' + hour + ':' + min 
             <%	}
             }	%>
       		<div class="panel-body no-padding-top bg-white"> 
-      			<form class="form-horizontal" action="/save/document" method="POST">
+      			<form class="form-horizontal" action="<%= backendDirectory %>/save/document" method="POST">
       				<input type="hidden" class="form-control" id="table_name" name="table_name" value="documents">
       				<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="Code">
       				<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>">
