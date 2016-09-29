@@ -1,4 +1,18 @@
-      'use strict';
+	/**********************************************************************
+	*  Author: Neha Kapoor (neha@jobshout.org)
+	*  Project Lead: Balinder WALIA (bwalia@jobshout.org)
+	*  Project Lead Web...: https://twitter.com/balinderwalia
+	*  Name..: Jobshout Server NodeJS
+	*  Desc..: Jobshout Server (part of Jobshout Suite of Apps)
+	*  Web: http://jobshout.org
+	*  License: http://jobshout.org/LICENSE.txt
+	**/
+
+	/**********************************************************************
+	*  express.js
+	**/
+	
+	'use strict';
 
 /**
  * Module dependencies.
@@ -25,10 +39,9 @@ module.exports = function(init) {
 	app.use(cookieParser());
 	
 	/// Setting the app router and static folder
+	app.use('/'+init.backendDirectoryName, express.static(path.resolve('./views/'+init.backendDirectoryName+'/assets')));
 	
-	app.use('/'+init.backendDirectoryName, express.static(path.resolve('./views'+init.backendDirectoryPath+'/assets')));
-	app.use(init.backendDirectoryPath+'/list', express.static(path.resolve('./views'+init.backendDirectoryPath+'/assets')));
-	
+	app.use('/'+init.backendDirectoryName+'/list', express.static(path.resolve('./views/'+init.backendDirectoryName+'/assets')));
 	
 	// Return Express server instance
 	return app;

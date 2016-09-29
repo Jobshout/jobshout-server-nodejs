@@ -10,31 +10,62 @@ var min = a.getMinutes();
 var sec = a.getSeconds();
 var publishedDate = year + '-' + month + '-' + dateNum + ' ' + hour + ':' + min ;
 } %>
-<!-- page specific css -->
-<link href="plugins/datetime-picker/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+<style>
+
+   label{
+	   max-width:195px!important;
+	   text-align:left!important;
+	   margin-bottom:5pximportant;
+	   color:#515151;
+   }
+   @media(min-width:768px){
+   input[type="text"], select,textarea, input[type="password"] {
+	   max-width:300px;
+   }
+   textarea{
+	   height:100px!important;
+   }
+   
+   }
+   @media(min-width:992px){
+    .submit-btn-setting{
+	   margin-left:195px;
+   }
+   }
+</style>
+
+    <!-- page specific css -->
+    <link href="plugins/datetime-picker/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
-	<div class="wrapper">	
+<body>
+	<!-- navbar top -->
+   	<div class="wrapper">
    		<!-- Header Starts here-->
   		<% include include/header %>
   		<!-- Header Ends here-->
   		
-  		<!-- Sidebar Starts Here-->
+  		<div class="content" >
+  			<!-- Sidebar Starts Here-->
   			<% include include/sidebar %>
-    	<!-- Sidebar Ends Here-->
-    	<div class="content-wrapper">
-    	  	<!-- Content Header (Page header) -->
-    		<section class="content-header">
-      			<h1>Document <small><% if (typeof contentObj.name !== 'undefined' && contentObj.name !== null) { %><%= contentObj.name %><% } else{	%>Add new<% }%></small></h1>
-      			<ol class="breadcrumb">
-        			<li><a href="<%= backendDirectory %>/index"><i class="fa fa-dashboard"></i> Home</a></li>
-        			<li class="active">Document</li>
-      			</ol>
-    		</section>	
-    		<section class="content">
-      			
-		<div class="row">
-		<% if (typeof queryStr !== 'undefined' && queryStr !== null) {
+    		<!-- Sidebar Ends Here-->
+    		
+    		<section>
+      			<article>
+      				<div id="page-wrapper">
+        				<div class="row">
+       						<!-- Page Header -->
+        					<div class="col-lg-12">
+								<div  CLASS="hidden-xs sidemenu"> <button id="menu" CLASS="btn btn-sm btn-danger" title="Menu"><i class="fa fa-bars fa-2x"></i></button></div>
+        						<h1 class="page-header">Documents</h1>
+        					</div>
+       						<!--End Page Header -->
+        				</div>
+
+<div class="row">
+	<div class="col-md-12">
+	
+    	<div class="panel" style="padding-top:20px;">
+    		<% if (typeof queryStr !== 'undefined' && queryStr !== null) {
     				if(queryStr.error_msg) {	%>
 			<div class="alert alert-danger alert-dismissable">
              	<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
@@ -67,26 +98,26 @@ var publishedDate = year + '-' + month + '-' + dateNum + ' ' + hour + ':' + min 
      							<div class="row">
            		  					<div class=" col-sm-12 col-lg-9">
   										<div class="form-group">
-    										<label for="" class="col-sm-2 control-label">Heading<sup class="required">*</sup></label>
+    										<label for="" class="col-sm-3 control-label">Heading<sup class="required">*</sup></label>
     										<div class="col-sm-9  ">
     											<input type="text" required class="form-control" id="Document" name="Document" onblur="generate_code('chk_manual','Document','Code'); generate_metaTags();" onkeyup="generate_code('chk_manual','Document','Code');generate_metaTags();"  value="<% if (typeof contentObj.Document !== 'undefined' && contentObj.Document !== null) { %><%= contentObj.Document %><% } %>">
     										</div>
   										</div>
   
   										<div class="form-group">
-    										<label for="firstname" class="col-sm-2  control-label">Sub heading </label>
+    										<label for="firstname" class="col-sm-3  control-label">Sub heading </label>
     										<div class="col-sm-9">
       											<input type="text" class="form-control" id="Title" name="Title" onblur="generate_metaTags();" onkeyup="generate_metaTags();" value="<% if (typeof contentObj.Title !== 'undefined' && contentObj.Title !== null) { %><%= contentObj.Title %><% } %>">
     										</div>
   										</div>
   										<div class="form-group">
-    										<label for="" class="col-sm-2 control-label">Body </label>
+    										<label for="" class="col-sm-3 control-label">Body </label>
     										<div class="col-sm-9">
      											<TEXTAREA CLASS="form-control" STYLE="height:500px;" name="Body" id="Body"><% if (typeof contentObj.Body !== 'undefined' && contentObj.Body !== null) { %><%= contentObj.Body %><% } %></TEXTAREA>
     										</div>
 										</div>
 										<div class="form-group">
-    										<label for="firstname" class="col-sm-2  control-label">Type </label>
+    										<label for="firstname" class="col-sm-3  control-label">Type </label>
     										<div class="col-sm-9">
     											<select  required="required" class="form-control col-md-5 col-xs-12" name="type" id="type">
                   									<option value="page" <% if (typeof contentObj.Type !== 'undefined' && contentObj.Type !== null && contentObj.Type == "page") { %>selected<% } %>>Page</option>
@@ -98,13 +129,13 @@ var publishedDate = year + '-' + month + '-' + dateNum + ' ' + hour + ':' + min 
       										</div>
   										</div>
   										<div class="form-group">
-    										<label for="firstname" class="col-sm-2  control-label">Image Path </label>
+    										<label for="firstname" class="col-sm-3  control-label">Image Path </label>
     										<div class="col-sm-9">
       											<input type="text" class="form-control" id="image_path" name="image_path" value="<% if (typeof contentObj.virtualFields !== 'undefined' && contentObj.virtualFields !== null) {  var virtualFields= contentObj.virtualFields; var image_path= virtualFields['image_path'] %><%= image_path %><% } %>">
     										</div>
   										</div>
   										<div class="form-group no-margn-bottom">
-              								<label for="dtp_input1" class="col-md-2 control-label" >Published On  <span class="required">*</span></label>
+              								<label for="dtp_input1" class="col-md-3 control-label" >Published On  <span class="required">*</span></label>
                   							<div class="col-md-6 col-lg-4" >
                 								<div class="input-group date form_datetime " style="max-width:300px;" >
                     								<input class="form-control col-md-5 col-xs-12" required type="text" id="Published_timestamp" name="Published_timestamp" value="<% if (typeof publishedDate !== 'undefined' && publishedDate !== null) {  %><%= publishedDate %><% } %>" readonly>
@@ -114,12 +145,12 @@ var publishedDate = year + '-' + month + '-' + dateNum + ' ' + hour + ':' + min 
             							</div>
   										
   										<div class="form-group">
-    										<label for="" class="col-sm-2 control-label">Status</label>
-    										<div class="col-sm-9" style="margin-top:6px;">
-    											<div STYLE="float:left; margin-right:10px; display:inline-block;">
+    										<label for="" class="col-sm-3 control-label">Status</label>
+    										<div class="col-sm-9">
+    											<div class="radio" STYLE="float:left; margin-right:10px;">
       		  										<label> <input type="radio" id="Status" name="Status" value="1" <% if (typeof contentObj.Status !== 'undefined' && contentObj.Status !== null && (contentObj.Status == 1 || contentObj.Status=="1")) { %>checked<% } %> > <strong style="font-weight:600">Active</strong></label>
     			  								</div>
-				  								<div sTYLE="float:left; display:inline-block;">
+				  								<div class="radio" STYLE="float:left;">
       		  										<label> <input type="radio" id="Status" name="Status" value="0" <% if (typeof contentObj.Status !== 'undefined' && contentObj.Status !== null && contentObj.Status == 0) { %>checked<% } %> > <strong style="font-weight:600">Inactive</strong></label>
     			  								</div>
 											</div>
@@ -132,7 +163,7 @@ var publishedDate = year + '-' + month + '-' + dateNum + ' ' + hour + ':' + min 
        							<div class="row">
                 					<div class="col-sm-10  col-md-12 col-lg-9">
                        					<div class="form-group">
-                              				<label for="" class="col-sm-2 control-label">Code<sup class="required">*</sup></label>
+                              				<label for="" class="col-sm-3 control-label">Code<sup class="required">*</sup></label>
                              				<div class="col-sm-9">
                               					<input type="text" required class="form-control" id="Code" name="Code" placeholder="" value="<% if (typeof contentObj.Code !== 'undefined' && contentObj.Code !== null) { %><%= contentObj.Code %><% } %>" <% if (typeof contentObj.AutoFormat !== 'undefined' && contentObj.AutoFormat !== null && contentObj.AutoFormat == 1) {  }else { %>readonly<% } %>>
 							  					<span STYLE="font-size:12px; color:#737373;">URL (SEO friendly)</span>
@@ -143,20 +174,20 @@ var publishedDate = year + '-' + month + '-' + dateNum + ' ' + hour + ':' + min 
                         				</div>
                         				
                         				<div class="form-group">
-                             				<label for="" class="col-sm-2 control-label">Window Title</label>
+                             				<label for="" class="col-sm-3 control-label">Window Title</label>
                              				<div class="col-sm-9">
                               					<input type="text" class="form-control" id="PageTitle" name="PageTitle" placeholder="" value="<% if (typeof contentObj.PageTitle !== 'undefined' && contentObj.PageTitle !== null) { %><%= contentObj.PageTitle %><% } %>" <% if (typeof contentObj.AutoFormatMetaData !== 'undefined' && contentObj.AutoFormatMetaData !== null && contentObj.AutoFormatMetaData == 1) {  }else { %>readonly<% } %>>
                             				</div>
                         				</div>
                         				<div class="form-group">
-                              				<label for="" class="col-sm-2 control-label">Meta Data Keywords</label>
+                              				<label for="" class="col-sm-3 control-label">Meta Data Keywords</label>
                              				<div class="col-sm-9">
                              					<TEXTAREA CLASS="form-control" STYLE="height:220px;" id="MetaTagKeywords" name="MetaTagKeywords" <% if (typeof contentObj.AutoFormatMetaData !== 'undefined' && contentObj.AutoFormatMetaData !== null && contentObj.AutoFormatMetaData == 1) {  }else { %>readonly<% } %>><% if (typeof contentObj.MetaTagKeywords !== 'undefined' && contentObj.MetaTagKeywords !== null) { %><%= contentObj.MetaTagKeywords %><% } %></TEXTAREA>
 							 					<span STYLE="font-size:11px;">Search terms relevant to this page to find content of this page easily</span>
                              				</div>
                         				</div>
                         				<div class="form-group">
-                              				<label for="" class="col-sm-2 control-label">Meta Data Description</label>
+                              				<label for="" class="col-sm-3 control-label">Meta Data Description</label>
                              				<div class="col-sm-9">
                              					<TEXTAREA CLASS="form-control" STYLE="height:220px;" id="MetaTagDescription" name="MetaTagDescription" <% if (typeof contentObj.AutoFormatMetaData !== 'undefined' && contentObj.AutoFormatMetaData !== null && contentObj.AutoFormatMetaData == 1) {  }else { %>readonly<% } %>><% if (typeof contentObj.MetaTagDescription !== 'undefined' && contentObj.MetaTagDescription !== null) { %><%= contentObj.MetaTagDescription %><% } %></TEXTAREA>
 							 					<span STYLE="font-size:11px;">Overview which describes this page (About 300 words)</span>
@@ -178,13 +209,13 @@ var publishedDate = year + '-' + month + '-' + dateNum + ' ' + hour + ':' + min 
                 						<input type="hidden" class="span10" name="obj_id[]" id="obj_id_<%=  objectArr[i].uuid %>" value="<%=  objectArr[i].uuid %>" />
 										
 										<div class="form-group">
-                              				<label for="" class="col-sm-2 control-label">Object Heading<sup class="required">*</sup></label>
+                              				<label for="" class="col-sm-3 control-label">Object Heading<sup class="required">*</sup></label>
                              				<div class="col-sm-9">
                               					<input type="text" class="form-control" id="obj_heading_<%=  objectArr[i].uuid %>" name="obj_heading_<%=  objectArr[i].uuid %>" onblur="generate_code('obj_chk_manual_<%=  objectArr[i].uuid %>','obj_heading_<%=  objectArr[i].uuid %>','obj_code_<%=  objectArr[i].uuid %>')" onkeyup="generate_code('obj_chk_manual_<%=  objectArr[i].uuid %>','obj_heading_<%=  objectArr[i].uuid %>','obj_code_<%=  objectArr[i].uuid %>')" value="<%=  objectArr[i].name %>">
                              				</div>
                         				</div>
                        					<div class="form-group">
-                              				<label for="" class="col-sm-2 control-label">Code<sup class="required">*</sup></label>
+                              				<label for="" class="col-sm-3 control-label">Code<sup class="required">*</sup></label>
                              				<div class="col-sm-9">
                               					<input type="text" class="form-control" id="obj_code_<%=  objectArr[i].uuid %>" name="obj_code_<%=  objectArr[i].uuid %>" placeholder="" <% if (objectArr[i].chk_manual == 0) { %>readonly<% } %> value="<%=  objectArr[i].code %>">
 							  					<span class="help-block" STYLE="font-size:12px;">
@@ -194,7 +225,7 @@ var publishedDate = year + '-' + month + '-' + dateNum + ' ' + hour + ':' + min 
                         				</div>
                         				                      				
                         				<div class="form-group">
-                              				<label for="" class="col-sm-2 control-label">Object Content</label>
+                              				<label for="" class="col-sm-3 control-label">Object Content</label>
                              				<div class="col-sm-9">
                              					<TEXTAREA CLASS="form-control" STYLE="height:220px;" id="obj_content__<%=  objectArr[i].uuid %>" name="obj_content__<%=  objectArr[i].uuid %>"><%=  objectArr[i].content %></TEXTAREA>
 							 				</div>
@@ -203,18 +234,18 @@ var publishedDate = year + '-' + month + '-' + dateNum + ' ' + hour + ':' + min 
                      				</div>
                      				<div class="col-lg-5">
                      					<div class="form-group">
-                              				<label for="" class="col-sm-2 control-label">Order By<sup class="required">*</sup></label>
+                              				<label for="" class="col-sm-3 control-label">Order By<sup class="required">*</sup></label>
                              				<div class="col-sm-9">
                               					<input type="text" class="form-control" id="obj_order__<%=  objectArr[i].uuid %>" name="obj_order__<%=  objectArr[i].uuid %>" placeholder="" value="<%=  objectArr[i].order_by %>">
                              				</div>
                         				</div>
                         				<div class="form-group">
-    										<label for="" class="col-sm-2 control-label">Status</label>
-    										<div class="col-sm-9"style="margin-top:6px;">
-    											<div STYLE="float:left; margin-right:10px;display:inline-block;">
+    										<label for="" class="col-sm-3 control-label">Status</label>
+    										<div class="col-sm-9">
+    											<div class="radio" STYLE="float:left; margin-right:10px;">
       		  										<label> <input type="radio" id="obj_status__<%=  objectArr[i].uuid %>" name="obj_status_<%=  objectArr[i].uuid %>" value="1" <% if (objectArr[i].status == 1 || objectArr[i].status == "1") { %>checked<% } %> > <strong style="font-weight:600">Active</strong></label>
     			  								</div>
-				  								<div class="radio" STYLE="float:left;display:inline-block;">
+				  								<div class="radio" STYLE="float:left;">
       		  										<label> <input type="radio" id="obj_status_<%=  objectArr[i].uuid %>" name="obj_status_<%=  objectArr[i].uuid %>" value="0" <% if (objectArr[i].status == 0 || objectArr[i].status == "0") { %>checked<% } %>> <strong style="font-weight:600">Inactive</strong></label>
     			  								</div>
 											</div>
@@ -228,13 +259,13 @@ var publishedDate = year + '-' + month + '-' + dateNum + ' ' + hour + ':' + min 
        							<div class="row" style="background-color: aliceblue; padding: 20px; margin: 5px 5px 20px; border-radius: 5px;">
                 					<div class="col-sm-10  col-md-12 col-lg-7">
                 						<div class="form-group">
-                              				<label for="" class="col-sm-2 control-label">Object Heading<sup class="required">*</sup></label>
+                              				<label for="" class="col-sm-3 control-label">Object Heading<sup class="required">*</sup></label>
                              				<div class="col-sm-9">
                               					<input type="text" class="form-control" id="new_obj_heading" name="new_obj_heading" onblur="generate_code('new_obj_chk_manual','new_obj_heading','new_obj_code')" onkeyup="generate_code('new_obj_chk_manual','new_obj_heading','new_obj_code')" value="">
                              				</div>
                         				</div>
                        					<div class="form-group">
-                              				<label for="" class="col-sm-2 control-label">Code<sup class="required">*</sup></label>
+                              				<label for="" class="col-sm-3 control-label">Code<sup class="required">*</sup></label>
                              				<div class="col-sm-9">
                               					<input type="text" class="form-control" id="new_obj_code" name="new_obj_code" placeholder="" readonly value="">
 							  					<span class="help-block" STYLE="font-size:12px;">
@@ -244,7 +275,7 @@ var publishedDate = year + '-' + month + '-' + dateNum + ' ' + hour + ':' + min 
                         				</div>
                         				                      				
                         				<div class="form-group">
-                              				<label for="" class="col-sm-2 control-label">Object Content</label>
+                              				<label for="" class="col-sm-3 control-label">Object Content</label>
                              				<div class="col-sm-9">
                              					<TEXTAREA CLASS="form-control" STYLE="height:220px;" id="new_obj_content" name="new_obj_content"></TEXTAREA>
 							 				</div>
@@ -253,18 +284,18 @@ var publishedDate = year + '-' + month + '-' + dateNum + ' ' + hour + ':' + min 
                      				</div>
                      				<div class="col-lg-5">
                      					<div class="form-group">
-                              				<label for="" class="col-sm-2 control-label">Order By<sup class="required">*</sup></label>
+                              				<label for="" class="col-sm-3 control-label">Order By<sup class="required">*</sup></label>
                              				<div class="col-sm-9">
                               					<input type="text" class="form-control" id="new_obj_order" name="new_obj_order" placeholder="" value="">
                              				</div>
                         				</div>
                         				<div class="form-group">
-    										<label for="" class="col-sm-2 control-label">Status</label>
-    										<div class="col-sm-9" style="margin-top:6px;">
-    											<div STYLE="float:left; margin-right:10px;display:inline-block;">
+    										<label for="" class="col-sm-3 control-label">Status</label>
+    										<div class="col-sm-9">
+    											<div class="radio" STYLE="float:left; margin-right:10px;">
       		  										<label> <input type="radio" id="new_obj_status" name="new_obj_status" value="1"  > <strong style="font-weight:600">Active</strong></label>
     			  								</div>
-				  								<div STYLE="float:left;"display:inline-block;>
+				  								<div class="radio" STYLE="float:left;">
       		  										<label> <input type="radio" id="new_obj_status" name="new_obj_status" value="0" checked> <strong style="font-weight:600">Inactive</strong></label>
     			  								</div>
 											</div>
@@ -283,25 +314,25 @@ var publishedDate = year + '-' + month + '-' + dateNum + ' ' + hour + ':' + min 
                 						<input type="hidden" class="span10" name="blog_id[]" id="blog_id_<%=  objectArr[i].uuid %>" value="<%=  objectArr[i].uuid %>" />
 										
 										<div class="form-group">
-                              				<label for="" class="col-sm-2 control-label">Name<sup class="required">*</sup></label>
+                              				<label for="" class="col-sm-3 control-label">Name<sup class="required">*</sup></label>
                              				<div class="col-sm-9">
                               					<input type="text" class="form-control" id="blog_name_<%=  objectArr[i].uuid %>" name="blog_name_<%=  objectArr[i].uuid %>" value="<%=  objectArr[i].name %>">
                              				</div>
                         				</div>
                        					<div class="form-group">
-                              				<label for="" class="col-sm-2 control-label">Email<sup class="required">*</sup></label>
+                              				<label for="" class="col-sm-3 control-label">Email<sup class="required">*</sup></label>
                              				<div class="col-sm-9">
                               					<input type="text" class="form-control" id="blog_email_<%=  objectArr[i].uuid %>" name="blog_email_<%=  objectArr[i].uuid %>" placeholder="" value="<%=  objectArr[i].email %>">
 							  				</div>
                         				</div>
                         				<div class="form-group">
-                              				<label for="" class="col-sm-2 control-label">Website<sup class="required">*</sup></label>
+                              				<label for="" class="col-sm-3 control-label">Website<sup class="required">*</sup></label>
                              				<div class="col-sm-9">
                               					<input type="text" class="form-control" id="blog_website_<%=  objectArr[i].uuid %>" name="blog_website_<%=  objectArr[i].uuid %>" placeholder="" value="<%=  objectArr[i].website %>">
 							  				</div>
                         				</div>                     				
                         				<div class="form-group">
-                              				<label for="" class="col-sm-2 control-label">Comment</label>
+                              				<label for="" class="col-sm-3 control-label">Comment</label>
                              				<div class="col-sm-9">
                              					<TEXTAREA CLASS="form-control" STYLE="height:220px;" id="blog_comment_<%=  objectArr[i].uuid %>" name="blog_comment_<%=  objectArr[i].uuid %>"><%=  objectArr[i].comment %></TEXTAREA>
 							 				</div>
@@ -310,19 +341,19 @@ var publishedDate = year + '-' + month + '-' + dateNum + ' ' + hour + ':' + min 
                      				</div>
                      				<div class="col-lg-5">
                      					<div class="form-group">
-                              				<label for="" class="col-sm-2 control-label">Posted On<sup class="required">*</sup></label>
+                              				<label for="" class="col-sm-3 control-label">Posted On<sup class="required">*</sup></label>
                              				<div class="col-sm-9">
                               					<input type="hidden" class="form-control" id="blog_created__<%=  objectArr[i].uuid %>" name="blog_created__<%=  objectArr[i].uuid %>" readonly value="<%=  objectArr[i].created %>">
                               					<input type="text" class="form-control" readonly value="<%=  timeConverter(objectArr[i].created) %>">
                              				</div>
                         				</div>
                         				<div class="form-group">
-    										<label for="" class="col-sm-2 control-label">Status</label>
-    										<div class="col-sm-9" style="margin-top:6px;">
-    											<div  STYLE="float:left; margin-right:10px;display:inline-block;">
+    										<label for="" class="col-sm-3 control-label">Status</label>
+    										<div class="col-sm-9">
+    											<div class="radio" STYLE="float:left; margin-right:10px;">
       		  										<label> <input type="radio" id="blog_status__<%=  objectArr[i].uuid %>" name="blog_status__<%=  objectArr[i].uuid %>" value="1" <% if (objectArr[i].status == 1 || objectArr[i].status == "1") { %>checked<% } %> > <strong style="font-weight:600">Active</strong></label>
     			  								</div>
-				  								<div STYLE="float:left;display:inline-block;">
+				  								<div class="radio" STYLE="float:left;">
       		  										<label> <input type="radio" id="blog_status__<%=  objectArr[i].uuid %>" name="blog_status__<%=  objectArr[i].uuid %>" value="0" <% if (objectArr[i].status == 0 || objectArr[i].status == "0") { %>checked<% } %>> <strong style="font-weight:600">Inactive</strong></label>
     			  								</div>
 											</div>
@@ -337,23 +368,25 @@ var publishedDate = year + '-' + month + '-' + dateNum + ' ' + hour + ':' + min 
       						</div>
       					</div>
   					</div>
-  					
-   					<div class="col-sm-12 margin-top-15 " ALIGN="CENTER" style="margin-top:20px;">	
-   						<button class="btn btn-primary btn-color margin-right-5 btn-sm"> Save Changes</button>
+   					<div class="col-sm-12 margin-top-15 " ALIGN="CENTER">	
+   						<button class="btn  palette-belize-hole btn-color margin-right-5 btn-sm "> Save Changes</button>
                 	</div>
         		</form>
       		</div>
 		</div>
-      			
+  <!-- /.col --> 
+</div>     
+      				</div>
+      			</article>
+    		</section>
     		<!--//body content--> 
   		</div>
   		<!--//Main Content--> 
-
+	</div>
 
 <!-- Footer Starts Here-->
 	<% include include/footer %>
 <!-- Footer Ends Here-->
-</div>
 <script SRC="plugins/tinymce/tinymce.min.js">
 
 <script>tinymce.init({ selector:'textarea' });</script>

@@ -1,28 +1,53 @@
 <% include include/main-header %>
-
+<style>
+   label{
+	   max-width:195px!important;
+	   text-align:left!important;
+	   margin-bottom:5pximportant;
+	   color:#515151;
+   }
+   @media(min-width:768px){
+   input[type="text"], select,textarea, input[type="password"] {
+	   max-width:300px;
+   }
+   textarea{
+	   height:100px!important;
+   }
+   
+   }
+   @media(min-width:992px){
+    .submit-btn-setting{
+	   margin-left:195px;
+   }
+   }
+</style>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body>
+	<!-- navbar top -->
    	<div class="wrapper">
    		<!-- Header Starts here-->
   		<% include include/header %>
   		<!-- Header Ends here-->
   		
-  		<!-- Sidebar Starts Here-->
+  		<div class="content" >
+  			<!-- Sidebar Starts Here-->
   			<% include include/sidebar %>
     		<!-- Sidebar Ends Here-->
     		
-    	<div class="content-wrapper">
-    	  	<!-- Content Header (Page header) -->
-    		<section class="content-header">
-      			<h1>User <small><% if (typeof contentObj.firstname !== 'undefined' && contentObj.firstname !== null) { %><%= contentObj.firstname %><% } else{	%>Add new<% }%></small></h1>
-      			<ol class="breadcrumb">
-        			<li><a href="<%= backendDirectory %>/index"><i class="fa fa-dashboard"></i> Home</a></li>
-        			<li class="active">User</li>
-      			</ol>
-    		</section>	
-    		<section class="content">
-      			<div class="row">
-            				<div class="panel-body no-padding-top bg-white"> 
+    		<section>
+      			<article>
+      				<div id="page-wrapper">
+        				<div class="row">
+       						<!-- Page Header -->
+        					<div class="col-lg-12">
+								<div  CLASS="hidden-xs sidemenu"> <button id="menu" CLASS="btn btn-sm btn-danger" title="Menu"><i class="fa fa-bars fa-2x"></i></button></div>
+        						<h1 class="page-header">User</h1>
+        					</div>
+       						<!--End Page Header -->
+        				</div>
+
+           				<div class="row">
+            				<div class="col-sm-12">
             					<% if (typeof queryStr !== 'undefined' && queryStr !== null) {
     								if(queryStr.error_msg) {	%>
 									<div class="alert alert-danger alert-dismissable">
@@ -46,19 +71,19 @@
       								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="email">
       								<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>">
             						<div class="form-group">
-                  						<label class="control-label col-md-2" for="first-name">First Name<span class="required">*</span></label>
+                  						<label class="control-label col-md-3" for="first-name">First Name<span class="required">*</span></label>
                   						<div class="col-md-6 col-lg-4">
                     						<input type="text" required="required" id="firstname" name="firstname" class="form-control col-md-5 col-xs-12" value="<% if (typeof contentObj.firstname !== 'undefined' && contentObj.firstname !== null) { %><%= contentObj.firstname %><% } %>">
                   						</div>
                 					</div>
               						<div class="form-group">
-                  						<label class="control-label col-md-2" for="">Last Name<span class="required">*</span></label>
+                  						<label class="control-label col-md-3" for="">Last Name<span class="required">*</span></label>
                   						<div class="col-md-6 col-lg-4">
                    							<input type="text"  required="required" class="form-control col-md-5 col-xs-12" id="lastname" name="lastname" value="<% if (typeof contentObj.lastname !== 'undefined' && contentObj.lastname !== null) { %><%= contentObj.lastname %><% } %>">
                   						</div>
                 					</div>
                 					<div class="form-group">
-    									<label for="" class="col-sm-2 control-label">Gender</label>
+    									<label for="" class="col-sm-3 control-label">Gender</label>
     									<div class="col-sm-9">
     										<div class="radio" STYLE="float:left; margin-right:10px;">
       		  									<label> <input type="radio" id="gender" name="gender" value="f" <% if (typeof contentObj.gender !== 'undefined' && contentObj.gender !== null && contentObj.gender == "f") { %>checked<% } %> > <strong style="font-weight:600">Female</strong></label>
@@ -69,14 +94,14 @@
 										</div>
 									</div>
                 					<div class="form-group">
-                  						<label class="control-label col-md-2" for="">Email Address<span class="required">*</span></label>
+                  						<label class="control-label col-md-3" for="">Email Address<span class="required">*</span></label>
                   						<div class="col-md-6 col-lg-4">
                    							<input type="email"  required="required" class="form-control col-md-5 col-xs-12" id="email" name="email" value="<% if (typeof contentObj.email !== 'undefined' && contentObj.email !== null) { %><%= contentObj.email %><% } %>">
                   						</div>
                 					</div>
                 					<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %>
                 						<div class="form-group">
-                  							<label class="control-label col-md-2" for="">Password<span class="required">*</span></label>
+                  							<label class="control-label col-md-3" for="">Password<span class="required">*</span></label>
                   							<div class="col-md-6 col-lg-4">
                    								<input type="password"  required="required" class="form-control col-md-5 col-xs-12" id="password" name="password" value="" disabled>
                   							</div>
@@ -87,14 +112,14 @@
                 							
                 					<% }else{	%>
                 					<div class="form-group">
-                  						<label class="control-label col-md-2" for="">Password<span class="required">*</span></label>
+                  						<label class="control-label col-md-3" for="">Password<span class="required">*</span></label>
                   						<div class="col-md-6 col-lg-4">
                    							<input type="password"  required="required" class="form-control col-md-5 col-xs-12" id="password" name="password" value="">
                   						</div>
                 					</div>
                 					<% } %>
                 					<div class="form-group">
-    									<label for="" class="col-sm-2 control-label">Access Right Code</label>
+    									<label for="" class="col-sm-3 control-label">Access Right Code</label>
     									<div class="col-sm-9">
     										<div class="radio" STYLE="float:left; margin-right:10px;">
       		  									<label> <input type="radio" id="access_rights_code" name="access_rights_code" value="1" <% if (typeof contentObj.access_rights_code !== 'undefined' && contentObj.access_rights_code !== null && contentObj.access_rights_code == 1) { %>checked<% } %> > <strong style="font-weight:600">ReadWrite</strong></label>
@@ -105,7 +130,7 @@
 										</div>
 									</div>
                 					<div class="form-group">
-    									<label for="" class="col-sm-2 control-label">Status</label>
+    									<label for="" class="col-sm-3 control-label">Status</label>
     									<div class="col-sm-9">
     										<div class="radio" STYLE="float:left; margin-right:10px;">
       		  									<label> <input type="radio" id="status" name="status" value="1" <% if (typeof contentObj.status !== 'undefined' && contentObj.status !== null && contentObj.status == 1) { %>checked<% } %> > <strong style="font-weight:600">Active</strong></label>
@@ -117,12 +142,12 @@
 									</div>
 									
                 					<div class="form-group">
-                   						<div class="col-md-9 col-lg-6" align="center">
-               								<div class="submit-btn-setting"> <button type="submit" class="btn btn-primary btn-color margin-right-5 btn-sm">Submit</button>
+                   						<div class="col-md-9 col-lg-6">
+               								<div class="submit-btn-setting"> <button type="submit" class="btn palette-belize-hole btn-color margn-right-15">Submit</button>
                								<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) {	%>
-               									<a href="<%= backendDirectory %>/list/users" class="btn btn-danger btn-sm">Cancel</a>
+               									<a href="<%= backendDirectory %>/list/users" class="btn btn-primary">Cancel</a>
                								<%	}else{	%>
-               									<button type="reset" class="btn btn-danger btn-sm">Reset</button>
+               									<button type="reset" class="btn btn-primary">Reset</button>
                								<% } %>
                								</div>
                							</div>
@@ -130,17 +155,18 @@
               					</form>
               				</div>
             			</div>
-      				
+      				</div>
+      			</article>
     		</section>
     		<!--//body content--> 
   		</div>
-  		
+  		<!--//Main Content--> 
+	</div>
 
 <!-- Footer Starts Here-->
 	<% include include/footer %>
 <!-- Footer Ends Here-->
-<!--//Main Content--> 
-	</div>
+
 <!-- Page-Level Plugin Scripts-->
 <script>
 function generate_code(name,code){
