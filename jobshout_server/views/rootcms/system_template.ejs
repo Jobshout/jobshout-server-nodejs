@@ -1,57 +1,31 @@
 <% include include/main-header %>
-<style>
-   label{
-	   max-width:195px!important;
-	   text-align:left!important;
-	   margin-bottom:5pximportant;
-	   color:#515151;
-   }
-   @media(min-width:768px){
-   input[type="text"], select,textarea, input[type="password"] {
-	   max-width:300px;
-   }
-   textarea{
-	   height:100px!important;
-   }
-   
-   }
-   @media(min-width:992px){
-    .submit-btn-setting{
-	   margin-left:195px;
-   }
-   }
-    .dragitems{width: 20%; float: left; background: #f1f1f1;}
-        .dropitems{width: 70%;float: left;background: #f1f1f1;
-                   margin-left: 20px;padding:5px 5px 5px 5px;}
-        .dragitems ul{list-style-type: none;padding-left: 5px;
-                   display: block;}
-</style>
+
 </head>
-<body>
+<body class="hold-transition skin-blue sidebar-mini">
 	<!-- navbar top -->
    	<div class="wrapper">
    		<!-- Header Starts here-->
   		<% include include/header %>
   		<!-- Header Ends here-->
-  		
-  		<div class="content" >
+  	
   			<!-- Sidebar Starts Here-->
   			<% include include/sidebar %>
     		<!-- Sidebar Ends Here-->
     		
-    		<section>
-      			<article>
-      				<div id="page-wrapper">
-        				<div class="row">
-       						<!-- Page Header -->
-        					<div class="col-lg-12">
-								<div  CLASS="hidden-xs sidemenu"> <button id="menu" CLASS="btn btn-sm btn-danger" title="Menu"><i class="fa fa-bars fa-2x"></i></button></div>
-        						<h1 class="page-header">System Template</h1>
-        					</div>
-       						<!--End Page Header -->
-        				</div>
-
-           				<div class="row">
+    		<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        System Template
+        <small>Detail Page</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="<%= backendDirectory %>/"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">System Template</li>
+      </ol>
+    </section>
+    		<section class="content">
+      			<div class="row">
             				<div class="col-sm-8">
             					<% if (typeof queryStr !== 'undefined' && queryStr !== null) {
     								if(queryStr.error_msg) {	%>
@@ -82,7 +56,7 @@
                   						
                   						<% if (typeof contentObj.code !== 'undefined' && contentObj.code !== null) { %>
                   						<div class="col-md-6 col-lg-4">
-                  							<a class="btn btn-info" href="<%= backendDirectory %>/list/<%= contentObj.code %>" target="_blank">View Page</a>
+                  							<a class="btn btn-primary btn-color margin-right-5 btn-sm" href="<%= backendDirectory %>/list/<%= contentObj.code %>" target="_blank">View Page</a>
                   						</div>
                   						<% } %>
                 					</div>
@@ -100,6 +74,9 @@
                     						</select>
                    						</div>
                    						<div class="col-md-6 col-lg-4">
+                   							<!--<label class="checkbox" STYLE="float:left; margin-right:10px;">
+                                                <span class="icons"><span class="first-icon fa fa-square-o"></span><span class="second-icon fa fa-check-square-o"></span></span><input value="" data-toggle="checkbox" type="checkbox" id="status" name="status" value="1" <% if (typeof contentObj.status !== 'undefined' && contentObj.status !== null && contentObj.status == 1) { %>checked<% } %> > <strong style="font-weight:600">Active</strong>
+                                            </label>-->
     										<div class="checkbox" STYLE="float:left; margin-right:10px;">
       		  									<label> <input type="checkbox" id="status" name="status" value="1" <% if (typeof contentObj.status !== 'undefined' && contentObj.status !== null && contentObj.status == 1) { %>checked<% } %> > <strong style="font-weight:600">Active</strong></label>
     			  							</div>
@@ -136,6 +113,7 @@
                   				
                 		<div class="form-group displayColumnsClass" style="display:none;">
                 			<input type="hidden" class="form-control col-md-5 col-xs-12" id="search_columns" name="search_columns">
+                			<input type="hidden" class="form-control col-md-5 col-xs-12" id="index_columns" name="index_columns">
                 			<input type="hidden" class="form-control col-md-5 col-xs-12" id="listing_columns" name="listing_columns">
                  			<label class="control-label col-md-3 tablefieldClass" for="">Display Columns</label>
                   			<div class="col-md-6 col-lg-4 tablefieldClass" id="tablefieldClass">
@@ -157,12 +135,12 @@
                    			</div>
                 		</div>
                 					<div class="form-group">
-                   						<div class="col-md-9 col-lg-6">
-               								<div class="submit-btn-setting"> <button type="submit" class="btn palette-belize-hole btn-color margn-right-15 save_exit">Submit</button>
+                   						<div class="col-md-9 col-lg-6" align="CENTER">
+               								<div class="submit-btn-setting"> <button type="submit" class="btn btn-primary btn-color margin-right-5 btn-sm save_exit">Submit</button>
                								<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) {	%>
-               									<a href="<%= backendDirectory %>/list/system_templates" class="btn btn-primary">Cancel</a>
+               									<a href="<%= backendDirectory %>/list/system_templates" class="btn btn-danger btn-sm">Cancel</a>
                								<%	}else{	%>
-               									<button type="reset" class="btn btn-primary">Reset</button>
+               									<button type="reset" class="btn btn-danger btn-sm">Reset</button>
                								<% } %>
                								</div>
                							</div>
@@ -180,20 +158,19 @@
                   				</ul>
               				</div>
             			</div>
-      				</div>
-      			</article>
-    		</section>
-    		<!--//body content--> 
-  		</div>
-  		<!--//Main Content--> 
-	</div>
+      		</section>
+    	</div>	
+  		
+	
 
 <!-- Footer Starts Here-->
 	<% include include/footer %>
 <!-- Footer Ends Here-->
 
-<!-- Page-Level Plugin Scripts-->
 
+</div>
+<!--//Main Content--> 
+<!-- Page-Level Plugin Scripts-->
 <script src="plugins/jquery-ui.min.js"></script>
 <script>
 function __chooseDetailView(){
@@ -303,6 +280,7 @@ $(document).ready(function() {
 	
 	$('.save_exit').on("click", function(){
 		var selectedSearchFieldsArr=new Array;
+		var selectedIndexFieldsArr=new Array;
 		var i=0, j=0;
 		$('.search_fields').each(function(){
 			var valStr= $(this).val();
@@ -311,11 +289,14 @@ $(document).ready(function() {
 				var searchObj={};
 				searchObj[valStr]= searchClause;
 				selectedSearchFieldsArr[i]= searchObj;
+				selectedIndexFieldsArr[i]=valStr;
 				i++;
 			}
 		});
 		var selectedSearchFieldsStr= JSON.stringify(selectedSearchFieldsArr);
 		$("#search_columns").val(selectedSearchFieldsStr);
+		
+		$("#index_columns").val(JSON.stringify(selectedIndexFieldsArr));
 		
 		var selectedListFieldsArr=new Array();
 		$('.list_fields').each(function(){

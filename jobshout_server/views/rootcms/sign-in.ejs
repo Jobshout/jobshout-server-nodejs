@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 
@@ -6,28 +7,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tenthmatrix CRM</title>
     <!-- Core CSS - Include with every page -->
-    <link href="plugins/bootstrap/bootstrap.css" rel="stylesheet" />
-    <link href="font-awesome/css/font-awesome.css" rel="stylesheet" />
-     <link href="css/animate.min.css" rel="stylesheet">
-     <link href="css/main-style.css" rel="stylesheet" />
+     <link rel="stylesheet" href="css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="css/Admin.min.css">
+  <style>
+  .logo-margin {
+    margin-top: 100px;
+}
+.login-panel .panel-heading {
+    background: #2a3f54;
+    color: #fff;
+}
 
+.checkbox input, .radio input{
+	display:block!important;
+}
+
+.btn-danger {
+    background-color: #fbb83b;
+    border-bottom: 3px solid #d69d33;
+    border-right: 3px solid #d69d33;
+    border-left: none;
+    border-top: none;
+}
+  
+  </style>
+ 
+<link rel="stylesheet" href="css/skins/_all-skins.min.css">
+<link href="css/animate.min.css" rel="stylesheet">
 </head>
 
 <body class="body-Login-back" id="login-pg">
-
     <div class="container">
-       
-        <div class="row  animated fadeInDown">
-            <div class="col-md-4 col-md-offset-4 text-center logo-margin ">
-              <img src="img/jobshout-logo.png" alt=""/>
-                </div>
-            <div class="col-md-4 col-md-offset-4">
-                <div class="login-panel panel panel-default  margin-btm5 ">                  
-                    <div class="panel-heading panel-black-bg">
-                        <h3 class="panel-title">Sign In</h3>
-                    </div>
-                    <div class="panel-body">
-                        <form class="form-horizontal" action="<%= backendDirectory %>/validlogin" method="POST">
+    <div class="row  animated fadeInDown">
+    <div class="col-md-4 col-md-offset-4 text-center logo-margin ">
+    <img src="images/login-logo.png" STYLE="padding-bottom:15px;" alt=""/>
+    </div>
+    <div class="col-md-4 col-md-offset-4">
+    <div class="login-panel panel panel-default  margin-btm5 ">                  
+    <div class="panel-heading panel-black-bg">
+    <h3 class="panel-title">Sign In</h3>
+    </div>
+    <div class="panel-body">
+        				<form class="form-horizontal" action="<%= backendDirectory %>/validlogin" method="POST">
                             <fieldset>
                             	<% if (typeof queryStr.error !== 'undefined' && queryStr.error !== null) {
     								if(queryStr.error=="no") {	%>
@@ -51,20 +77,20 @@
                                 </div>
                                 <!--<div class="checkbox"><label><input name="remember" type="checkbox" value="Remember Me">Remember Me </label></div>-->
                                 
-                               	<button  class="btn btn-lg btn-success btn-block" type="submit" style="padding-top: 3px;">Login</button>
+                                <button  class="btn btn-danger btn-color" style="WIDTH: 100%; font-size:17px; line-height: 27px;" type="submit" style="padding-top: 3px;">Login</button>
                                 <!--<p class="text-right"><small><a href="#"><em>forgot password?</em></a></small></p>-->
                             </fieldset>
                         </form>
                     </div>
                 </div>
-                <!--<p class="text-center font-size12" style="color:#919191;">Version: 04.03.18 - 17:01</p>-->
+                
             </div>
         </div>
     </div>
 
- <!-- Footer Starts Here-->
-	<% include include/footer %>
-<!-- Footer Ends Here-->
+     <!-- Core Scripts - Include with every page -->
+     <script src="js/jquery-2.2.3.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
 </body>
-
 </html>
+

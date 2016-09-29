@@ -9,7 +9,7 @@
 	**/
 
 	/**********************************************************************
-	*  init.js handles the basic initial constants
+	*  config.js
 	**/
 	
 	var mongodbRe = require('mongodb')
@@ -22,8 +22,8 @@
     	mongodb : mongodbRe,
     	MongoClient : MongoClient,
     	mongoConnUrl : url,
-    	port : 3001,
-		cookieName : "jobshout_login",
+    	port : 3030,
+		cookieName : "rootinternet_id",
 		backendDirectoryPath : "/rootcms",
 		backendDirectoryName : "rootcms"
 	};

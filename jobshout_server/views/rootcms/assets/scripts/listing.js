@@ -2,13 +2,18 @@ var xhrStatus;
 
 var pageSize=15, totalNum=0;
 var start=0, end=pageSize;
-function generateHeading(e){
+function generateHeading(e, upperCase=false){
 	var patt=/[^A-Za-z0-9]/g;
 	var result=e.replace(patt,' ');
 	result=result.replace(/\s+/g, ' ');
-	result=result.toUpperCase();
+	if(upperCase==true){
+		result=result.toUpperCase();
+	}else{
+		result=result.substr(0, 1).toUpperCase() + result.substr(1);
+	}
 	return result;
 }
+
 	function searchKeyword(e){
 		var searchField= $("#"+e).val();
 		if(searchField!=""){
@@ -101,7 +106,8 @@ function load_more(){
 					
 				}
 				if (typeof html.table !== 'undefined' && html.table !== null && html.table!="" && start==0){
-					$(".page-header").html(generateHeading(html.table)+" (LIST VIEW)");
+					$("#pageMainHeading").html(generateHeading(html.table)+" <small>LIST VIEW</small>");
+					$("#breadcrumbTitle").html(generateHeading(html.table));
 				}
 				if (typeof html.enable_search !== 'undefined' && html.enable_search !== null && (html.enable_search==true ||  html.enable_search=="true") && start==0){
 					$(".form-inline").show();

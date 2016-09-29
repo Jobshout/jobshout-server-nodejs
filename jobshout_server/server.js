@@ -1,17 +1,3 @@
-	/**********************************************************************
-	*  Author: Neha Kapoor (neha@jobshout.org)
-	*  Project Lead: Balinder WALIA (bwalia@jobshout.org)
-	*  Project Lead Web...: https://twitter.com/balinderwalia
-	*  Name..: Jobshout Server NodeJS
-	*  Desc..: Jobshout Server (part of Jobshout Suite of Apps)
-	*  Web: http://jobshout.org
-	*  License: http://jobshout.org/LICENSE.txt
-	**/
-
-	/**********************************************************************
-	*  server.js handles the whole app
-	**/
-	
 'use strict';
 /**
  * Module dependencies.
@@ -37,14 +23,14 @@ init.MongoClient.connect(init.mongoConnUrl, function (err, database) {
     	console.log('Unable to connect to the mongoDB server. Error:', err);
   	} else {
    		console.log('Connection established to', init.mongoConnUrl);
-   		require('./controller/routes')(init, app,db);
+   		require('./controller/routes')(init, app, db);
   	}
 });
 
 // Logging initialization
-console.log('rootcms application started on port ' + init.port);
+console.log('rootcrm application started on port ' + init.port);
 
-app.locals.backendDirectory = init.backendDirectoryPath;
+app.locals.backendDirectory = init.backendDirectoryPath; 
 
 app.locals.timeConverter = function(UNIX_timestamp) {
   var a = new Date(UNIX_timestamp * 1000);

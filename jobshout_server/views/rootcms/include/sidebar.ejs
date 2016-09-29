@@ -1,104 +1,44 @@
-<aside class="content mCustomScrollbar light" data-mcs-theme="minimal-dark" >
-     <ul class="nav" id="side-menu">
-                    <li>
-                        <!-- user image section-->
-                        <div class="user-section">
-                            <div class="user-section-inner">
-                                <img src="img/user.jpg" alt="">
-                            </div>
-                            <div class="user-info">
-                            	<% if (typeof authenticatedUser !== 'undefined' && authenticatedUser !== null) {	
-                            		var loggedInUserNameStr="";
-                            		if (typeof authenticatedUser.firstname !== 'undefined' && authenticatedUser.firstname !== null) {	
-                            			loggedInUserNameStr+=authenticatedUser.firstname;
-                            		}
-                            		if (typeof authenticatedUser.lastname !== 'undefined' && authenticatedUser.firlastnamestname !== null) {	
-                            			loggedInUserNameStr+="&nbsp;<strong>"+authenticatedUser.lastname+"</strong>";
-                            		}
-                            	%>
-                                <div><%- loggedInUserNameStr %></div>
-                                <% } %>
-                                <div class="user-text-online">
-                                    <span class="user-circle-online btn btn-success btn-circle "></span>&nbsp;Online
-                                </div>
-                            </div>
-                        </div>
-                        <!--end user image section-->
-                    </li>
-                    <li class="sidebar-search">
-                        <!-- search section-->
-                        <div class="input-group custom-search-form">
-														<input class="form-control" placeholder="Search..." type="text">
-														<span class="input-group-btn">
-														<button class="btn palette-belize-hole btn-color" type="button"> <i class="fa fa-search"></i> </button>
-														</span> </div>
-                        <!--end search section-->
-                    </li>
-                    <li class="active">
-                        <a href="<%= backendDirectory %>/"><i class="fa fa-dashboard fa-fw"></i>Dashboard</a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="contact-icon"></i> Bookmarks<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li> <a href="<%= backendDirectory %>/list/bookmarks">Bookmarks</a> </li>
-							<li><a href="<%= backendDirectory %>/bookmark">Enter new Bookmark</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-tasks"></i> Categories<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li> <a href="<%= backendDirectory %>/list/categories">Categories</a> </li>
-							<li><a href="<%= backendDirectory %>/category">Enter new Category</a></li>
-                        </ul>
-                    </li>
-					<li>
-                        <a href="#"><i class="fa fa-file-text"></i> Documents<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li> <a href="<%= backendDirectory %>/list/documents">List Documents</a> </li>
-							<li><a href="<%= backendDirectory %>/document">Enter new document</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-folder-o"></i> Email Queue<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li> <a href="<%= backendDirectory %>/list/emails">Email Queue</a> </li>
-							<li><a href="<%= backendDirectory %>/email">Enter new email</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-book"></i> Templates<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li> <a href="<%= backendDirectory %>/list/templates">List Templates</a> </li>
-							<li><a href="<%= backendDirectory %>/template">Enter new Template</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-file-text-o"></i> Tokens<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li> <a href="<%= backendDirectory %>/list/tokens">List Tokens</a> </li>
-							<li><a href="<%= backendDirectory %>/token">Enter new token</a></li>
-                        </ul>
-                    </li>
-                     <li>
-                        <a href="#"><i class="domains-icon"></i> Web Routes<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li> <a href="<%= backendDirectory %>/list/web_routes">Web Routes</a> </li>
-							<li><a href="<%= backendDirectory %>/web_route">Enter new Web Route</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-file-code-o"></i> System Templates<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li> <a href="<%= backendDirectory %>/list/system_templates">System Templates</a> </li>
-							<li><a href="<%= backendDirectory %>/system_template">Enter new System Templates</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-group"></i> Users<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li> <a href="<%= backendDirectory %>/list/users">Users</a> </li>
-							<li><a href="<%= backendDirectory %>/user">Enter new user</a></li>
-                        </ul>
-                    </li>
-				</ul>
-    </aside>
+<aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+      <!-- Sidebar user panel -->
+      <div class="user-panel">
+        <div class="pull-left image">
+          <img src="img/user2-160x160.jpg" class="img-circle" alt="User Image">
+        </div>
+        <% 	
+if (typeof authenticatedUser !== 'undefined' && authenticatedUser !== null) {	
+	var loggedInUserNameStr="";
+	if (typeof authenticatedUser.firstname !== 'undefined' && authenticatedUser.firstname !== null) {	
+		loggedInUserNameStr+=authenticatedUser.firstname;
+	}
+	if (typeof authenticatedUser.lastname !== 'undefined' && authenticatedUser.firlastnamestname !== null) {	
+		loggedInUserNameStr+="&nbsp;"+authenticatedUser.lastname;
+	}
+	%>
+	<div class="pull-left info">
+          <p><%- loggedInUserNameStr %></p>
+          <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+        </div>
+      
+<% } %>
+      </div>  
+      <!-- search form -->
+      <form action="#" method="get" class="sidebar-form" onSubmit="load_navigation_data()">
+        <div class="input-group">
+          <input type="text" id="menuSearchBox" class="form-control" placeholder="Search...">
+              <span class="input-group-btn">
+                <button type="submit" id="search-btn" class="btn btn-flat" STYLE="border-left:none;line-height: 12px;"><i class="fa fa-search"></i>
+                </button>
+              </span>
+        </div>
+      </form>
+      <!-- /.search form -->
+      <!-- sidebar menu: : style can be found in sidebar.less -->
+      <ul class="sidebar-menu" id="dashboard-menu">
+      
+        
+      </ul>
+    </section>
+    <!-- /.sidebar -->
+  </aside>

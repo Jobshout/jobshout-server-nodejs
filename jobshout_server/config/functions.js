@@ -169,6 +169,29 @@ var self = module.exports =
 		});
 	},
 	
+	createIndexes : function (db, collectionName, columnsArr, cb){
+		var outputObj = new Object();
+		var fetchFieldsObj="";
+		columnsArr = columnsArr.replace(/'/g, '"');
+		columnsArr = JSON.parse(columnsArr);
+		if(columnsArr.length>0){
+			for(var l_count=0; l_count< columnsArr.length; l_count++){
+				if(l_count==0){
+					fetchFieldsObj="{";
+					fetchFieldsObj+="'"+columnsArr[l_count]+"' : 1";
+				}else{
+					fetchFieldsObj+=", '"+columnsArr[l_count]+"' : 1";
+				}
+			}
+			if(fetchFieldsObj!=""){
+				fetchFieldsObj+="}";
+				
+				eval('var fetchFieldsobj='+fetchFieldsObj);
+				console.log(fetchFieldsobj);
+				db.collection(collectionName).createIndex(fetchFieldsobj);
+			}
+		}
+	},
 	
 	saveEntry : function(db, table_nameStr, checkForExistence, postContent, parameterStr, findmongoID, unique_fieldStr, unique_fieldVal, cb){
 		var link="";
