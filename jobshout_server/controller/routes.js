@@ -20,8 +20,10 @@ module.exports = function(init, app,db){
 var mongodb=init.mongodb;
 var backendDirectoryNameStr=init.backendDirectoryName;
 var backendDirectoryPath=init.backendDirectoryPath;
+
 //sign in page
 app.get(backendDirectoryPath+'/sign-in', function(req, res) {
+	console.log(backendDirectoryNameStr+'/sign-in');
 	res.render(backendDirectoryNameStr+'/sign-in', {
       	 queryStr : req.query
     });   
@@ -257,9 +259,9 @@ app.get(backendDirectoryPath+'/:id', requireLogin, function(req, res) {
 	var pageRequested = req.params.id;
 	
 	var queryString= req.url;
-	console.log(queryString);
+	//console.log(queryString);
 	var removeUrl=backendDirectoryPath+'/'+req.params.id+'?';
-	console.log(removeUrl);
+	//console.log(removeUrl);
 	queryString= queryString.substr(removeUrl.length);
 	
 	if(queryString.indexOf("&")>-1){
@@ -275,7 +277,7 @@ app.get(backendDirectoryPath+'/:id', requireLogin, function(req, res) {
 	
 	var contentObj= "";
 	var table_name =initFunctions.fetchTableName(pageRequested);
-	console.log(editFieldName+" "+editFieldVal);
+	//console.log(editFieldName+" "+editFieldVal);
 	if(table_name!=""){
 		var tokensArr= new Array();
 		if (typeof editFieldVal !== 'undefined' && editFieldVal !== null) {
