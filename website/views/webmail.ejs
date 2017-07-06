@@ -1,0 +1,57 @@
+ <link href="css/bootstrap.min.css" rel="stylesheet">
+
+
+<div CLASS="container" ALIGN="CENTER">
+<a HREF="#"><img src="images/logo.jpg" STYLE="margin-top:20px;"></a>
+
+
+<h3>Webmail Access!</h3>
+<form name="loginForm" style="margin:0px" onsubmit="submitForm();" action="https://apps.rackspace.com/login.php" method="post" class="form-horizontal">
+
+
+<div STYLE="background:#F0EEEE; padding:20px 30px; border-radius:5px; overflow:hidden; width:40%; margin-top:20px;">
+<div STYLE="padding-bottom:10px;"> 
+<p STYLE="text-align:left;">User Name:</p> 
+<input type="password" class="form-control small" name="user_name">
+</div>
+
+
+
+<div STYLE="padding-bottom:30px;"> 
+<p STYLE="text-align:left;">Password:</p>  
+<input type="password" class="form-control small" type="password" name="password" >
+</div>
+
+
+
+<div STYLE="padding-bottom:30px;" CLASS="pull-right">
+<input type="submit" value="Login" CLASS="btn btn-info" STYLE="border-radius:2px; width:100%">
+</div>
+
+
+
+<input type="checkbox" name="remember" id="remember" >
+												<font style="font-size:11px">Remember me</font>
+												<input type=hidden name='useSSL' id='useSSL' value=''>
+
+
+</div>
+
+
+
+				<div style="text-align:center;padding-top:10px;" >
+				<div style="text-align:center;padding-top:10px"> <img src="images/logo-email-rackspace-apps.png" align="middle" border="0"> </div>
+				<font style="font-size:10px;">  <a href="http://www.rackspace.com/apps/email_hosting/exchange_hosting" color="#0000FF" style="text-decoration:none;" target="_blank">Exchange Hosting and Email Services by Rackspace</a>
+				</font>
+
+
+
+</div>
+		
+</div>
+</form>
+
+
+
+
+<script type="text/javascript" src="http://webmail.emailsrvr.com/mail/js/login.js"></script><script type="text/javascript">preloadForm(); if (getQueryVariable("fail") == 1) {alert("Incorrect username or password.")}</script> 

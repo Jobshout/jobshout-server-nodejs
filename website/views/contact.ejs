@@ -1,0 +1,226 @@
+<%  include include/main-header %>
+<% var locStr="ambala", addressStr="", mapStr="";
+if (typeof queryStr.loc !== 'undefined' && queryStr.loc !== null) {
+	locStr=queryStr.loc;
+}
+if (typeof address_token !== 'undefined' && address_token !== null) {
+	addressStr=address_token;
+} %>
+
+</head>
+<body>
+ 	<!--header end-->
+	<% include include/header %>
+	<!--header end-->
+ 	
+	<div class="breadcrumbs">
+		<div class="container">
+        	<div class="row">
+          		<div class="col-lg-4 col-sm-4">
+           			<h1 class="mainheading"><span>Contact Us</span></h1>
+          		</div>
+          		<div class="col-lg-8 col-sm-8">
+            		<ol class="breadcrumb pull-right">
+              			<li><a href="/">Home</a></li>
+              			<li class="active">Contact Us</li>
+    				</ol>
+        		</div>
+        	</div>
+		</div>
+	</div>
+	
+	<div class="container">
+    	<div class="row">
+        	<div class="col-lg-5 col-sm-5 address">
+          		<% if (typeof addressStr !== 'undefined' && addressStr !== null) {
+          			var tokenContentStr = JSON.parse(addressStr.token_content);  
+          			var addrDetails= tokenContentStr[locStr];
+          			if (typeof addrDetails.map !== 'undefined' && addrDetails.map !== null) {
+          				mapStr=addrDetails.map;
+          			}
+          			var headingStr="Registered Office";
+          			if(locStr=="uk"){	
+          				var headingStr="Registered Office";
+          			}else if(locStr=="Sydney"){
+          				var headingStr="Sales Office";
+          			}else if(locStr=="ambala"){ 
+          				var headingStr="Technical Support Office";
+          			}	%>
+          			<% if (typeof addrDetails.head_office !== 'undefined' && addrDetails.head_office !== null) {	%>
+            			<section class="contact-infos">
+            				<h4>Head Office</h4>
+            				<address>
+            					<ul class="icons-list" STYLE="list-style:none;"><img src="images/head-office.jpg" class="img-responsive" style="padding:0 10px 10px 0;" alt="" align="left">
+									<li style="height:101px;"><i class="fa fa-globe">&nbsp;</i> <strong>Address:</strong>
+										<%= addrDetails.head_office %>
+									</li>
+								</ul>
+							</address>
+						</section>
+          			<% } %>
+          				<section class="contact-infos">
+            				<h4><%= headingStr %></h4>
+            				<% if (typeof addrDetails.address !== 'undefined' && addrDetails.address !== null) {	%>
+            				<address>
+            					<ul class="icons-list" STYLE="list-style:none;">
+									<li><i class="fa fa-globe">&nbsp;</i> <strong>Address:</strong>
+										<%= addrDetails.address %>
+									</li>
+								</ul>
+							</address>
+							<% } %>
+          				</section>
+						<section class="contact-infos">
+            				<h4>Contact Info</h4>
+           						<i class="icon-phone">  </i>
+              					<ul class="icons-list" style="padding-left:0px; list-style:none;">
+									<% if (typeof addrDetails.phone_number !== 'undefined' && addrDetails.phone_number !== null) { %><li><i class="fa fa-mobile"></i> <strong>Phone:</strong> <%= addrDetails.phone_number	%></li><% } %>
+									<% if (typeof addrDetails.email_address !== 'undefined' && addrDetails.email_address !== null) { %><li><i class="fa fa-envelope-o"></i> <strong>Email:</strong> <%= addrDetails.email_address	%></li><% } %>
+									<% if (typeof addrDetails.fax_number !== 'undefined' && addrDetails.fax_number !== null) { %><li><i class="fa fa-envelope-o"></i> <strong>Uk fax number:</strong> <%= addrDetails.fax_number	%></li><% } %>
+								</ul>
+						</section>
+            		<%	}else{ %>
+            		<address>
+              <ul class="icons-list" STYLE="list-style:none;"><img src="images/head-ofce.jpg" class="img-responsive" style="padding:0 10px 10px 0;" alt="" align="left">
+					<li style="height:201px;"><i class="fa fa-globe">&nbsp;</i> <strong>Address:</strong>
+Tenthmatrix Information Systems LTD<br />
+The Coach House<br /> 
+77A MARLOWES<br />
+HEMEL HEMPSTEAD<br />
+HERTFORDSHIRE<br />
+ENGLAND<br />
+HP1 1LF UK<br />
+Company No. 06597469</li>
+</ul></address>
+          </section>
+
+          <section class="contact-infos">
+            <h4>Contact Info</h4>
+           
+              <i class="icon-phone">
+              </i>
+              <ul class="icons-list" style="padding-left:0px; list-style:none;">
+					<li><i class="fa fa-mobile"></i> <strong>Phone:</strong> 01442 384 149</li>
+<li><i class="fa fa-envelope-o"></i> <strong>Email:</strong> info@tenthmatrix.co.uk</li>
+</ul>
+
+          </section>
+          <% } %>
+		  <section class="contact-infos">
+            <h4>Select Location</h4>
+            <ul class="icons-list" style="padding-left:0px; list-style:none;">
+				<li><a href="/contact?loc=ambala">Head Office India</a></li>
+				<li><a href="/contact?loc=Sydney">Sales Office Sydney (Australia)</a></li>
+				<li><a href="/contact?loc=uk">Sales Office UK</a></li>
+			</ul>
+
+          </section>
+		  
+		  
+        </div>
+        <div class="col-lg-7 col-sm-7 address">
+          <h4>
+            Drop us a line so that we can hear from you
+          </h4>
+          <% if (typeof queryStr !== 'undefined' && queryStr !== null) {
+    								if(queryStr.msg=="error") {	%>
+									<div class="alert alert-danger alert-dismissable">
+             							<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                						Oops! Please try after some time, we are having some technical issue. 
+                					</div>
+            						<% }
+           							if(queryStr.msg=="success") {	%>
+										<div class="alert alert-success alert-dismissable">
+             								<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                							Thank you. Your message has been sent successfully!
+            							</div>
+            						<%	}
+            					}	%>
+          <div class="contact-form">
+            <form id="ajax-contact-form" role="form" method="post" action="/contact/save">
+            	<input name="location" type="hidden" value="<%= locStr %>">
+              <div class="form-group">
+                <label for="name">
+                  Name
+                </label>
+                <input placeholder="" name="name" id="name" class="form-control" type="text">
+              </div>
+              <div class="form-group">
+                <label for="email">
+                  Email
+                </label>
+                <input placeholder="" name="email" id="email" class="form-control" type="text">
+              </div>
+              <div class="form-group">
+                <label for="phone">
+                  Phone
+                </label>
+                <input id="phone" name="phone" class="form-control" type="text">
+              </div>
+			  
+			  
+			  <div class="form-group">
+                <label for="phone">
+                  Subject
+                </label>
+                <input id="subject" name="subject" class="form-control" type="text">
+              </div>
+              <div class="form-group">
+                <label for="phone">
+                  Message
+                </label>
+                <textarea placeholder="" id="message" name="message" rows="10" class="form-control"></textarea>
+              </div>
+              <button class="btn btn-primary" type="submit">
+                Submit
+              </button>
+            </form>
+
+          </div>
+        </div>
+      </div>
+      </div>
+
+
+
+<% if (typeof mapStr !== 'undefined' && mapStr !== null && mapStr !== "") {	%>
+	<div style="position: relative; top: 34px;">
+	<iframe src="<%= mapStr %>" scrolling="no" marginheight="0" marginwidth="0" frameborder="0" height="300" width="100%"></iframe>
+	</div>
+<%	}	%>
+
+   	<!--footer start-->
+    <% include include/footer %>
+    <!--footer end-->
+    <script src="js/jquery.validate.js"></script>
+    <script type="text/javascript">
+$(document).ready(function(){
+	$("#ajax-contact-form").validate({
+		rules: {
+			name: "required",
+			email: {
+				required: true,
+				email: true
+			},
+			subject: "required",
+			message: "required",
+			captcha_code: "required",
+			
+		},
+		messages: {
+			name: "Please enter your name",
+			email: {
+				required: "Please enter your E-mail",
+				email: "Please enter valid E-mail"
+			},
+			subject: "Please enter Subject",
+			message: "Please enter Message",
+			captcha_code: "Please enter Security Code",
+		}
+	});
+
+});
+
+</script>
+  </body>
+</html>

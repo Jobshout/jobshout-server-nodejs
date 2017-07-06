@@ -1,0 +1,342 @@
+<% var pageTileStr= "", metaKeywordsStr= "", metaDescriptionStr="";
+if (document_details.PageTitle) { 
+pageTileStr= document_details.PageTitle;
+}
+if (document_details.MetaTagKeywords) { 
+metaKeywordsStr= document_details.MetaTagKeywords;
+}
+if (document_details.MetaTagDescription) { 
+metaDescriptionStr= document_details.MetaTagDescription;
+}
+
+%>
+
+<%  include include/main-header %>
+<link rel="stylesheet" type="text/css" href="css/parallax-slider/parallax-slider.css" />
+    
+</head>
+<body>
+ 	<!--header end-->
+	<% include include/header %>
+	<!--header end-->
+ 	<div class="breadcrumbs">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-sm-8">
+           <h1 class="mainheading"><span><%= document_details.Document %></span></h1>
+          </div>
+          <div class="col-lg-4 col-sm-4">
+            <ol class="breadcrumb pull-right">
+              <li><a href="/" title="Home">Home</a></li>
+              <li class="active" title="<%= document_details.Document %>"><%= document_details.Document %></li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+	<div class="container">
+      	<div class="row">
+      		<% if(document_details.Type=="blog"){
+      			var a = new Date(document_details.Created * 1000);
+  				var months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  				var year = a.getFullYear();
+  				var month = months[a.getMonth()];
+  				var dateNum = a.getDate();
+  				
+  				var defaultImg="images/welcome.jpg";
+				if(document_details.virtualFields){
+					defaultImg=document_details.virtualFields['image_path'];
+				}
+  			%>
+      			<div class="col-lg-9 ">
+					<div class="blog-item">
+            			<div class="row">
+              				<div class="col-lg-2 col-sm-2">
+                				<div class="date-wrap">
+                  					<span class="date">	<%= dateNum %> <%= month %></span>
+                  					<span class="month"><%= year %></span>
+                				</div>
+							</div>
+              				<div class="col-lg-10 col-sm-10">
+								<div class="blog-img gs">
+                  					<img src="<%= defaultImg %>" alt="">
+                				</div>
+							</div>
+            			</div>
+            			<div class="row">
+              				<div class="col-lg-2 col-sm-2 text-right">
+                				<div class="author">By <a href="javascript:void(0)">Admin</a></div>
+                				<%	if(document_details.Objects){	%>
+                  				<div class="st-view">
+                  					<ul class="list-unstyled" STYLE="border-top:1px solid #ddd;">
+                    					<li><a href="javascript:;"><%= document_details.Objects.length %> comments</a></li>
+									</ul>
+               					</div>
+               					<% } %>
+              				</div>
+              				<div class="col-lg-10 col-sm-10">
+                				<h1><%= document_details.Document %></h1>
+                				<p><%- document_details.Body %></p>
+                				<%	if(document_details.BlogComments){
+                					if(document_details.BlogComments.length>0){	%>
+	          					<div class="media">
+                  					
+                  					<%	var objectArr=document_details.BlogComments;
+      									for(var objCount=0; objCount<objectArr.length; objCount++){
+                  							var subObject=objectArr[objCount];
+                  							if(subObject.status==1){
+                  								if(objCount==1){	%>
+                  								<h3>Comments</h3>
+                  							<%	}
+                  					 %>
+                  					<hr>
+                  					<a class="pull-left" href="javascript:;"><img class="media-object" src="images/no-image-user.jpg" alt=""></a>
+                  					<div class="media-body">
+                    					<h4 class="media-heading">
+                      						<%= subObject.name %>
+                      						<% if(subObject.modified){
+                      						var modifiedDateStr = timeConverter(subObject.modified);
+  											
+  											%>
+                      						<span> | </span>
+                      						<span>
+                      							<%= modifiedDateStr %>
+                      						</span>
+                      						<% } %>
+                    					</h4>
+                    					<p><%= subObject.comment %></p>
+                 					</div>
+                 					<% 		}
+                 						}	%>
+    							</div>
+                				<% }	
+                				}	%>
+                				<div class="post-comment">
+                  					<h3 class="skills">Post Comments</h3>
+                 					<form class="form-horizontal" role="form" id="blogComment" method="post" action="">
+                    					<div class="form-group">
+                      						<div class="col-lg-4">
+                        						<input placeholder="Name" id="name" name="name" class="col-lg-12 form-control" type="text">
+                        						<input id="blog_uuid" name="blog_uuid" type="hidden" value="<%= document_details._id %>">
+                      						</div>
+
+                      						<div class="col-lg-4">
+                        						<input placeholder="Email" id="email" name="email" class="col-lg-12 form-control" type="text">
+                      						</div>
+
+                      						<div class="col-lg-4">
+                        						<input placeholder="Website" id="website" name="website" class="col-lg-12 form-control" type="text">
+                     						</div>
+                    					</div>
+                    					<div class="form-group">
+                      						<div class="col-lg-12">
+                        						<textarea placeholder="Message" id="comment" name="comment" rows="8" class=" form-control"></textarea>
+                      						</div>
+                    					</div>
+                    					<p><button type="submit" class="btn btn-primary pull-right" id="postBtn">Post Comment</button></p>
+                  					</form>
+                				</div>
+							</div>
+            			</div>
+          			</div>
+				</div>
+				<div class="col-lg-3">
+          			<div class="blog-side-item">
+		  				<div class="archive">
+              				<h3>News</h3>
+              				<ul class="list-unstyled ulrightlink" id="newsContent">
+                	
+              				</ul>
+            			</div>
+		  				<div class="blog-post margin-top-25">
+              				<div class="blog-post" id="blogContent">
+              			
+              				</div>
+              			</div>
+            		</div>
+				</div>
+        	</div>
+      		<% }else if(document_details.Type=="news"){	
+      			var a = new Date(document_details.Created * 1000);
+  				var months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  				var year = a.getFullYear();
+  				var month = months[a.getMonth()];
+  				var dateNum = a.getDate();
+  				
+  			%>
+      			<div class="col-lg-9 ">
+					<div class="blog-item">
+            			<div class="row">
+              				<div class="col-lg-2 col-sm-2">
+                				<div class="date-wrap">
+                  					<span class="date">	<%= dateNum %> <%= month %></span>
+                  					<span class="month"><%= year %></span>
+                				</div>
+							</div>
+              				
+              				<div class="col-lg-10 col-sm-10">
+                				<h1><%= document_details.Document %></h1>
+                				<p><%- document_details.Body %></p>
+                			</div>
+            			</div>
+          			</div>
+				</div>
+				<div class="col-lg-3">
+          			<div class="blog-side-item">
+		  				<div class="archive">
+              				<h3>News</h3>
+              				<ul class="list-unstyled ulrightlink" id="newsContent">
+                	
+              				</ul>
+            			</div>
+		  				<div class="blog-post margin-top-25">
+              				<div class="blog-post" id="blogContent">
+              			
+              				</div>
+              			</div>
+            		</div>
+				</div>
+        	</div>
+      		
+      		<%	}else{	%>
+	  		<%- document_details.Body %>
+	  			<% if(document_details.Code=="key-people-in-the-company"){
+	  					if(document_details.Objects){
+	  						for(var i=0; i<document_details.Objects.length; i++){	%>
+	  							<%- document_details.Objects[i].content %>
+	  					<%	}	  					
+	  					}
+	  			}	 %>
+	  		<% }	%>
+      	</div>
+	</div>
+	
+	
+
+   	<!--footer start-->
+    <% include include/footer %>
+    <!--footer end-->
+<script src="js/jquery.validate.js"></script>
+       <script>
+       var typeStr='<%= document_details.Type %>';
+function timeConverter(UNIX_timestamp){
+  var a = new Date(UNIX_timestamp * 1000);
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var year = a.getFullYear();
+  var month = months[a.getMonth()];
+  var date = a.getDate();
+  var hour = a.getHours();
+  var min = a.getMinutes();
+  var sec = a.getSeconds();
+  var time = month + ' ' + date + ' ' + year + ', ' + hour + ':' + min ;
+  return time;
+}
+
+$(document).ready(function() {
+	if(typeStr=="news"){	
+		load_blogs();
+	} 
+	if(typeStr=="blog"){	
+	load_news();
+	}
+	
+	$("#blogComment").validate({
+		rules: {
+			name: "required",
+			email: {
+				required: true,
+				email: true
+			},
+			comment: "required",
+			blog_uuid : "required"
+		},
+		messages: {
+			name: "Please enter your name",
+			email: {
+				required: "Please enter your E-mail",
+				email: "Please enter valid E-mail"
+			},
+			comment: "Please leave your message!",
+			blog_uuid: "Required Field!"
+		},
+		submitHandler: function(form) {
+			$(".alert").remove();
+    		$("#postBtn").html("Posting your comment...");
+    		$("#postBtn").prop("disabled",true);
+    		$.ajax({
+				type: "POST",
+				url: "saveblogcomment",
+				headers : { "cache-control": "no-cache" },
+				data: {'blog_uuid' : $("#blog_uuid").val(), 'name' : $("#name").val(), 'email' : $("#email").val(), 'comment' : $("#comment").val(), 'website' : $("#website").val() },
+				dataType: "json",
+				cache: false,
+				success: function(response){
+					$("#postBtn").html("Post Comment");
+    				$("#postBtn").prop("disabled",false);
+    				$('#blogComment').trigger("reset");
+					if(response.success){
+						$("#blogComment").before('<div class="alert alert-success">'+response.success+'</div>');
+					}else if(response.error){
+						$("#blogComment").before('<div class="alert alert-danger">'+response.error+'</div>');
+					}
+				}
+			});
+		}
+	});
+});
+	function load_blogs(){
+		var jsonRow="/search-results?start=1&&type=blog&limit=5",
+		xhrStatus=$.getJSON(jsonRow,function(html){
+			if(html.error){
+				$("#newsContent").html('<li><i class="fa fa-angle-double-right pr-10"></i>No latest news available!</li>');
+				//$("#newsContent").hide();
+			}else{
+				
+				var contentHtml="<h3>Latest Blog Post</h3>";
+				$.each(html.aaData, function(i,row){
+					if(row.Code!=""){
+						var defaultImg="images/welcome.jpg";
+						if(row.virtualFields){
+							defaultImg=row.virtualFields['image_path'];
+						}
+						contentHtml+='<div class="media">';
+                		contentHtml+='<a class="pull-left" href="/'+row.Code+'" title="'+row.Document+'"><img width="80" height="81" onerror="this.src=\'images/welcome.jpg\'" src="'+defaultImg+'"></a>';
+                		contentHtml+='<div class="media-body">';
+                  		contentHtml+='<h5 class="media-heading">';
+                    	contentHtml+='<a href="/'+row.Code+'" title="'+row.Document+'">'+timeConverter(row.Created)+'</a>';
+                  		contentHtml+='</h5>';
+                  		contentHtml+='<p>'+row.Document+'</p>';
+                		contentHtml+='</div>';
+              			contentHtml+='</div>';
+					}
+				});
+				$("#blogContent").html(contentHtml);
+			}
+		});
+	}
+
+	function load_news(){
+		var jsonRow="/search-results?start=1&&type=news&limit=5",
+		xhrStatus=$.getJSON(jsonRow,function(html){
+			if(html.error){
+				$("#newsContent").html('<li><i class="fa fa-angle-double-right pr-10"></i>No latest news available!</li>');
+				//$("#newsContent").hide();
+			}else{
+				
+				var contentHtml="";
+				$.each(html.aaData, function(i,row){
+					if(row.Code!=""){
+						contentHtml+='<li><a href="/'+row.Code+'" title="'+row.Document+'">';
+                    	contentHtml+='<i class="fa fa-angle-double-right pr-10"></i>'+row.Document+'<a>';
+                   		contentHtml+='</li>';
+					}
+				});
+				$("#newsContent").html(contentHtml);
+			}
+		});
+	}
+
+	
+	</script>
+</body>
+</html>

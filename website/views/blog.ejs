@@ -1,0 +1,199 @@
+<% include include/main-header %>
+</head>
+<body>
+ 	<!--header end-->
+	<% include include/header %>
+	<!--header end-->
+ 
+	
+	
+	<div class="breadcrumbs">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4 col-sm-4">
+           <h1 class="mainheading"><span>Blog</span></h1>
+          </div>
+          <div class="col-lg-8 col-sm-8">
+            <ol class="breadcrumb pull-right">
+              <li>
+                <a href="#">
+                  Home
+                </a>
+              </li>
+              
+              <li class="active">
+               Blog
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+	
+	
+	
+	
+	<div class="container">
+      <div class="row">
+	  
+	  
+	  <div class="row">
+        <!--blog start-->
+        <div class="col-lg-9 ">
+		
+			<div class="row" id="documents_data">
+
+          	</div>
+			<div style="text-align:center">
+				<a style="width: 60%; margin-bottom: 10px;" class="btn btn-primary" id="display_more_btn" title="Load more" onclick="load_more()" href="javascript:void(0);">
+				Load more
+				</a>
+        	</div>
+        	<div style="text-align:center" id="img_loading_div">
+				Loading...<br /> <img id="imgAjaxLoading" src="images/loading.gif" width="109" height="25" style="border-width: 0px;">
+			</div>
+        	
+          <!--blog end-->
+      </div>
+	
+        <div class="col-lg-3">
+			<div class="blog-side-item">
+				<div class="archive">
+              		<h3>News</h3>
+              		<ul class="list-unstyled ulrightlink" id="newsContent">
+                
+             		</ul>
+            	</div>
+			</div>
+        </div>
+
+        <!--blog end-->
+      </div>
+	<!--blog end-->
+      </div>
+
+    </div>
+	
+	
+
+   	<!--footer start-->
+    <% include include/footer %>
+    <!--footer end-->
+    <script>
+var xhrStatus;
+var searchkeyword="", typeStr="blog";
+var pageSize=4, totalNum=0;
+var start=0, end=pageSize;
+
+$(document).ready(function() {
+	$.doSearch(typeStr);
+	load_news();
+});
+
+
+function timeConverter(UNIX_timestamp){
+  var a = new Date(UNIX_timestamp * 1000);
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var year = a.getFullYear();
+  var month = months[a.getMonth()];
+  var date = a.getDate();
+  var hour = a.getHours();
+  var min = a.getMinutes();
+  var sec = a.getSeconds();
+  var time = month + ' ' + date + ',' + year ;
+  return time;
+}
+
+
+function load_more(){
+	$('#display_more_btn').hide();
+	$('#img_loading_div').show();
+	start=end;
+	end=start+pageSize;
+	load_data();
+}
+	$.doSearch = function doSearch(type){
+		$('#display_more_btn').hide();
+		$('#img_loading_div').show();
+		load_data();
+	}
+	
+	function load_news(){
+		var jsonRow="/search-results?start=1&&type=news&limit=5",
+		xhrStatus=$.getJSON(jsonRow,function(html){
+			if(html.error){
+				$("#newsContent").html('<li><i class="fa fa-angle-double-right pr-10"></i>No latest news available!</li>');
+				//$("#newsContent").hide();
+			}else{
+				if(html.total){
+					totalNum=parseInt(totalNum);
+				}
+				var contentHtml="";
+				$.each(html.aaData, function(i,row){
+					if(row.Code!=""){
+						contentHtml+='<li><a href="/'+row.Code+'" title="'+row.Document+'">';
+                    	contentHtml+='<i class="fa fa-angle-double-right pr-10"></i>'+row.Document+'<a>';
+                   		contentHtml+='</li>';
+					}
+				});
+				$("#newsContent").html(contentHtml);
+			}
+		});
+	}
+	function load_data(){
+		$(".alert").remove();
+		var jsonRow="/search-results?start="+start+"&type="+typeStr+"&limit="+pageSize,
+		xhrStatus=$.getJSON(jsonRow,function(html){
+			if(html.error){
+				$("#documents_data").before('<div class="alert alert-danger">No blogs found!</div>');
+			}else{
+				if(html.total){
+					totalNum=parseInt(html.total);
+				}
+				var contentHtml="";
+				$.each(html.aaData, function(i,row){
+					if(row.Code!=""){
+						var bodyStr=row.Body;
+                      	bodyStr=bodyStr.replace(/<\/?[^>]+(>|$)/g, "");
+                      	bodyStr=bodyStr.substr(0, 250);
+                      	contentHtml+="<div class='col-md-6'>";
+						contentHtml+='<div data-wow-animation-name="fadeInRight" style="visibility: visible; animation-name: fadeInRight;" class="blog-right wow fadeInRight animated">';
+						var defaultImg="images/welcome.jpg";
+						if(row.virtualFields){
+							defaultImg=row.virtualFields['image_path'];
+							console.log(defaultImg)
+						}
+						contentHtml+='<div class="blog-img"><img src="'+defaultImg+'" alt="'+row.Document+'" onerror="this.src=\'images/welcome.jpg\'"></div>';
+              			contentHtml+='<div class="row">';
+                		contentHtml+='<div class="col-md-12">';
+                  		contentHtml+='<div class="blog-two-info"><p>'+timeConverter(row.Created);
+                  		var commentsNum =0;
+                  		if(row.Objects){
+                  			commentsNum =row.Objects.length;
+                  		}                 		
+                  		
+                     	contentHtml+=' | <i class="fa fa-comment"></i> <a href="/'+row.Code+'"> '+commentsNum+' Comments</a>';
+						contentHtml+='</p></div></div> </div>';
+              			contentHtml+='<div class="blog-content">';
+                		contentHtml+='<h3>'+row.Document+'</h3>';
+                		contentHtml+='<p>'+bodyStr+'</p>';
+              			contentHtml+='</div>';
+                 		contentHtml+='<a href="/'+row.Code+'" title="'+row.Document+'" class="btn btn-primary">Continue Reading</a>';
+						contentHtml+='</div>';
+                    	contentHtml+="</div>";
+					}
+				});
+				$("#documents_data").append(contentHtml);
+			}
+			
+			if(end< totalNum){
+				$('#display_more_btn').show();
+			}
+			$('#img_loading_div').hide();
+			
+		});
+	}
+
+</script>
+  </body>
+</html>
