@@ -22,7 +22,11 @@ function generateHeading(e, upperCase){
 
 function filter_by_status(valNum){
 	totalDisplayedNum=0;
-	statusFieldValStr = valNum;
+	if(valNum=="all"){
+		statusFieldValStr = "";
+	}else{
+		statusFieldValStr = valNum;
+	}
 	$('#table-breakpoint').basictable('destroy');
 	$("#documents_data").html('');
 	$('#display_more_btn').hide();
