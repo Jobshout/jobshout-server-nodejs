@@ -1,6 +1,33 @@
 <% include include/main-header %>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
+<style>
+.uldragdrop{
+padding:0px;
+margin:0px;
+}
+		
+.uldragdrop li{
+list-style: none;
+background: #fff;
+border: 1px solid #ddd;
+border-radius: 4px;
+cursor: pointer;
+padding: 7px 12px;
+margin-bottom: 6px;
+width: 50%;
+text-align: left;
+}
+		
+.uldragdrop li:hover{
+color:#fff;		
+background: #b90140;
+border:1px solid #8a0024;
+}
+
+</style>
+
+
 	<div class="wrapper">	
    		<!-- Header Starts here-->
   		<% include include/header %>
@@ -102,7 +129,7 @@
               					</form>
               				</div>
               				<div class="col-sm-3  pull-right">
-              					<ul id="DragWordList" runat="server">
+              					<ul id="DragWordList" class="uldragdrop" runat="server">
               					
                   				</ul>
               				</div>
