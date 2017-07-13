@@ -509,7 +509,6 @@ var self = module.exports =
 					allCollections.push(coll[i].name);
 				}
 			}
-			console.log(allCollections);
 			return cb(allCollections);
 		});
 	},

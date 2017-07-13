@@ -31,9 +31,7 @@ module.exports = function(init) {
 		
 	// Set view engine
 	app.set('view engine', 'ejs')
-	
-	app.set('jwtTokenSecret', 'jobshoutApp');
-	
+		
 	// Request body parsing middleware should be above methodOverride
 	app.use(bodyParser.urlencoded({extended: true}))
 	
