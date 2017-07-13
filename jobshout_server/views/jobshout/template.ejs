@@ -89,20 +89,7 @@ border:1px solid #8a0024;
                    							<textarea rows="20" required="required" class="form-control col-md-5 col-xs-12" id="template_content" name="template_content"><% if (typeof contentObj.template_content !== 'undefined' && contentObj.template_content !== null) { %><%= contentObj.template_content %><% } %></textarea>
                   						</div>
                 					</div>
-                					<div class="form-group">
-                  						<label class="control-label col-md-2" for="">Type </label>
-                  						<div class="col-md-6 col-lg-4">
-                  							<select id="type" name="type" class="form-control col-md-5 col-xs-12">
-                  								<option value="" <% if (typeof contentObj.type !== 'undefined' && contentObj.type !== null && contentObj.type == "") { %>selected<% } %>>Basic</option>
-                  								<option value="email" <% if (typeof contentObj.type !== 'undefined' && contentObj.type !== null && contentObj.type == "email") { %>selected<% } %>>Email</option>
-                    						</select>
-                   						</div>
-    									<div class="col-sm-3">
-    										<div class="checkbox" STYLE="float:left;">
-      		  									<label> <input type="checkbox" id="enable_editor" name="enable_editor" value="1" <% if (typeof contentObj.enable_editor !== 'undefined' && contentObj.enable_editor !== null && contentObj.enable_editor == 1) { %>checked<% } %> > <strong style="font-weight:600">Enable TinyMCE</strong></label>
-    			  							</div>
-										</div>
-									</div>
+                					
                 					<div class="form-group">
     									<label for="" class="col-sm-2 control-label">Status</label>
     									<div class="col-sm-9">
@@ -128,6 +115,14 @@ border:1px solid #8a0024;
               					</form>
               				</div>
               				<div class="col-md-2 col-sm-12 col-xs-12  pull-right">
+              					<div class="form-group" style="padding-bottom:50px;">
+                  					<div class="col-md-12 col-lg-12">
+                  						<div class="btn-inline display-inline-block">
+											<input class="form-control" style="min-width:225px; height:36px;" required="" id="search_here" placeholder="Search here..." value="">
+											<button class="btn btn-left-align btn-link no-shadow bg-transparent no-padding-top padding-right-10 right-auto left" type="button" id="searchBtn" title="Search"><i class="glyphicon glyphicon-search"></i></button>
+										</div>
+                  					</div>
+                				</div>
               					<ul id="DragWordList" class="uldragdrop" runat="server">
               					
                   				</ul>
@@ -146,55 +141,33 @@ border:1px solid #8a0024;
 
 <script src="plugins/jquery-ui.min.js"></script>
 <script src="js/jquery.validate.js"></script>
-<script SRC="plugins/tinymce/tinymce.min.js">
-<script>tinymce.init({ selector:'textarea' });</script>
 <script>
-function setup() {
-   tinyMCE.init({
-      selector : "textarea#template_content",
-      theme : "modern",
-      plugins : "advlist autolink link image lists charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking save table contextmenu directionality emoticons template paste textcolor",
-      theme_advanced_buttons1 : "save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect",
-      theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor",
-      theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media,advhr,|,print,|,ltr,rtl,|,fullscreen",
-      theme_advanced_buttons4 : "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking,template,pagebreak",
-      theme_advanced_toolbar_location : "top",
-      theme_advanced_toolbar_align : "left",
-      theme_advanced_statusbar_location : "bottom",
-      theme_advanced_resizing : true
-   });
-}
-
+var xhrStatus;
 function loadTokens(){
-	var jsonRow=backendDirectory+"/api_fetch_list?start=0&limit=100&collection=tokens";
-	
-		$.getJSON(jsonRow,function(html){
-			var contentHtml="";
-			if(html.aaData.length>0){
-					$.each(html.aaData, function(i,row){
-						contentHtml+="<li>"+row.code+"</li>";
-					});
-     		}
-			$("#DragWordList").html(contentHtml);
-			$("#DragWordList li").draggable({
-				appendTo: "body",
-        		helper: "clone",
-        		cursor: "select",
-        		revert: "invalid"
-    		});
-		});
+	var jsonRow=backendDirectory+"/api_fetch_list?start=0&limit=10&collection=tokens";
+	if($("#search_here").val()!=""){
+		jsonRow+="&s="+$("#search_here").val();
+	}
+	if(xhrStatus) xhrStatus.abort();
+	xhrStatus = $.getJSON(jsonRow,function(html){
+		var contentHtml="";
+		if(html.aaData.length>0){
+			$.each(html.aaData, function(i,row){
+				contentHtml+="<li>"+row.code+"</li>";
+			});
+     	}
+		$("#DragWordList").html(contentHtml);
+		$("#DragWordList li").draggable({
+			appendTo: "body",
+        	helper: "clone",
+        	cursor: "select",
+        	revert: "invalid"
+    	});
+	});
 }
 
 $(function() {
 	loadTokens();
-	          
-    $("#enable_editor").click(function(){
-		if(this.checked) {
-			setup();
-		}else{
-			tinymce.execCommand( 'mceRemoveEditor', false, "template_content" );
-		}
-	});
       
     initDroppable($("#template_content"));
     function initDroppable($elements) {
@@ -243,7 +216,22 @@ $(function() {
 			submitHandler: function(form) {
 				dataAsJson('contentForm', form);
  			}
-		});	
+		});
+		
+	$("#search_here").blur(function()	{
+		loadTokens();
+	});	
+	$("#search_here").change(function()	{
+		loadTokens();
+	});	
+	$('#searchField').keypress(function (e) {
+  		if (e.which == 13) {
+    		loadTokens();
+  		}
+	});
+	$("#searchBtn").click(function()	{
+		loadTokens();
+	});
 });
 </script>
 </body>
