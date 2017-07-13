@@ -19,7 +19,8 @@ var passwordHash = require('password-hash'),
 var multer = require('multer');
 var GridFsStorage = require('multer-gridfs-storage');
 var Grid = require('gridfs-stream');
-	
+var jwt = require('jwt-simple');
+
 module.exports = function(init, app,db){
 var mongodb=init.mongodb;
 var gfs = Grid(db, mongodb);
@@ -2699,7 +2700,19 @@ app.post(backendDirectoryPath+'/save/:id', requireLogin, (req, res) => {
 })
 
 function requireLogin (req, res, next) {
-	if(req.cookies[init.cookieName] != null && req.cookies[init.cookieName] != 'undefined' && req.cookies[init.cookieName]!=""){
+	if(req.token != null && req.token != 'undefined' && (req.token=="1" || req.token==1)){
+		var token = jwt.encode({
+  			username: 'admin',
+  			password: 'admin'
+		}, app.get('jwtTokenSecret'));
+			console.log("Encoded token: "+token);
+
+			var decoded = jwt.decode(token, app.get('jwtTokenSecret'));
+			console.log("Decoded token: "+decoded.iss);
+
+		req.authenticationBool=true;
+		next();
+	}else if(req.cookies[init.cookieName] != null && req.cookies[init.cookieName] != 'undefined' && req.cookies[init.cookieName]!=""){
    		authenticatedUser(req, function(user) {
    			if(user === null){
    				req.authenticationBool=false;

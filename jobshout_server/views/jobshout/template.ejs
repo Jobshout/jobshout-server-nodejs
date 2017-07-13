@@ -21,8 +21,7 @@
     		<section class="content">
       			<div class="row">
       				<div class="panel-body no-padding-top bg-white"> 
-            				<div class="col-sm-8">
-            					<% if (typeof queryStr !== 'undefined' && queryStr !== null) {
+      						<% if (typeof queryStr !== 'undefined' && queryStr !== null) {
     								if(queryStr.error_msg) {	%>
 									<div class="alert alert-danger alert-dismissable">
              							<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
@@ -36,6 +35,7 @@
             							</div>
             						<%	}
             					}	%>
+            				<div class="col-sm-9">
             					<form class="form-horizontal" action="<%= backendDirectory %>/save/template/" method="POST" id="contentForm">
             						<input type="hidden" class="form-control" id="editorField" name="editorField" value="<% if (typeof editorField !== 'undefined' && editorField !== null) { %><%= editorField %><% }else{ %>_id<% } %>">
       								<input type="hidden" class="form-control" id="editorValue" name="editorValue" value="<% if (typeof editorValue !== 'undefined' && editorValue !== null) { %><%= editorValue %><% } %>">
@@ -46,42 +46,39 @@
       								
       								
             						<div class="form-group">
-                  						<label class="control-label col-md-3" for="first-name">Name<span class="required">*</span></label>
+                  						<label class="control-label col-md-2" for="first-name">Name<span class="required">*</span></label>
                   						<div class="col-md-6 col-lg-4">
                     						<input type="text" required="required" id="name" name="name" class="form-control col-md-5 col-xs-12" onblur="generate_code('name','code')" onkeyup="generate_code('name','code')" value="<% if (typeof contentObj.name !== 'undefined' && contentObj.name !== null) { %><%= contentObj.name %><% } %>">
                   						</div>
                 					</div>
               						<div class="form-group">
-                  						<label class="control-label col-md-3" for="">Code<span class="required">*</span></label>
+                  						<label class="control-label col-md-2" for="">Code<span class="required">*</span></label>
                   						<div class="col-md-6 col-lg-4">
                    							<input type="text"  required="required" class="form-control col-md-5 col-xs-12" id="code" name="code" readonly value="<% if (typeof contentObj.code !== 'undefined' && contentObj.code !== null) { %><%= contentObj.code %><% } %>">
                   						</div>
                 					</div>
                 					<div class="form-group">
-                  						<label class="control-label col-md-3" for="">Content<span class="required">*</span></label>
-                  						<div class="col-md-6 col-lg-4">
-                   							<textarea required="required" class="form-control col-md-5 col-xs-12" id="template_content" name="template_content"><% if (typeof contentObj.template_content !== 'undefined' && contentObj.template_content !== null) { %><%= contentObj.template_content %><% } %></textarea>
+                  						<label class="control-label col-md-2" for="">Content<span class="required">*</span></label>
+                  						<div class="col-md-10 col-lg-10">
+                   							<textarea rows="20" required="required" class="form-control col-md-5 col-xs-12" id="template_content" name="template_content"><% if (typeof contentObj.template_content !== 'undefined' && contentObj.template_content !== null) { %><%= contentObj.template_content %><% } %></textarea>
                   						</div>
                 					</div>
                 					<div class="form-group">
-                  						<label class="control-label col-md-3" for="">Type </label>
+                  						<label class="control-label col-md-2" for="">Type </label>
                   						<div class="col-md-6 col-lg-4">
                   							<select id="type" name="type" class="form-control col-md-5 col-xs-12">
                   								<option value="" <% if (typeof contentObj.type !== 'undefined' && contentObj.type !== null && contentObj.type == "") { %>selected<% } %>>Basic</option>
                   								<option value="email" <% if (typeof contentObj.type !== 'undefined' && contentObj.type !== null && contentObj.type == "email") { %>selected<% } %>>Email</option>
                     						</select>
                    						</div>
-                					</div>
-                					<div class="form-group">
-    									<label for="" class="col-sm-3 control-label"></label>
-    									<div class="col-sm-9">
-    										<div class="checkbox" STYLE="float:left; margin-right:10px;">
+    									<div class="col-sm-3">
+    										<div class="checkbox" STYLE="float:left;">
       		  									<label> <input type="checkbox" id="enable_editor" name="enable_editor" value="1" <% if (typeof contentObj.enable_editor !== 'undefined' && contentObj.enable_editor !== null && contentObj.enable_editor == 1) { %>checked<% } %> > <strong style="font-weight:600">Enable TinyMCE</strong></label>
     			  							</div>
 										</div>
 									</div>
                 					<div class="form-group">
-    									<label for="" class="col-sm-3 control-label">Status</label>
+    									<label for="" class="col-sm-2 control-label">Status</label>
     									<div class="col-sm-9">
     										<div class="radio" STYLE="float:left; margin-right:10px;">
       		  									<label> <input type="radio" id="status" name="status" value="1" <% if (typeof contentObj.status !== 'undefined' && contentObj.status !== null && contentObj.status == 1) { %>checked<% } %> > <strong style="font-weight:600">Active</strong></label>
