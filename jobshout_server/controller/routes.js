@@ -449,7 +449,6 @@ app.post(backendDirectoryPath+'/forgot_password', (req, res) => {
 //validate user
 app.post(backendDirectoryPath+'/validlogin', (req, res) => {
 	var postJson=req.body;
-	
 	var checkForExistence= '{"email": \''+postJson.email+'\', "status": { $in: [ 1, "1" ] }}';
 	
 	initFunctions.crudOpertions(db, 'users', 'findOne', null, null, null, checkForExistence, function(result) {
@@ -491,8 +490,6 @@ app.post(backendDirectoryPath+'/validlogin', (req, res) => {
       				res.redirect(backendDirectoryPath+'/sign-in?error=no');
       		  	}
     		});
-
-      		//res.redirect(backendDirectoryPath+'/sign-in?error=no');
         }
     });
 })
@@ -1224,26 +1221,26 @@ app.get(backendDirectoryPath+'/api_crud_get/', requireLogin, function(req, res) 
 	var outputObj = new Object();
 	
 	if(req.authenticationBool){
-		var postContent=req.query;
+		var getContent=req.query;
 		
 		if(req.query.collection){
 			collectionStr=req.query.collection;
-			delete postContent['collection']; 
+			delete getContent['collection']; 
 		}
 	
 		if(req.query.action){
 			actionStr=req.query.action;
-			delete postContent['action']; 
+			delete getContent['action']; 
 		}
 	
 		if(req.query.fieldName){
 			uniqueFieldNameStr=req.query.fieldName;
-			delete postContent['fieldName']; 
+			delete getContent['fieldName']; 
 		}
 	
 		if(req.query.fieldValue){
 			uniqueFieldValueStr=req.query.fieldValue;
-			delete postContent['fieldValue']; 
+			delete getContent['fieldValue']; 
 		}
 		
 		if(collectionStr!=""){
@@ -1252,7 +1249,7 @@ app.get(backendDirectoryPath+'/api_crud_get/', requireLogin, function(req, res) 
 					res.send(resultObject);
 				});
 			}	else	{**/
-				initFunctions.crudOpertions(db, collectionStr, actionStr, postContent, uniqueFieldNameStr, uniqueFieldValueStr, null, function(result) {
+				initFunctions.crudOpertions(db, collectionStr, actionStr, getContent, uniqueFieldNameStr, uniqueFieldValueStr, null, function(result) {
 					res.send(result);
 				});	
 			//}
@@ -2701,7 +2698,9 @@ app.post(backendDirectoryPath+'/save/:id', requireLogin, (req, res) => {
 
 function requireLogin (req, res, next) {
 	if(req.cookies[init.cookieName] != null && req.cookies[init.cookieName] != 'undefined' && req.cookies[init.cookieName]!=""){
-   		authenticatedUser(req, function(user) {
+		var session_id= req.cookies[init.cookieName];
+		
+   		authenticatedUser(session_id, function(user) {
    			if(user === null){
    				req.authenticationBool=false;
    				next();
@@ -2711,18 +2710,61 @@ function requireLogin (req, res, next) {
 				next();
 			}
 		});
-	}else if(req.headers['token'] != null && req.headers['token'] != 'undefined' && (req.headers['token']=="1" || req.headers['token']==1)){
-		req.authenticationBool=true;
-		next();
+	}else if(req.headers['token'] != null && req.headers['token'] != 'undefined' && req.headers['token']!=""){
+		initFunctions.crudOpertions(db, 'tokens', 'findOne', null, 'code', 'jwttokensecret', null, function(tokenResult) {
+			if(tokenResult.aaData){
+				var secretKeyValue=tokenResult.aaData.token_content;
+				var decodedToken = jwt.decode(req.headers['token'], secretKeyValue);
+				var checkForExistence= '{"email": \''+decodedToken.email+'\', "status": { $in: [ 1, "1" ] }}';
+				
+				initFunctions.crudOpertions(db, 'users', 'findOne', null, null, null, checkForExistence, function(result) {
+					if (result.aaData) {
+						var returnUserDetsils= result.aaData;
+						if(passwordHash.verify(decodedToken.password, returnUserDetsils.password)){
+	   						returnUserDetsils['active_system_uuid']=returnUserDetsils.uuid_default_system;
+							req.authenticationBool=true;
+							req.authenticatedUser = returnUserDetsils;
+							next();	
+						}else{
+							req.authenticationBool=false;
+							next();	
+		   				}
+    	  			} else {
+      					// search user by username
+      					var checkForExistence= '{"username": \''+decodedToken.email+'\', "status": { $in: [ 1, "1" ] }}';
+	      				initFunctions.crudOpertions(db, 'users', 'findOne', null, null, null, checkForExistence, function(result) {
+							if (result.aaData) {
+								var returnUserDetsils= result.aaData;
+								if(passwordHash.verify(decodedToken.password, returnUserDetsils.password)){
+									returnUserDetsils['active_system_uuid']=returnUserDetsils.uuid_default_system;
+									req.authenticationBool=true;
+									req.authenticatedUser = returnUserDetsils;
+									next();	
+								}else{
+      								req.authenticationBool=false;
+									next();
+      							}
+      						} else {
+      							req.authenticationBool=false;
+								next();
+    	  		  			}
+    					});
+        			}
+    			});
+    		}else{
+    			req.authenticationBool=false;
+				next();
+    		}
+    	});
 	}else{
 		req.authenticationBool=false;
 		next();
    	}
 }
 
-var authenticatedUser =function (req, cb) {
-	if(req.cookies[init.cookieName] != null && req.cookies[init.cookieName] != 'undefined' && req.cookies[init.cookieName]!=""){
-		var mongoIDField= new mongodb.ObjectID(req.cookies[init.cookieName]);
+var authenticatedUser =function (auth_session_id, cb) {
+	if(auth_session_id != null && auth_session_id != 'undefined' && auth_session_id !=""){
+		var mongoIDField= new mongodb.ObjectID(auth_session_id);
 		
 		initFunctions.returnFindOneByMongoID(db, 'sessions', mongoIDField, function(result) {
 			if(result.error) {
