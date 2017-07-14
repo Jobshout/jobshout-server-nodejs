@@ -74,18 +74,9 @@
                   								} %>
                     						</select>
                    						</div>
-                   						<div class="col-md-6 col-lg-3">
-                   							<!--<label class="checkbox" STYLE="float:left; margin-right:10px;">
-                                                <span class="icons"><span class="first-icon fa fa-square-o"></span><span class="second-icon fa fa-check-square-o"></span></span><input value="" data-toggle="checkbox" type="checkbox" id="status" name="status" value="1" <% if (typeof contentObj.status !== 'undefined' && contentObj.status !== null && contentObj.status == 1) { %>checked<% } %> > <strong style="font-weight:600">Active</strong>
-                                            </label>-->
-    										<div class="checkbox" STYLE="float:left; margin-right:10px;">
-      		  									<label> <input type="checkbox" id="status" name="status" value="1" <% if (typeof contentObj.status !== 'undefined' && contentObj.status !== null && contentObj.status == 1) { %>checked<% } %> > <strong style="font-weight:600">Active</strong></label>
-    			  							</div>
+                   						<div class="col-md-6 col-lg-2">
+                   							<a href="<%= backendDirectory %>/system_table" target="_blank" class="btn btn-primary btn-color margin-right-5 btn-sm">Add a new table</a>
 				  						</div>
-				  						<!--
-				  						<div class="col-md-6 col-lg-2">
-                   							<button type="button" class="btn btn-primary btn-color margin-right-5 btn-sm">Add a new table</button>
-				  						</div>-->
                 					</div>
                 					<div class="form-group">
                   						<label class="control-label col-md-3" for="">Type <span class="required">*</span></label>
@@ -94,6 +85,11 @@
 												<option value="list_view" <% if (typeof contentObj.table !== 'undefined' && contentObj.table !== null && contentObj.table == "list_view") { %>selected<% } %>	>List View</option>
 											</select>
                   						</div>
+                  						<div class="col-md-6 col-lg-3">
+                   							<div class="checkbox" STYLE="float:left; margin-right:10px;">
+      		  									<label> <input type="checkbox" id="status" name="status" value="1" <% if (typeof contentObj.status !== 'undefined' && contentObj.status !== null && contentObj.status == 1) { %>checked<% } %> > <strong style="font-weight:600">Active</strong></label>
+    			  							</div>
+				  						</div>
                 					</div>
                 					<div class="form-group">
                   						<label class="control-label col-md-3" for="first-name">Add filename for Detail View/Editor <span class="required">*</span></label>

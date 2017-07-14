@@ -371,6 +371,24 @@ app.get(backendDirectoryPath+'/index', requireLogin, function(req, res) {
 	}
 }); 
 
+//index
+app.get(backendDirectoryPath+'/launchpad', requireLogin, function(req, res) {
+	if(req.authenticationBool){
+		const fs = require('fs');
+		var filesArr= new Array(), i=0;
+		fs.readdirSync('views/jobshout').forEach(file => {
+ 			filesArr[i]=file;
+ 			i++;
+ 		});
+ 		res.render(accessFilePath+'launchpad', {
+ 			directory_files : filesArr,
+      		authenticatedUser : req.authenticatedUser
+   		});
+    }else{
+		res.redirect(backendDirectoryPath+'/sign-in');
+	}
+}); 
+
 //send notifications
 app.get(backendDirectoryPath+'/send_notifications', requireLogin, function(req, res) {
 	if(req.authenticationBool){
@@ -2235,6 +2253,7 @@ app.get(backendDirectoryPath+'/list/:id', requireLogin, function(req, res) {
 app.get(backendDirectoryPath+'/fetchTableColumns', requireLogin, function(req, res) {
 	if(req.authenticationBool){
 		initFunctions.fetchTableColumns(db, req.query.e, function(result) {	
+			console.log(result);
 			res.send(result);
 		});
 	}else{
