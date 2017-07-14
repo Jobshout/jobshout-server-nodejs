@@ -272,7 +272,6 @@ var self = module.exports =
 				checkForExistenceObj= '{'+uniqueFieldNameStr +': \''+uniqueFieldValueStr+'\', "uuid_system" : \''+postContent['uuid_system']+'\'}';
 			}
 		}
-				
 		//if(uniqueFieldNameStr!="" && uniqueFieldValueStr!=""){
 		if(checkForExistenceObj!="" && checkForExistenceObj!=null){
 			if(postContent!="" && postContent!=null){
@@ -546,13 +545,25 @@ var self = module.exports =
 	
 	fetchTableColumns : function (db, table, cb) {
 		var allKeys=new Array();
-  		db.collection(table).findOne({}, (err, result) => {
-   			if(err) return cb(allKeys)
-   			for (key in result){
-   				allKeys.push(key);
-   			}
-			return cb(allKeys);
-		});
+		
+  		db.collection('system_tables').findOne({name: table}, function(err, listDetails) {
+  			var nofieldsExistBool=true;
+  			if(listDetails && listDetails.fields && listDetails.fields.length>0){
+  				nofieldsExistBool=false;
+  				return cb(listDetails.fields);
+  			}
+  			
+  			if(nofieldsExistBool){
+  				db.collection(table).findOne({}, (err, result) => {
+   					if(result){
+   						for (key in result){
+   							allKeys.push(key);
+   						}
+   					}
+					return cb(allKeys);
+				});
+  			}
+  		});
 	},
 	
 	send_email : function (db, from_email, sender_name, to_email, subject, plaintext, htmlContent, cb){
