@@ -19,7 +19,7 @@ html, body {
 body {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	font-family: 'Raleway', sans-serif;
+	font-family: 'Work Sans', sans-serif;
 	font-weight: 400;
 	overflow-x: hidden;
 	overflow-y: auto
@@ -319,31 +319,45 @@ color:#ccc
 }
 .content-header>h1 {
 	margin: 0;
-	font-size: 24px
+	font-size: 24px;
+	border-bottom: 1px dashed #ddd;
+    padding-bottom: 6px;
+}
+
+.content-header>h1 {
+	margin: 0;
+	font-size: 24px;
+	 border-bottom: 1px dashed #ddd;
+    padding-bottom: 6px;
+	margin-bottom: 7px;
 }
 .content-header>h1>small {
 	font-size: 15px;
 	display: inline-block;
 	padding-left: 4px;
-	font-weight: 500;
-	color: #b90140;
+	font-weight: 300
 }
-.content-header>.breadcrumb {
-	float: right;
-	background: transparent;
-	margin-top: 0;
-	margin-bottom: 0;
-	font-size: 12px;
-	padding: 7px 5px;
-	position: absolute;
-	top: 15px;
-	right: 10px;
-	border-radius: 2px
+
+.content-header > .breadcrumb {
+    float: right;
+    background: #fff;
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 13.5px;
+    padding: 7px 7px;
+    position: absolute;
+    top: 14px;
+    right: 13px;
+    border-radius: 2px;
+    border: 1px dashed #ddd;
+   	
 }
+
 .content-header>.breadcrumb>li>a {
 	color: #444;
 	text-decoration: none;
-	display: inline-block
+	display: inline-block;
+	font-weight:bold;
 }
 .content-header>.breadcrumb>li>a>.fa, .content-header>.breadcrumb>li>a>.glyphicon, .content-header>.breadcrumb>li>a>.ion {
 	margin-right: 5px
