@@ -2165,9 +2165,9 @@ app.get(backendDirectoryPath+'/list/:id', requireLogin, function(req, res) {
 			}else{
 				var assignedModuleBool= false, requestedPageStr= "/list/"+pageRequested;
 					
-				if(allowedNavigationData && allowedNavigationData.module && allowedNavigationData.module.length>0)	{
-					for (var i = 0; i < allowedNavigationData.module.length; i++) {
-  						if(allowedNavigationData.module[i]==requestedPageStr){
+				if(allowedNavigationData && allowedNavigationData.modules && allowedNavigationData.modules.length>0)	{
+					for (var i = 0; i < allowedNavigationData.modules.length; i++) {
+  						if(allowedNavigationData.modules[i]==requestedPageStr){
   							assignedModuleBool= true;
   							break;
   						}
