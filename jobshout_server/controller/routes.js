@@ -81,6 +81,7 @@ app.post(backendDirectoryPath+'/upload', requireLogin, function(req, res) {
   	}
 });
 
+//fetch uploaded file content
 app.get(backendDirectoryPath+'/file/', requireLogin, function(req, res){
 	if(req.authenticationBool){
 		/** First check if file exists */
@@ -231,7 +232,7 @@ app.post(backendDirectoryPath+'/addCommentForUser', requireLogin, (req, res) => 
   	}
 });
 
-//post action for sub objects
+//post action for save players
 app.post(backendDirectoryPath+'/saveplayers', (req, res) => {
 	var myObj = new Object();
 	var postContent= req.body;
@@ -371,7 +372,18 @@ app.get(backendDirectoryPath+'/index', requireLogin, function(req, res) {
 	}
 }); 
 
-//index
+//403 : forbidden page
+app.get(backendDirectoryPath+'/403', requireLogin, function(req, res) {
+	if(req.authenticationBool){
+ 		res.render(accessFilePath+'403', {
+      		 authenticatedUser : req.authenticatedUser
+   		});
+    }else{
+		res.redirect(backendDirectoryPath+'/sign-in');
+	}
+}); 
+
+//launchpad
 app.get(backendDirectoryPath+'/launchpad', requireLogin, function(req, res) {
 	if(req.authenticationBool){
 		const fs = require('fs');
@@ -389,18 +401,7 @@ app.get(backendDirectoryPath+'/launchpad', requireLogin, function(req, res) {
 	}
 }); 
 
-//send notifications
-app.get(backendDirectoryPath+'/send_notifications', requireLogin, function(req, res) {
-	if(req.authenticationBool){
-		res.render(accessFilePath+'send_notifications', {
-      		 authenticatedUser : req.authenticatedUser
-   		});
-    }else{
-		res.redirect(backendDirectoryPath+'/sign-in');
-	}
-}); 
-
-//jobshout_server logout
+//jobshout logout
 app.get(backendDirectoryPath+'/logout', function(req, res) {
 	if(req.cookies[init.cookieName] != null && req.cookies[init.cookieName] != 'undefined' && req.cookies[init.cookieName]!=""){
 		var mongoIDField= new mongodb.ObjectID(req.cookies[init.cookieName]);
@@ -741,7 +742,7 @@ app.get(backendDirectoryPath+'/save_task_scheduler', (req, res) => {
 	}
 })
 
-//save notifications
+//notify user one user : this is called from user entry form
 app.post(backendDirectoryPath+'/notifyUser/', requireLogin, function(req, res) {
 	var outputObj = new Object();
 	
@@ -1420,89 +1421,8 @@ app.get(backendDirectoryPath+'/load_navigator/', requireLogin, function(req, res
 		
 	if(req.authenticationBool){
 		var loggedInUser = req.authenticatedUser;
-		var loggedInUserID= new mongodb.ObjectID(loggedInUser._id);
-		var checkForExistence= '{"users_list": { $in: ["'+loggedInUserID+'"] }, "status": { $in: [ 1, "1" ] }}';
-		eval('var obj='+checkForExistence);
-		
-		db.collection('groups').find(obj).toArray(function(g_err, g_details) {
-			if(g_err){
-				outputObj["error"]   = "no record found!";
-				res.send(outputObj);
-			}	else	{
-				var modulesStrArr = new Array();
-				var modulesArr = new Array();
-				var isUserAdmin= false;
-				
-				for (var count=0; count < g_details.length; count++) {
-					if(g_details[count].code=="admin"){
-						isUserAdmin=true;
-					}
-					var assigned_modulesArr =g_details[count].assigned_modules;
- 					if(assigned_modulesArr.length>0){
- 						for (var i=0; i < assigned_modulesArr.length; i++) {
- 							modulesStrArr.push("'"+assigned_modulesArr[i]+"'");
- 							modulesArr.push(assigned_modulesArr[i]);
- 						}
- 					}
- 				}
- 				var uniqueModuleArr = modulesStrArr.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
- 				var modulesArr = modulesArr.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
- 				
- 				var coll= db.collection(collectionStr);
-				var query="{ 'active': { $in: [ 1, '1' ] }";
-				if(!isUserAdmin){
-					query+=", 'module_items.uuid' : {$in: ["+uniqueModuleArr+"]}";
-				}
-				if(req.query.s){
-     				//create text index
-     				coll.createIndex({ "$**": "text" },{ name: "TextIndex" });
-     				query+=", '$text': { '$search': '"+req.query.s+"' } ";
-     			}
-     			query+=" } ";
-     			eval('var queryObj='+query);
-				
-				coll.find(queryObj).sort({sort_order: -1}).toArray(function(err, items) {
-					if (err) {
-						outputObj["error"]   = 'not found';
-						res.send(outputObj);
-      				} else if (items) {
-      					if(isUserAdmin){
-      						outputObj["aaData"]   = items;
-      						res.send(outputObj);
-      					}else{
-      						var outputContentJson=new Array();
-      						for (var j=0; j < items.length; j++) {
-      							var moduleObj={};
-      							var moduleContentArr=items[j];
-								for(var key in moduleContentArr) {
-									if(key=="module_items"){
-										var moduleItemsArr = new Array();
-										if(moduleContentArr[key].length>0){
-											var addInArrayNum=0;
- 											for (var i=0; i < moduleContentArr[key].length; i++) {
- 												var existingModuleItemsArr=moduleContentArr[key][i];
- 												if(modulesArr.indexOf(existingModuleItemsArr.uuid)!==-1){
- 													moduleItemsArr[addInArrayNum] = existingModuleItemsArr;
- 													addInArrayNum++;
- 												}
- 											}
- 										}
- 									
- 										if(moduleItemsArr.length>0){
- 											moduleObj[key] = moduleItemsArr;
- 										}
-   									} else	{
-   										moduleObj[key] = moduleContentArr[key];
-   									}
-								}
-								outputContentJson[j]=moduleObj;
-							}
-							outputObj["aaData"]   = outputContentJson;
-							res.send(outputObj);
- 						}
- 					}
-				});
-			}
+		returnUserAssignedModules (loggedInUser._id, req, function(data) {
+			res.send(data);
 		});
 	}else{
 		outputObj["error"]   = "Authorization error!";
@@ -1628,7 +1548,6 @@ app.get(backendDirectoryPath+'/api_fetch_list/', requireLogin, function(req, res
 		res.send(outputObj);
 	}
 }); 
-
 
 //api_fixture_history
 app.get(backendDirectoryPath+'/api_fixture_history/', requireLogin, function(req, res) {
@@ -2231,19 +2150,40 @@ app.get(backendDirectoryPath+'/api_fetch_fixtures/', requireLogin, function(req,
 // listing pages ui
 app.get(backendDirectoryPath+'/list/:id', requireLogin, function(req, res) {
 	if(req.authenticationBool){
-		var pageRequested = req.params.id;
-		var queryString= req.query;
-		var keywordStr="";
-	
+		var pageRequested = req.params.id, loggedInUser = req.authenticatedUser, queryString= req.query, keywordStr="";
 		if(queryString.keyword){
 			keywordStr=queryString.keyword;
 		}
-	
-		res.render(accessFilePath+'standard_listing', {
-       	 	currentTemplate : pageRequested,
-        	searched_keyword : keywordStr,
-        	authenticatedUser : req.authenticatedUser
-    	});
+		req.sendModuleLinks = true;
+		returnUserAssignedModules (loggedInUser._id, req, function(allowedNavigationData) {
+			if(allowedNavigationData && allowedNavigationData.admin_user && allowedNavigationData.admin_user==true)	{
+				res.render(accessFilePath+'standard_listing', {
+       	 			currentTemplate : pageRequested,
+        			searched_keyword : keywordStr,
+        			authenticatedUser : req.authenticatedUser
+    			});
+			}else{
+				var assignedModuleBool= false, requestedPageStr= "/list/"+pageRequested;
+					
+				if(allowedNavigationData && allowedNavigationData.module && allowedNavigationData.module.length>0)	{
+					for (var i = 0; i < allowedNavigationData.module.length; i++) {
+  						if(allowedNavigationData.module[i]==requestedPageStr){
+  							assignedModuleBool= true;
+  							break;
+  						}
+					}
+				}
+				if(assignedModuleBool)	{
+					res.render(accessFilePath+'standard_listing', {
+       	 				currentTemplate : pageRequested,
+        				searched_keyword : keywordStr,
+        				authenticatedUser : req.authenticatedUser
+    				});
+    			}else{
+    				res.redirect(backendDirectoryPath+'/403');
+    			}
+			}
+		});
     }else{
 		res.redirect(backendDirectoryPath+'/sign-in');
 	}
@@ -2253,7 +2193,6 @@ app.get(backendDirectoryPath+'/list/:id', requireLogin, function(req, res) {
 app.get(backendDirectoryPath+'/fetchTableColumns', requireLogin, function(req, res) {
 	if(req.authenticationBool){
 		initFunctions.fetchTableColumns(db, req.query.e, function(result) {	
-			console.log(result);
 			res.send(result);
 		});
 	}else{
@@ -2266,75 +2205,95 @@ app.get(backendDirectoryPath+'/fetchTableColumns', requireLogin, function(req, r
 // render pages
 app.get(backendDirectoryPath+'/:id', requireLogin, function(req, res) {
 	if(req.authenticationBool){
-	var pageRequested = req.params.id;
-	var queryString= req.url;
-	var removeUrl=backendDirectoryPath+'/'+req.params.id+'?';
-	queryString= queryString.substr(removeUrl.length);
-	if(queryString.indexOf("&")>-1){
-		queryString= queryString.substr(0,queryString.indexOf("&"));
-	}
-	
-	var editFieldName="", editFieldVal="";
-	
-	if(queryString.indexOf("=")>-1){
-		editFieldName=queryString.substr(0,queryString.indexOf("="));
-		editFieldVal=queryString.substr(queryString.indexOf("=")+1);
-	}
-	
-	var contentObj= "";
-	var table_name =initFunctions.fetchTableName(pageRequested);
-	
-	pageRequested=accessFilePath+pageRequested;
-	
-		if(table_name==""){
-			res.render(pageRequested, {
-      			queryStr : req.query,
-       			contentObj : contentObj,
-       			authenticatedUser : req.authenticatedUser
-    		});
-		}else{
-		if (typeof editFieldVal !== 'undefined' && editFieldVal !== null) {
-			if(editFieldName=="_id"){
-				 initFunctions.returnFindOneByMongoID(db, table_name, editFieldVal, function(resultObject) {
-					if (resultObject.aaData) {
-      					contentObj=resultObject.aaData;
-      				} 
-      				
-      				res.render(pageRequested, {
-      	 				editorField : editFieldName,
-      	 				editorValue : editFieldVal,
-       					queryStr : req.query,
-       					contentObj : contentObj,
-       					authenticatedUser : req.authenticatedUser
-    				});
-    			}); 
-			}else{
-				var queryStr="{'"+editFieldName+"': '"+editFieldVal+"'}";
-				//eval('var queryObj='+queryStr);
-				//db.collection(table_name).findOne(queryObj, function(err, document) {
+		var pageRequested = req.params.id;
+		var requestedPageStr="/"+pageRequested;
 				
-				initFunctions.crudOpertions(db, table_name, 'findOne', null, editFieldName, editFieldVal, queryStr, function(result) {
-					if (result.aaData) {
-      					contentObj=result.aaData;
-      				} 
-      			
-      				res.render(pageRequested, {
-      	 				editorField : editFieldName,
-      	 				editorValue : editFieldVal,
-       					queryStr : req.query,
+		var queryString= req.url, removeUrl=backendDirectoryPath+'/'+req.params.id+'?';
+		queryString= queryString.substr(removeUrl.length);
+		if(queryString.indexOf("&")>-1){
+			queryString= queryString.substr(0,queryString.indexOf("&"));
+		}
+	
+		var editFieldName="", editFieldVal="";
+	
+		if(queryString.indexOf("=")>-1){
+			editFieldName=queryString.substr(0,queryString.indexOf("="));
+			editFieldVal=queryString.substr(queryString.indexOf("=")+1);
+		}
+	
+		var contentObj= "";
+		var table_name =initFunctions.fetchTableName(pageRequested);
+	
+		pageRequested=accessFilePath+pageRequested;
+	
+		req.sendModuleLinks = true;
+		returnUserAssignedModules (req.authenticatedUser._id, req, function(allowedNavigationData) {
+			var assignedModuleBool= false;
+			if(allowedNavigationData && allowedNavigationData.admin_user && allowedNavigationData.admin_user==true)	{
+				assignedModuleBool= true;
+			}else{
+				if(allowedNavigationData && allowedNavigationData.modules && allowedNavigationData.modules.length>0)	{
+					for (var i = 0; i < allowedNavigationData.modules.length; i++) {
+						if(allowedNavigationData.modules[i]==requestedPageStr){
+  							assignedModuleBool= true;
+  							break;
+  						}
+					}
+				}
+			}
+		
+			if(assignedModuleBool){
+				if(table_name==""){
+					res.render(pageRequested, {
+      					queryStr : req.query,
        					contentObj : contentObj,
        					authenticatedUser : req.authenticatedUser
     				});
+				}else{
+					if (typeof editFieldVal !== 'undefined' && editFieldVal !== null) {
+						if(editFieldName=="_id"){
+					 		initFunctions.returnFindOneByMongoID(db, table_name, editFieldVal, function(resultObject) {
+								if (resultObject.aaData) {
+      								contentObj=resultObject.aaData;
+      							} 
+      				
+      							res.render(pageRequested, {
+      	 							editorField : editFieldName,
+      	 							editorValue : editFieldVal,
+       								queryStr : req.query,
+       								contentObj : contentObj,
+       								authenticatedUser : req.authenticatedUser
+    							});
+    						}); 
+						}else{
+							var queryStr="{'"+editFieldName+"': '"+editFieldVal+"'}";
+
+							initFunctions.crudOpertions(db, table_name, 'findOne', null, editFieldName, editFieldVal, queryStr, function(result) {
+								if (result.aaData) {
+      								contentObj=result.aaData;
+      							} 
+      			
+      							res.render(pageRequested, {
+      	 							editorField : editFieldName,
+      	 							editorValue : editFieldVal,
+       								queryStr : req.query,
+       								contentObj : contentObj,
+       								authenticatedUser : req.authenticatedUser
+    							});
+    						});
+    					} 
+					}else{
+      					res.render(pageRequested, {
+      				queryStr : req.query,
+       				contentObj : contentObj,
+       				authenticatedUser : req.authenticatedUser
     			});
-    		} 
-		}else{
-      		res.render(pageRequested, {
-      			queryStr : req.query,
-       			contentObj : contentObj,
-       			authenticatedUser : req.authenticatedUser
-    		});
-    	}
-    	}
+    				}
+    			}
+    		}else{
+    			res.redirect(backendDirectoryPath+'/403');
+    		}
+    	});
   	}else {
     	res.redirect(backendDirectoryPath+'/sign-in');
     }	
@@ -2715,6 +2674,103 @@ app.post(backendDirectoryPath+'/save/:id', requireLogin, (req, res) => {
 	}
 })
 
+
+function returnUserAssignedModules (auth_user_id, req, cb) {
+	var outputObj= new Object();
+	if(auth_user_id != null && auth_user_id != 'undefined' && auth_user_id !=""){
+		db.collection('groups').find({"users_list": { $in: new Array(auth_user_id.toString()) }, "status": { $in: [ 1, "1" ] }}).toArray(function(g_err, g_details) {
+			if(g_err){
+				outputObj["error"]   = "no record found!";
+				res.send(outputObj);
+			}	else	{
+				var modulesStrArr = new Array();
+				var modulesArr = new Array();
+				var isUserAdmin= false;
+				
+				for (var count=0; count < g_details.length; count++) {
+					if(g_details[count].code=="admin"){
+						isUserAdmin=true;
+					}
+					var assigned_modulesArr =g_details[count].assigned_modules;
+ 					if(assigned_modulesArr.length>0){
+ 						for (var i=0; i < assigned_modulesArr.length; i++) {
+ 							modulesStrArr.push("'"+assigned_modulesArr[i]+"'");
+ 							modulesArr.push(assigned_modulesArr[i]);
+ 						}
+ 					}
+ 				}
+ 				var uniqueModuleArr = modulesStrArr.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+ 				var modulesArr = modulesArr.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+ 				
+ 				var coll= db.collection('modules');
+				var query="{ 'active': { $in: [ 1, '1' ] }";
+				if(!isUserAdmin){
+					query+=", 'module_items.uuid' : {$in: ["+uniqueModuleArr+"]}";
+				}
+				if(req.query.s){
+     				//create text index
+     				coll.createIndex({ "$**": "text" },{ name: "TextIndex" });
+     				query+=", '$text': { '$search': '"+req.query.s+"' } ";
+     			}
+     			query+=" } ";
+     			eval('var queryObj='+query);
+				
+				coll.find(queryObj).sort({sort_order: -1}).toArray(function(err, items) {
+					if (err) {
+						outputObj["error"]   = 'not found';
+						return cb(outputObj);
+      				} else if (items) {
+      					var outputLinksOnlyArr= new Array();
+      					if(isUserAdmin){
+      						outputObj["aaData"]   = items;
+      					}else{
+      						var outputContentJson=new Array();
+      						for (var j=0; j < items.length; j++) {
+      							var moduleObj={};
+      							var moduleContentArr=items[j];
+								for(var key in moduleContentArr) {
+									if(key=="module_items"){
+										var moduleItemsArr = new Array();
+										if(moduleContentArr[key].length>0){
+											var addInArrayNum=0;
+ 											for (var i=0; i < moduleContentArr[key].length; i++) {
+ 												var existingModuleItemsArr=moduleContentArr[key][i];
+ 												if(modulesArr.indexOf(existingModuleItemsArr.uuid)!==-1){
+ 													moduleItemsArr[addInArrayNum] = existingModuleItemsArr;
+ 													outputLinksOnlyArr.push(existingModuleItemsArr.link);
+ 													addInArrayNum++;
+ 												}
+ 											}
+ 										}
+ 									
+ 										if(moduleItemsArr.length>0){
+ 											moduleObj[key] = moduleItemsArr;
+ 										}
+   									} else	{
+   										moduleObj[key] = moduleContentArr[key];
+   									}
+								}
+								outputContentJson[j]=moduleObj;
+							}
+							outputObj["aaData"]   = outputContentJson;
+						}
+						if(req.sendModuleLinks && req.sendModuleLinks==true){
+							var outputObjNew = new Object();
+							outputObjNew["admin_user"]   = isUserAdmin;
+							outputObjNew["modules"]   = outputLinksOnlyArr;
+							return cb(outputObjNew);
+						} else {
+							return cb(outputObj);
+						}
+ 					}
+				});
+			}
+		});
+   	}else{
+		outputObj["error"]   = "Authorization error!";
+   		return cb(outputObj);
+   	}
+}
 function requireLogin (req, res, next) {
 	if(req.cookies[init.cookieName] != null && req.cookies[init.cookieName] != 'undefined' && req.cookies[init.cookieName]!=""){
 		var session_id= req.cookies[init.cookieName];
@@ -2822,14 +2878,4 @@ var authenticatedUser =function (auth_session_id, cb) {
    		return cb(null);
    	}
 }
-
-function checkForCookie (req, res, next) {
-	if(req.cookies['ucs'] != null && req.cookies['ucs'] != 'undefined' && req.cookies['ucs']=="ok"){
-   		req.ucsCookie = false;
-	}else{
-   		req.ucsCookie = true;
-   	}
-   	next();
-}
-
 }
