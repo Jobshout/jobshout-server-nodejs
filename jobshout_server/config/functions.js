@@ -160,7 +160,7 @@ var self = module.exports =
 					}
 				}
 				query+="}";
-				
+
 				if(templateResponse.listing_columns){
 					eval('var obj='+query);
 					eval('var fetchFieldsobj='+fetchFieldsObj);
@@ -377,9 +377,10 @@ var self = module.exports =
 	saveEntry : function(db, table_nameStr, checkForExistence, postContent, parameterStr, findmongoID, unique_fieldStr, unique_fieldVal, cb){
 		for(var key in postContent) {
 			var contentStr=postContent[key];
-			if(contentStr.charAt(0)=="["){
+			var tempStr=contentStr.toString();
+			if(tempStr.charAt(0)=="["){
 				try{
-        			postContent[key]=JSON.parse(contentStr);
+        			postContent[key]=JSON.parse(tempStr);
         		}
     			catch (error){
        				postContent[key]=contentStr;

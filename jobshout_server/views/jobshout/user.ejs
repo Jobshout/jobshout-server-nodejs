@@ -245,7 +245,7 @@
             						<div class="form-group">
                   						<label class="control-label col-md-3" for="first-name">Assign Systems<span class="required">*</span></label>
                   						<div class="col-md-6 col-lg-7">
-                    						<input name="user_systems" type="hidden" value="" id="user_systems">
+                    						<input name="shared_systems" type="hidden" value="" id="shared_systems">
                   							<select id="select_systems" name="select_systems" multiple="multiple" class="chosen-select form-control"></select>
                     					</div>
                 					</div>
@@ -625,8 +625,8 @@ function load_systems(e){
 				defaultAssignedVal="<%= contentObj.uuid_default_system %>";
 			<% } %>
 			
-			<% if (typeof contentObj.user_systems !== 'undefined' && contentObj.user_systems !== null && contentObj.user_systems !== "") { %>
-				var tempselectedSearchArr=<%- JSON.stringify(contentObj.user_systems) %>;
+			<% if (typeof contentObj.shared_systems !== 'undefined' && contentObj.shared_systems !== null && contentObj.shared_systems !== "") { %>
+				var tempselectedSearchArr=<%- JSON.stringify(contentObj.shared_systems) %>;
 				if(typeof(tempselectedSearchArr)=="object" || typeof(tempselectedSearchArr)=="array"){
 					selectedSearchArr = tempselectedSearchArr;
 				}	else	{
@@ -882,7 +882,7 @@ $(document).ready(function() {
 					userSystemsArr.push(uuid_default_system);
 					var selectedSystemsStr= JSON.stringify(userSystemsArr);
 					
-					$('#user_systems').val(selectedSystemsStr);
+					$('#shared_systems').val(selectedSystemsStr);
 					$('#select_systems').remove();
 				}
 				

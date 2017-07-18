@@ -1376,9 +1376,9 @@ app.get(backendDirectoryPath+'/fetch_user_systems/', requireLogin, function(req,
 	var outputObj = new Object();
 	
 	if(req.authenticationBool){
-		if(req.authenticatedUser.user_systems!=""){
-			var userSysArr= req.authenticatedUser.user_systems;
-			if(userSysArr!="" && typeof(userSysArr)!=="array" && typeof(userSysArr)!=="object"){
+		if(req.authenticatedUser.shared_systems!=""){
+			var userSysArr= req.authenticatedUser.shared_systems;
+			if(userSysArr!="" && typeof(userSysArr)!="undefined" && typeof(userSysArr)!="null" && typeof(userSysArr)!=="array" && typeof(userSysArr)!=="object"){
 				userSysArr = JSON.parse(userSysArr);
 			}
 		}else if(req.authenticatedUser.active_system_uuid && req.authenticatedUser.active_system_uuid!=""){
@@ -2348,7 +2348,7 @@ app.post(backendDirectoryPath+'/default_system', requireLogin, (req, res) => {
 		initFunctions.crudOpertions(db, table_nameStr, 'create', contentJson, unique_fieldStr, unique_fieldVal, null,function(result) {
     		if(result.success){
     			var default_system_id=result._id;
-    			db.collection("users").update({_id:req.authenticatedUser._id}, {'$set' : {"uuid_default_system" : default_system_id.toString(), "user_systems" : new Array(default_system_id)}}, (err1	, result) => {
+    			db.collection("users").update({_id:req.authenticatedUser._id}, {'$set' : {"uuid_default_system" : default_system_id.toString(), "shared_systems" : new Array(default_system_id)}}, (err1	, result) => {
     				db.collection("modules").update({'active':1}, {'$set' : {"uuid_system" : default_system_id}}, { multi: true });
     				db.collection("session").update({'user_id':req.authenticatedUser._id}, {'$set' : {"active_system_uuid" : default_system_id}}, (err2	, result2) => {
     					res.redirect(backendDirectoryPath+'/default_system?success=Saved the basic details successfully!');
@@ -2573,20 +2573,21 @@ app.post(backendDirectoryPath+'/save/:id', requireLogin, (req, res) => {
       						contentJson["created"]=existingDocument.created;
       						
       						var updateContentObj = new Object();
-					 		for(var key in contentJson) {
-      							updateContentObj[key]=contentJson[key];
+					 		/**for(var key in contentJson) {
+					 			updateContentObj[key]=contentJson[key];
+							}**/
+							for(var key in contentJson) {
+								var contentStr=contentJson[key].toString();
+								if(contentStr.charAt(0)=="["){
+									try{
+        								updateContentObj[key]=JSON.parse(contentStr);
+        							}
+    								catch (error){
+       									updateContentObj[key]=contentJson[key];
+    								}
+								}			
 							}
-							/**
-      						var  updaTeContent="{ $set: { ";
-      						for(var key in contentJson) {
-      							updaTeContent+="'"+key+"' : '"+contentJson[key]+"',";
-							}
-							updaTeContent = updaTeContent.replace(/,([^,]*)$/,'$1');
-							updaTeContent+="}	} ";
-					 		eval('var updateObj='+updaTeContent);
-					 		db.collection(table_nameStr).update({_id:mongoIDField}, updateObj, (err, result) => { 
-					 		**/
-					 				 		
+								 		
 							db.collection(table_nameStr).update({_id:mongoIDField}, { $set: updateContentObj }, (err, result) => {
 								if (err) {
     								link+="?error_msg=Error occurred while saving  please try after some time!";
@@ -2617,9 +2618,17 @@ app.post(backendDirectoryPath+'/save/:id', requireLogin, (req, res) => {
       					contentJson["created"]=existingDocument.created;
       				
       					var updateContentObj = new Object();
-					 	for(var key in contentJson) {
-      						updateContentObj[key]=contentJson[key];
-						}
+					 		for(var key in contentJson) {
+								var contentStr=contentJson[key].toString();
+								if(contentStr.charAt(0)=="["){
+									try{
+        								updateContentObj[key]=JSON.parse(contentStr);
+        							}
+    								catch (error){
+       									updateContentObj[key]=contentJson[key];
+    								}
+								}			
+							}
 					 
 						db.collection(table_nameStr).update({_id:mongoIDField}, { $set: updateContentObj }, (err, result) => {
     						if (err) {
