@@ -44,7 +44,7 @@
     		<section class="content-header">
       			<h1>Fixture <small><% if (typeof contentObj.name !== 'undefined' && contentObj.name !== null) { %><%= contentObj.name %><% } else{	%>Add new<% }%></small></h1>
       			<ol class="breadcrumb">
-        			<li><a href="<%= backendDirectory %>/index"><i class="fa fa-dashboard"></i> Home</a></li>
+        			<% include include/dashboard-breadcrumb %>
         			<li class="active">Fixture</li>
       			</ol>
     		</section>	

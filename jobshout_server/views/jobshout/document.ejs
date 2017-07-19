@@ -22,7 +22,7 @@ width : 402px!important;
     		<section class="content-header">
       			<h1>Document <small><% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj.Document %><% } else{	%>Add new<% }%></small></h1>
       			<ol class="breadcrumb">
-        			<li><a href="<%= backendDirectory %>/index"><i class="fa fa-dashboard"></i> Home</a></li>
+        			<% include include/dashboard-breadcrumb %>
         			<li class="active">Document</li>
       			</ol>
     		</section>	

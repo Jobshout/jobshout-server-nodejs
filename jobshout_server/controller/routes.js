@@ -2570,22 +2570,29 @@ app.post(backendDirectoryPath+'/save/:id', requireLogin, (req, res) => {
       				initFunctions.returnFindOneByMongoID(db, table_nameStr, mongoIDField, function(existingDoc) {
       					if (existingDoc.aaData) {
       						var existingDocument=existingDoc.aaData;
-      						contentJson["created"]=existingDocument.created;
-      						
+      						if(existingDocument.created){
+								contentJson["created"]=existingDocument.created;
+							}else{
+								contentJson['created']=initFunctions.currentTimestamp();
+							}
       						var updateContentObj = new Object();
 					 		/**for(var key in contentJson) {
 					 			updateContentObj[key]=contentJson[key];
 							}**/
 							for(var key in contentJson) {
-								var contentStr=contentJson[key].toString();
-								if(contentStr.charAt(0)=="["){
-									try{
-        								updateContentObj[key]=JSON.parse(contentStr);
-        							}
-    								catch (error){
-       									updateContentObj[key]=contentJson[key];
-    								}
-								}			
+								if(contentJson[key]!="" && contentJson[key]!="null" && contentJson[key]!="undefined")	{
+									var contentStr=contentJson[key].toString();
+									if(contentStr.charAt(0)=="["){
+										try{
+        									updateContentObj[key]=JSON.parse(contentStr);
+        								}
+    									catch (error){
+       										updateContentObj[key]=contentJson[key];
+    									}
+									}
+								}	else {
+									updateContentObj[key]=contentJson[key];
+								}		
 							}
 								 		
 							db.collection(table_nameStr).update({_id:mongoIDField}, { $set: updateContentObj }, (err, result) => {
@@ -2615,7 +2622,11 @@ app.post(backendDirectoryPath+'/save/:id', requireLogin, (req, res) => {
       			initFunctions.returnFindOneByMongoID(db, table_nameStr, mongoIDField, function(existingDoc) {
       				if (existingDoc.aaData) {
       					var existingDocument=existingDoc.aaData;
-      					contentJson["created"]=existingDocument.created;
+      					if(existingDocument.created){
+							contentJson["created"]=existingDocument.created;
+						}else{
+							contentJson['created']=initFunctions.currentTimestamp();
+						}
       				
       					var updateContentObj = new Object();
 					 		for(var key in contentJson) {

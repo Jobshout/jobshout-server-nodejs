@@ -34,7 +34,7 @@ if (typeof searched_keyword !== 'undefined' && searched_keyword !== null) {
         <small>Control panel</small>
       </h1>
       <ol class="breadcrumb">
-        <li><a href="<%= backendDirectory %>/index"><i class="fa fa-dashboard"></i> Home</a></li>
+        <% include include/dashboard-breadcrumb %>
         <li class="active" id="breadcrumbTitle">Dashboard</li>
       </ol>
     </section>

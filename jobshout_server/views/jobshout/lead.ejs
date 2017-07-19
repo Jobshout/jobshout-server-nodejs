@@ -32,7 +32,7 @@ if (typeof contentObj.Created !== 'undefined' && contentObj.Created !== null) {
     		<section class="content-header">
       			<h1>Lead <small><% if (typeof contentObj.lead_name !== 'undefined' && contentObj.lead_name !== null) { %><%= contentObj.lead_name %><% } else{	%>Add new<% }%></small></h1>
       			<ol class="breadcrumb">
-        			<li><a href="<%= backendDirectory %>/index"><i class="fa fa-dashboard"></i> Home</a></li>
+        			<% include include/dashboard-breadcrumb %>
         			<li class="active">Lead</li>
       			</ol>
     		</section>	

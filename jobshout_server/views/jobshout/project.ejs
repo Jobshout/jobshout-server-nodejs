@@ -68,7 +68,7 @@ font-size: 20px;
     		<section class="content-header">
       			<h1> <% if (typeof contentObj.name !== 'undefined' && contentObj.name !== null) { %><%= contentObj.name %><% } else{	%>Add new<% }%><small>Project</small></h1>
       			<ol class="breadcrumb">
-        			<li><a href="<%= backendDirectory %>/index"><i class="fa fa-dashboard"></i> Home</a></li>
+        			<% include include/dashboard-breadcrumb %>
         			<li class="active">Project</li>
       			</ol>
     		</section>

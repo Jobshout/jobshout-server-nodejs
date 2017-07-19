@@ -40,7 +40,7 @@ border:1px solid #8a0024;
     		<section class="content-header">
       			<h1>Token <small><% if (typeof contentObj.name !== 'undefined' && contentObj.name !== null) { %><%= contentObj.name %><% } else{	%>Add new<% }%></small></h1>
       			<ol class="breadcrumb">
-        			<li><a href="<%= backendDirectory %>/index"><i class="fa fa-dashboard"></i> Home</a></li>
+        			<% include include/dashboard-breadcrumb %>
         			<li class="active">Token</li>
       			</ol>
     		</section>	

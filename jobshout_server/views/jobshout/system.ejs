@@ -23,10 +23,10 @@
 		<div class="content-wrapper">
     	  	<!-- Content Header (Page header) -->
     		<section class="content-header">
-      			<h1><% if (typeof contentObj.name !== 'undefined' && contentObj.name !== null) { %><%= contentObj.name %><% } else{	%>Add new<% }%> <small>Organisation</small></h1>
+      			<h1><% if (typeof contentObj.name !== 'undefined' && contentObj.name !== null) { %><%= contentObj.name %><% } else{	%>Add new<% }%> <small>Business</small></h1>
       			<ol class="breadcrumb">
-        			<li><a href="<%= backendDirectory %>/index"><i class="fa fa-dashboard"></i> Home</a></li>
-        			<li class="active">Organisation</li>
+        			<% include include/dashboard-breadcrumb %>
+        			<li class="active">Business</li>
       			</ol>
     		</section>	
     		<section class="content">
