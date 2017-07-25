@@ -1,4 +1,5 @@
 <% include include/main-header %>
+<link rel="stylesheet" href="css/jquery.tag-editor.css" />
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <style>
@@ -25,8 +26,6 @@ border:1px solid #8a0024;
 }
 
 </style>
-
-
 	<div class="wrapper">	
    		<!-- Header Starts here-->
   		<% include include/header %>
@@ -89,7 +88,13 @@ border:1px solid #8a0024;
                    							<textarea rows="20" required="required" class="form-control col-md-5 col-xs-12" id="template_content" name="template_content"><% if (typeof contentObj.template_content !== 'undefined' && contentObj.template_content !== null) { %><%= contentObj.template_content %><% } %></textarea>
                   						</div>
                 					</div>
-                					
+                					<div class="form-group">
+    									<label for="firstname" class="col-sm-2  control-label">Tags </label>
+    									<div class="col-sm-10">
+    										<input type="hidden" class="form-control" id="default_tags" value="<% if (typeof contentObj.tags !== 'undefined' && contentObj.tags !== null) { %><%= contentObj.tags %><% } %>">
+    										<textarea type="text" class="form-control" name="tags" id="tags" rows="1"></textarea>
+										</div>
+                  					</div>
                 					<div class="form-group">
     									<label for="" class="col-sm-2 control-label">Status</label>
     									<div class="col-sm-9">
@@ -141,6 +146,9 @@ border:1px solid #8a0024;
 
 <script src="plugins/jquery-ui.min.js"></script>
 <script src="js/jquery.validate.js"></script>
+
+ <script src="js/jquery.caret.min.js"></script>
+ <script src="js/jquery.tag-editor.min.js"></script>
 <script>
 var xhrStatus;
 function loadTokens(){
@@ -167,6 +175,8 @@ function loadTokens(){
 }
 
 $(function() {
+	drawTagsUi();	// call this method to initialise tags
+	
 	loadTokens();
       
     initDroppable($("#template_content"));
@@ -214,6 +224,9 @@ $(function() {
 				template_content: { required: true }
 			},
 			submitHandler: function(form) {
+				var tempTags =$("#tags").val();
+				$("#tags").val(JSON.stringify(tempTags.split(',')));
+				
 				dataAsJson('contentForm', form);
  			}
 		});

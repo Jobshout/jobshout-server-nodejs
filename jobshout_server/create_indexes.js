@@ -53,6 +53,7 @@ init.MongoClient.connect(init.mongoConnUrl, function (err, database) {
    		// index on fixtures's table
    		db.collection('fixtures').createIndex(  { "uuid_system" : 1 } );
    	  	
+   	  	db.collection('bookmarks').createIndex({"tags":"text"})
    	  	//created indexes and now terminating this process
    	  	
    	  	//process.exit();	

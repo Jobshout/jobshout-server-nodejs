@@ -54,7 +54,7 @@ var storage = GridFsStorage({
 	},
 	/** With gridfs we can store aditional meta-data along with the file */
 	metadata: function(req, file, cb) {
-		cb(null, { originalname: file.originalname, related_collection: req.body.related_collection, collection_id: req.body.collection_id, type: req.body.type });
+		cb(null, { uuid_system: req.authenticatedUser.active_system_uuid.toString(), uuid: req.body.uuid, originalname: file.originalname, related_collection: req.body.related_collection, collection_id: req.body.collection_id, type: req.body.type });
 	}
 });
 
@@ -71,6 +71,7 @@ app.post(backendDirectoryPath+'/upload', requireLogin, function(req, res) {
 				myObj["error"]=err;
 				res.send(myObj);
 			} else	{
+				myObj["_id"]=req.file.id;
 				myObj["success"]="Uploaded successfully!";
 				res.send(myObj);
 			}
@@ -81,10 +82,52 @@ app.post(backendDirectoryPath+'/upload', requireLogin, function(req, res) {
   	}
 });
 
+//find and remove file
+app.post(backendDirectoryPath+'/find_remove_file', requireLogin, function(req, res) {
+    var outputObj = new Object();
+	gfs.files.findOne({'metadata.uuid': req.body.uuid}, function(err, files) {
+		if(files && files._id!=""){
+        	gfs.remove({'_id': files._id});
+            outputObj["success"]   = "OK";
+			res.send(outputObj);
+		} else if(err){
+        	outputObj["error"]   = "Sorry, error occurred, please try after sometime!";
+			res.send(outputObj);
+        } else{
+        	outputObj["success"]   = "OK";
+            res.send(outputObj);
+        }
+    });
+});
+
 //fetch uploaded file content
-app.get(backendDirectoryPath+'/file/', requireLogin, function(req, res){
+app.get(backendDirectoryPath+'/file/:filename', requireLogin, function(req, res){
+    if(req.authenticationBool){
+        /** First check if file exists */
+        gfs.files.find({'metadata.uuid': req.params.filename}).toArray(function(err, files){
+            if(!files || files.length === 0){
+                return res.status(404).json({
+                    responseCode: 1,
+                    responseMessage: "error"
+                });
+            }
+
+            /** create read stream */
+            var readstream = gfs.createReadStream({
+            	filename: files[0].filename
+            });
+
+            /** set the proper content type */
+            res.set('Content-Type', files[0].contentType)                                                                                                                      
+
+            /** return response */
+            return readstream.pipe(res);
+        });
+    }
+});
+/**app.get(backendDirectoryPath+'/file/', requireLogin, function(req, res){
 	if(req.authenticationBool){
-		/** First check if file exists */
+	
 		gfs.files.find({filename: req.params.filename}).toArray(function(err, files){
 			if(!files || files.length === 0){
 				return res.status(404).json({
@@ -93,19 +136,16 @@ app.get(backendDirectoryPath+'/file/', requireLogin, function(req, res){
 				});
 			}
 
-            /** create read stream */
-			var readstream = gfs.createReadStream({
+            var readstream = gfs.createReadStream({
 				filename: files[0].filename
 			});
 
-            /** set the proper content type */
-			res.set('Content-Type', files[0].contentType)
+            res.set('Content-Type', files[0].contentType)
 
-            /** return response */
-			return readstream.pipe(res);
+            return readstream.pipe(res);
 		});
 	}
-});
+});**/
      
 //post action for save notes
 app.post(backendDirectoryPath+'/savenotes', requireLogin, (req, res) => {
@@ -1473,7 +1513,11 @@ app.get(backendDirectoryPath+'/api_fetch_list/', requireLogin, function(req, res
 				
 				if (typeof activeSystemsStr !== 'undefined' && activeSystemsStr !== null && activeSystemsStr!="") {
 					if(definedAdminTablesArr.indexOf(collectionStr)==-1){
-						query+=" $or: [ { 'uuid_system' : { $in: ['"+activeSystemsStr+"'] } }, { 'shared_systems': { $in: ['"+activeSystemsStr+"'] } } ] ";
+						if(collectionStr=="fs.files"){
+							query+=" 'metadata.uuid_system': { $in: ['"+activeSystemsStr+"'] } ";
+						}else{
+							query+=" $or: [ { 'uuid_system' : { $in: ['"+activeSystemsStr+"'] } }, { 'shared_systems': { $in: ['"+activeSystemsStr+"'] } } ] ";
+						}
 					}
 				}
 				//search by criteria passed
@@ -2267,7 +2311,6 @@ app.get(backendDirectoryPath+'/:id', requireLogin, function(req, res) {
     						}); 
 						}else{
 							var queryStr="{'"+editFieldName+"': '"+editFieldVal+"'}";
-
 							initFunctions.crudOpertions(db, table_name, 'findOne', null, editFieldName, editFieldVal, queryStr, function(result) {
 								if (result.aaData) {
       								contentObj=result.aaData;
@@ -2284,10 +2327,10 @@ app.get(backendDirectoryPath+'/:id', requireLogin, function(req, res) {
     					} 
 					}else{
       					res.render(pageRequested, {
-      				queryStr : req.query,
-       				contentObj : contentObj,
-       				authenticatedUser : req.authenticatedUser
-    			});
+		      				queryStr : req.query,
+       						contentObj : contentObj,
+       						authenticatedUser : req.authenticatedUser
+    					});
     				}
     			}
     		}else{

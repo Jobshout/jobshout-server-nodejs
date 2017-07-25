@@ -1,4 +1,4 @@
-var menuxhr;
+var menuxhr, allDefaultTagsArr= new Array();;
 function __alertModalBox(msg){
 	$("#globalMessage").html(msg);
 	$('#globalPrompt').modal('show');
@@ -289,52 +289,61 @@ function load_notifications(){
 	});
 }
 
-function upload_single_file(){
-	if($('#file').val().length>0)	{
-		var data = new FormData();
-		data.append('related_collection', $('#table_name').val());
-		data.append('collection_id', $('#id').val());
-		data.append('type', $('#file_type').val());
-		
-		var filesize=Number($('#file')[0].files[0].size)/(1024*1024);
-		
-		if(filesize>5){
-			var msg = "The CV file size larger than 5MB is not allowed.";
-
-			$("#validation").css("padding-left", "0%");
-			$("#validation").html(msg);
-			window.location.href="#validation";
-			$('#file').focus();
-		}else{
-			var files= $('#file')[0].files;
-			$.each(files, function(key, value){
-				data.append('file', value);
+function fetch_saved_tags(val){
+	var jsonRow=backendDirectory+"/api_fetch_list?limit=all&collection=tags";
+	$.getJSON(jsonRow,function(html){
+		if(html.aaData.length>0){
+			$.each(html.aaData, function(i,row){
+				allDefaultTagsArr.push(row.name);
 			});
-			$.ajax({
-				url: backendDirectory+'/upload',
-				type: 'POST',
-				data: data,
-				dataType: 'json',
-				contentType: false,
-				enctype: 'multipart/form-data',
-				cache: false,
-				processData: false, // Don't process the files
-				success: function(response){
-					if(response.success){
-						__alertModalBox(response.success);
-					} else if(response.error) {
-						__alertModalBox(response.error);
-					}else {
-						__alertModalBox('Sorry, error in uploading file!');
-					}
-				}
-			});
-		}
-	}	else {
-		__alertModalBox("Please select file to upload!");
-	}
+     	}
+	});
 }
-
+function drawTagsUi(){
+	fetch_saved_tags();
+	
+	$('#tags').keypress(function(event){
+		if(event.keyCode == 13) {
+      		event.preventDefault();
+      		return false;
+   		}
+  	});
+  	
+  	var existingTagsStr=$("#default_tags").val();
+  	  	
+  	var existingTagsArr = existingTagsStr.split(',');
+  	$('#tags').tagEditor({
+		initialTags: existingTagsArr,
+		delimiter: ',',
+		placeholder: 'Enter tags ...',
+  		autocomplete: {
+        	delay: 0, // show suggestions immediately
+       		position: { collision: 'flip' }, // automatic menu position up/down
+        	source: allDefaultTagsArr
+   		},
+   		forceLowercase: false,
+    	placeholder: 'Add Tags',
+    	beforeTagSave: function(field, editor, tags, tag, val) {
+    		if($.inArray( val, allDefaultTagsArr)==-1){
+    			generate_default_tags(val);
+        	}
+    	}
+	});
+}
+function generate_default_tags(val){
+	var codeStr=val;
+    var postContentURL=backendDirectory+"/api_crud_post";
+   	$.ajax({
+		type: "POST",
+		dataType: "json",
+		url: postContentURL,
+		data: {"collection" : "tags", "action" : "create", "fieldName" : "name", "fieldValue" : val, "name" : val},
+		success: function(response){
+			console.log(response);
+		}
+	});
+}
+	
 function getAge(date) {
 	var now = new Date();
   	var birthDate = new Date(date * 1000);

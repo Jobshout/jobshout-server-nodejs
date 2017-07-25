@@ -42,6 +42,7 @@
    }
    }
 </style>
+<link rel="stylesheet" href="css/jquery.tag-editor.css" />
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">	
@@ -88,12 +89,15 @@
             						<input type="hidden" class="form-control" id="data" name="data" value="">
             						<div class="form-group">
     									<label for="firstname" class="col-sm-3  control-label">Categories </label>
-    									<div class="col-sm-9">
+    									<div class="col-sm-3">
                   							<select  required="required" class="form-control col-md-5 col-xs-12" name="categories" id="categories" >
                   							
                     						</select>
                   						</div>
-                  					</div>
+                  						<div class="col-sm-3" style="margin-top:6px;">
+    										<label> <input type="checkbox" id="default" name="default" value="1" <% if (typeof contentObj.default !== 'undefined' && contentObj.default !== null && contentObj.default == 1) { %>checked<% } %>>  <strong style="font-weight:600">Set as default</strong></label>
+    			  						</div>
+                 					</div>
                   					<div class="form-group">
     									<label for="firstname" class="col-sm-3  control-label">Type </label>
     									<div class="col-sm-9">
@@ -130,6 +134,13 @@
                    							<input type="text"  class="form-control col-md-5 col-xs-12" id="order_by_num" name="order_by_num" value="<% if (typeof contentObj.order_by_num !== 'undefined' && contentObj.order_by_num !== null) { %><%= contentObj.order_by_num %><% } %>">
                   						</div>
                 					</div>
+                					<div class="form-group">
+    									<label for="firstname" class="col-sm-3  control-label">Tags </label>
+    									<div class="col-sm-9">
+    										<input type="hidden" class="form-control" id="default_tags" value="<% if (typeof contentObj.tags !== 'undefined' && contentObj.tags !== null) { %><%= contentObj.tags %><% } %>">
+    										<textarea type="text" class="form-control" name="tags" id="tags" rows="1"></textarea>
+										</div>
+                  					</div>
                 					<div class="form-group" id="linkTargetDivID">
     									<label for="" class="col-sm-3 control-label">Target</label>
     									<div class="col-sm-9" style="margin-top:6px;">
@@ -335,6 +346,9 @@
 <script src="js/basictable.js"></script>
  <script src="plugins/combobox/autocomplete-ui.js"></script>
  <script src="js/jquery.validate.js"></script>
+ <script src="js/jquery.caret.min.js"></script>
+ <script src="js/jquery.tag-editor.min.js"></script>
+			
 <script>
 function loadcategories(){
 	$("#categories").html("");
@@ -543,8 +557,11 @@ function resetItemForm(){
 	$("#item_query_string").val("");
 	$( "#item_related_doc" ).html("");
 }
+
 $(document).ready(function(){
 	loadcategories();
+	
+  	drawTagsUi();	// call this method to initialise tags
 	
 	  $('#table').basictable();
 	   $('#table-breakpoint').basictable({
@@ -615,6 +632,9 @@ $(document).ready(function(){
 				label: { required: true }
 			},
 			submitHandler: function(form) {
+				var tempTags =$("#tags").val();
+				$("#tags").val(JSON.stringify(tempTags.split(',')));
+				
 				generateObjectJson();
  				dataAsJson('contentForm', form);
  			}
@@ -821,8 +841,5 @@ var xhr;
 			});
 			})( jQuery );
 </script>
-
-
-
 </body>
 </html>

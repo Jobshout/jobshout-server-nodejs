@@ -54,8 +54,11 @@ var self = module.exports =
 				outputObj["table"]   = table_name;
 				
 				if(definedAdminTablesArr.indexOf(table_name)==-1){
-					//query+=" 'uuid_system': { $in: ['"+activeSystemsStr+"'] } ";
-					query+=" $or: [ { 'uuid_system' : { $in: ['"+activeSystemsStr+"'] } }, { 'shared_systems': { $in: ['"+activeSystemsStr+"'] } } ] ";
+					if(table_name=="fs.files"){
+						query+=" 'metadata.uuid_system': { $in: ['"+activeSystemsStr+"'] } ";
+					}else{
+						query+=" $or: [ { 'uuid_system' : { $in: ['"+activeSystemsStr+"'] } }, { 'shared_systems': { $in: ['"+activeSystemsStr+"'] } } ] ";
+					}
 				}
 				
 				if (typeof templateResponse.search_columns !== 'undefined' && templateResponse.search_columns !== null && templateResponse.search_columns !== "")	{
@@ -532,12 +535,14 @@ var self = module.exports =
 			table_name="categories";
 		}else if(filename=="emails" || filename=="email"){
 			table_name="email_queue";
-		}else if(filename=="task" || filename=="calendar" || filename=="test"){
+		}else if(filename=="task" || filename=="calendar"){
 			table_name="tasks";
 		}else if(filename=="customer"){
 			table_name="Companies";
 		}else if(filename=="venue"){
 			table_name="venue";
+		}else if(filename=="image"){
+			table_name="fs.files";
 		}else{
 			table_name=filename+"s";
 		}
