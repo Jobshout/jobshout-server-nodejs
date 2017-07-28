@@ -388,7 +388,9 @@ var self = module.exports =
     			catch (error){
        				postContent[key]=contentStr;
     			}
-			}			
+			}	else {
+				postContent[key]=contentStr;
+			}		
 		}
 		
 		var link="";
@@ -529,11 +531,7 @@ var self = module.exports =
 	// (This is hard coded right now, will make this option dynamic from system_templates)
 	fetchTableName : function (filename){
 		var table_name="";
-		if(filename=="document"  || filename=="document_list" || filename=="documents_test"){
-			table_name="documents";
-		}else if(filename=="category" || filename=="categories"){
-			table_name="categories";
-		}else if(filename=="emails" || filename=="email"){
+		if(filename=="emails" || filename=="email"){
 			table_name="email_queue";
 		}else if(filename=="task" || filename=="calendar"){
 			table_name="tasks";
@@ -541,7 +539,7 @@ var self = module.exports =
 			table_name="Companies";
 		}else if(filename=="venue"){
 			table_name="venue";
-		}else if(filename=="image"){
+		}else if(filename=="image" || filename=="image_gallery"){
 			table_name="fs.files";
 		}else{
 			table_name=filename+"s";

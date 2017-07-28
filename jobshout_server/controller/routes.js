@@ -1545,7 +1545,6 @@ app.get(backendDirectoryPath+'/api_fetch_list/', requireLogin, function(req, res
      			}
      			query+= "}";
      			eval('var queryObj='+query);
-     			
      			coll.find(queryObj).count(function (e, count) {
       				total_records= count;
       			});
@@ -1714,6 +1713,25 @@ app.get(backendDirectoryPath+'/players', requireLogin, function(req, res) {
 			keywordStr=queryString.keyword;
 		}
 		res.render(accessFilePath+'players', {
+       		currentTemplate : '',
+        	searched_keyword : keywordStr,
+        	authenticatedUser : req.authenticatedUser
+    	});
+    }else{
+		res.redirect(backendDirectoryPath+'/sign-in');
+	}
+});
+
+//images gallery
+app.get(backendDirectoryPath+'/image_gallery', requireLogin, function(req, res) {
+	if(req.authenticationBool){
+		var queryString= req.query;
+		var keywordStr="";
+	
+		if(queryString.keyword){
+			keywordStr=queryString.keyword;
+		}
+		res.render(accessFilePath+'image_gallery', {
        		currentTemplate : '',
         	searched_keyword : keywordStr,
         	authenticatedUser : req.authenticatedUser
@@ -2547,7 +2565,7 @@ app.post(backendDirectoryPath+'/save/:id', requireLogin, (req, res) => {
 	var postJson=req.body;
 	
 	var contentJson = JSON.parse(req.body.data);	//all form content will be posted in field name="data"
-	
+
 	var idField="", editorFieldName="", editorFieldVal="", checkForExistence="";
 	
 	var table_nameStr=postJson.table_name;
@@ -2632,12 +2650,13 @@ app.post(backendDirectoryPath+'/save/:id', requireLogin, (req, res) => {
     									catch (error){
        										updateContentObj[key]=contentJson[key];
     									}
+									}	else{
+										updateContentObj[key]=contentJson[key];
 									}
 								}	else {
 									updateContentObj[key]=contentJson[key];
 								}		
 							}
-								 		
 							db.collection(table_nameStr).update({_id:mongoIDField}, { $set: updateContentObj }, (err, result) => {
 								if (err) {
     								link+="?error_msg=Error occurred while saving  please try after some time!";
@@ -2681,6 +2700,8 @@ app.post(backendDirectoryPath+'/save/:id', requireLogin, (req, res) => {
     								catch (error){
        									updateContentObj[key]=contentJson[key];
     								}
+								}else{
+									updateContentObj[key]=contentJson[key];
 								}			
 							}
 					 
