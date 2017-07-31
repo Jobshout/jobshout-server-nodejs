@@ -94,8 +94,23 @@ font-size: 20px;
   																</div>
   																<div class="form-group">
     																<label for="" class="col-sm-3 control-label">Follow Up Date </label>
-    																<div class="col-sm-9">
+    																<div class="col-sm-6">
       																	<input type="text" class="col-sm-4 datepicker form-control" id="followup_date" name="followup_date" data-date-format="dd/mm/yyyy"  readonly value="<% if (typeof contentObj.followup_date !== 'undefined' && contentObj.followup_date !== null) { %><%= contentObj.followup_date %><% } %>">
+    																</div>
+    																<div class="col-sm-3">
+																		<label>	<input  name="is_supplier" type="checkbox" value="true" id="is_supplier" <% if (typeof contentObj.is_supplier !== 'undefined' && contentObj.is_supplier !== null && contentObj.is_supplier == true) { %>checked<% } %> > Supplier</label>	
+								 									</div>
+  																</div>
+  																<div class="form-group">
+    																<label for="" class="col-sm-3 control-label">Website </label>
+    																<div class="col-sm-9">
+      																	<input type="text" class="form-control" id="website" name="website" value="<% if (typeof contentObj.website !== 'undefined' && contentObj.website !== null) { %><%= contentObj.website %><% } %>">
+    																</div>
+  																</div>
+  																<div class="form-group">
+    																<label for="" class="col-sm-3 control-label">Comments</label>
+    																<div class="col-sm-9">
+      																	<textarea name="comments" class="form-control" rows="4" id="comments"><% if (typeof contentObj.comments !== 'undefined' && contentObj.comments !== null) { %><%= contentObj.comments %><% } %></textarea>
     																</div>
   																</div>
    															</div>
@@ -105,26 +120,48 @@ font-size: 20px;
 										</div>
 										<div class="col-xs-6">
           									<div class="box box-primary">
-		    									<h4>Contact Details</h4>
+		    									<h4>Other Details</h4>
             									<div class="box-body">
 														<div class="row">
            		  											<div class=" col-sm-12 col-lg-11">
    																<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">First name </label>
+    																<label for="" class="col-sm-3 control-label">Currency </label>
     																<div class="col-sm-9">
-      																	<input type="text" class="form-control" id="contact_firstname" name="contact_firstname" value="<% if (typeof contentObj.contact_firstname !== 'undefined' && contentObj.contact_firstname !== null) { %><%= contentObj.contact_firstname %><% } %>">
+      																	<input type="text" class="form-control" id="currency_code" name="currency_code" value="<% if (typeof contentObj.currency_code !== 'undefined' && contentObj.currency_code !== null) { %><%= contentObj.currency_code %><% } %>">
     																</div>
   																</div>
   																<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">Last name </label>
+    																<label for="" class="col-sm-3 control-label">VAT Number</label>
+    																<div class="col-sm-6">
+      																	<input type="text" class="form-control" id="vat_tax_number" name="vat_tax_number" value="<% if (typeof contentObj.vat_tax_number !== 'undefined' && contentObj.vat_tax_number !== null) { %><%= contentObj.vat_tax_number %><% } %>">
+    																</div>
+    																<div class="col-sm-3">
+																		<label><input id="vat_claimed" name="vat_claimed" value="true" type="checkbox" <% if (typeof contentObj.vat_claimed !== 'undefined' && contentObj.vat_claimed !== null && contentObj.vat_claimed == true) { %>checked<% } %>> VAT Claimed</label>
+    			  													</div>
+  																</div>
+  																<div class="form-group">
+    																<label for="" class="col-sm-3 control-label">Bank Account no </label>
     																<div class="col-sm-9">
-      																	<input type="text" class="form-control" id="contact_Lastname" name="contact_Lastname" value="<% if (typeof contentObj.contact_Lastname !== 'undefined' && contentObj.contact_Lastname !== null) { %><%= contentObj.contact_Lastname %><% } %>">
+      																	<input type="text" class="form-control" id="bank_account_number" name="bank_account_number" value="<% if (typeof contentObj.bank_account_number !== 'undefined' && contentObj.bank_account_number !== null) { %><%= contentObj.bank_account_number %><% } %>">
     																</div>
   																</div>
   																<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">Email</label>
+    																<label for="" class="col-sm-3 control-label">IBAN </label>
     																<div class="col-sm-9">
-      																	<input type="text" class="form-control" id="email_address" name="email_address" value="<% if (typeof contentObj.email_address !== 'undefined' && contentObj.email_address !== null) { %><%= contentObj.email_address %><% } %>">
+      																	<input type="text" class="form-control" id="iban" name="iban" value="<% if (typeof contentObj.iban !== 'undefined' && contentObj.iban !== null) { %><%= contentObj.iban %><% } %>">
+    																</div>
+  																</div>
+  																
+   																<div class="form-group">
+    																<label for="" class="col-sm-3 control-label">Relation</label>
+    																<div class="col-sm-9">
+      																	<input type="text" class="form-control" id="relationship" name="relationship" placeholder="" value="<% if (typeof contentObj.relationship !== 'undefined' && contentObj.relationship !== null) { %><%= contentObj.relationship %><% } %>">
+    																</div>
+  																</div>
+																<div class="form-group">
+    																<label for="" class="col-sm-3 control-label">Referred By</label>
+    																<div class="col-sm-9">
+      																	<input type="text" class="form-control" id="referred_by" name="referred_by" placeholder="" value="<% if (typeof contentObj.referred_by !== 'undefined' && contentObj.referred_by !== null) { %><%= contentObj.referred_by %><% } %>">
     																</div>
   																</div>
    															</div>
@@ -132,14 +169,51 @@ font-size: 20px;
             									</div>
           									</div>
 										</div>
+										<!--
+										<div class="col-xs-6">
+          									<div class="box box-primary">
+		    									<h4>Contact Details</h4>
+            									<div class="box-body">
+														<div class="row">
+           		  											<div class=" col-sm-12 col-lg-11">
+   																<div class="form-group">
+    																<label for="" class="col-sm-3 control-label">Name </label>
+    																<div class="col-sm-9">
+      																	<input type="text" class="form-control" id="contact_name" name="contact_name" value="<% if (typeof contentObj.contact_name !== 'undefined' && contentObj.contact_name !== null) { %><%= contentObj.contact_name %><% } %>">
+    																</div>
+  																</div>
+  																<div class="form-group">
+    																<label for="" class="col-sm-3 control-label">Email</label>
+    																<div class="col-sm-9">
+      																	<input type="text" class="form-control" id="contact_email" name="contact_email" value="<% if (typeof contentObj.contact_email !== 'undefined' && contentObj.contact_email !== null) { %><%= contentObj.contact_email %><% } %>">
+    																</div>
+  																</div>
+   															</div>
+       			 										</div>
+            									</div>
+          									</div>
+										</div>
+										-->
 									</div>
 	  								<div class="row" STYLE="margin-top:10px;">
 										<div class="col-xs-6">
           									<div class="box box-primary">
-		    									<h4>Address</h4>
+		    									<h4>Contact & Address</h4>
             									<div class="box-body">
        		 											<div class="row">
            		  											<div class=" col-sm-12 col-lg-11">
+           		  												<div class="form-group">
+    																<label for="" class="col-sm-3 control-label">Contact Name</label>
+    																<div class="col-sm-9">
+      																	<input type="text" class="form-control" id="contact_name" name="contact_name" placeholder="" value="<% if (typeof contentObj.contact_name !== 'undefined' && contentObj.contact_name !== null) { %><%= contentObj.contact_name %><% } %>">
+    																</div>
+  																</div>
+  																<div class="form-group">
+    																<label for="" class="col-sm-3 control-label">Contact Email</label>
+    																<div class="col-sm-9">
+      																	<input type="text" class="form-control" id="contact_email" name="contact_email" placeholder="" value="<% if (typeof contentObj.contact_email !== 'undefined' && contentObj.contact_email !== null) { %><%= contentObj.contact_email %><% } %>">
+    																</div>
+  																</div>
    																<div class="form-group">
     																<label for="" class="col-sm-3 control-label">Address 1 <span style="color:#6E829B">*</span></label>
     																<div class="col-sm-9">
@@ -172,13 +246,11 @@ font-size: 20px;
   																</div>
   																<div class="form-group">
     																<label for="" class="col-sm-3 control-label">Telephone</label>
-    																<div class="col-sm-9">
+    																<div class="col-sm-4">
       																	<input type="text" class="form-control" id="telephone" name="telephone" value="<% if (typeof contentObj.telephone !== 'undefined' && contentObj.telephone !== null) { %><%= contentObj.telephone %><% } %>">
     																</div>
-  																</div>
-  																<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">Fax</label>
-    																<div class="col-sm-9">
+    																<label for="" class="col-sm-1 control-label">Fax</label>
+    																<div class="col-sm-4">
       																	<input type="text" class="form-control" id="fax" name="fax" value="<% if (typeof contentObj.fax !== 'undefined' && contentObj.fax !== null) { %><%= contentObj.fax %><% } %>">
     																</div>
   																</div>
@@ -195,36 +267,36 @@ font-size: 20px;
 										</div>
 										<div class="col-xs-6">
           									<div class="box box-primary">
-		    									<h4>Other Info</h4>
+		    									<h4>Invoice Details</h4>
             									<div class="box-body">
 														<div class="row">
            		  											<div class=" col-sm-12 col-lg-11">
            		  												<div class="form-group ">
 																	<label class="col-sm-3 control-label">&nbsp;</label>
 																	<div class=" col-sm-9">
-																	<label>	<input  name="is_supplier" type="checkbox" value="true" id="is_supplier" <% if (typeof contentObj.is_supplier !== 'undefined' && contentObj.is_supplier !== null && contentObj.is_supplier == true) { %>checked<% } %> >
-								 									Supplier	</label>
+																	<label>	<input type="checkbox" value="true" id="copy_address" >
+								 									Copy Invoice details same as "Contact & Address"</label>
 								 									</div>
-																	</div>	
-   																<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">Relation</label>
+																</div>	
+           		  												<div class="form-group">
+    																<label for="" class="col-sm-3 control-label">Invoice Contact Name</label>
     																<div class="col-sm-9">
-      																	<input type="text" class="form-control" id="relationship" name="relationship" placeholder="" value="<% if (typeof contentObj.relationship !== 'undefined' && contentObj.relationship !== null) { %><%= contentObj.relationship %><% } %>">
-    																</div>
-  																</div>
-																<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">Referred By</label>
-    																<div class="col-sm-9">
-      																	<input type="text" class="form-control" id="referred_by" name="referred_by" placeholder="" value="<% if (typeof contentObj.referred_by !== 'undefined' && contentObj.referred_by !== null) { %><%= contentObj.referred_by %><% } %>">
+      																	<input type="text" class="form-control" id="invoice_contact_name" name="invoice_contact_name" placeholder="" value="<% if (typeof contentObj.invoice_contact_name !== 'undefined' && contentObj.invoice_contact_name !== null) { %><%= contentObj.invoice_contact_name %><% } %>">
     																</div>
   																</div>
   																<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">Comments</label>
+    																<label for="" class="col-sm-3 control-label">Invoice Contact Email</label>
     																<div class="col-sm-9">
-      																	<textarea name="comments" class="form-control" rows="4" id="comments"><% if (typeof contentObj.comments !== 'undefined' && contentObj.comments !== null) { %><%= contentObj.comments %><% } %></textarea>
+      																	<input type="text" class="form-control" id="invoice_contact_email" name="invoice_contact_email" placeholder="" value="<% if (typeof contentObj.invoice_contact_email !== 'undefined' && contentObj.invoice_contact_email !== null) { %><%= contentObj.invoice_contact_email %><% } %>">
     																</div>
   																</div>
-   															</div>
+           		  												<div class="form-group">
+    																<label for="" class="col-sm-3 control-label">Invoice Address</label>
+    																<div class="col-sm-9">
+      																	<textarea class="form-control" id="invoice_address" name="invoice_address"><% if (typeof contentObj.invoice_address !== 'undefined' && contentObj.invoice_address !== null) { %><%= contentObj.invoice_address %><% } %></textarea>
+    																</div>
+  																</div>
+															</div>
        			 										</div>
              									</div>
           									</div>
@@ -464,7 +536,41 @@ function savenote(uuid,actionStr, note){
  				dataAsJson('contentForm', form);
  			}
 		});			
-		
+		//
+		$('#copy_address').change(function(){
+			if($(this).is(":checked")){
+				var inv_addr='';
+				if($('#address_line_1').val()!=""){
+					inv_addr+=$('#address_line_1').val();
+				}
+				if($('#address_line_2').val()!=""){
+					inv_addr+="<br>"+$('#address_line_2').val();
+				}
+				if($('#city_or_town').val()!=""){
+					inv_addr+="<br>"+$('#city_or_town').val();
+				}
+				if($('#county_or_state').val()!=""){
+					inv_addr+="<br>"+$('#county_or_state').val();
+				}
+				if($('#post_zip_code').val()!=""){
+					inv_addr+=", "+$('#post_zip_code').val();
+				}
+				if($('#country').val()!=""){
+					inv_addr+="<br>"+$('#country').val();
+				}
+				if($('#telephone').val()!=""){
+					inv_addr+="<br> Contact number: "+$('#telephone').val();
+				}
+				if($('#fax').val()!=""){
+					inv_addr+="<br> Fax: "+$('#fax').val();
+				}
+				$('#invoice_address').val(inv_addr);
+				$('#invoice_contact_name').val($('#contact_name').val());	$('#invoice_contact_email').val($('#contact_email').val());	
+			}else{
+				$('#invoice_contact_name').val('');	$('#invoice_contact_email').val('');	$('#invoice_address').val('');
+			}
+		});
+		 
             // datepicker plugin
             $('.datepicker').datepicker().on('changeDate', function (ev) {
                 $(this).datepicker('hide');

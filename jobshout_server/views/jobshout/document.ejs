@@ -10,8 +10,7 @@ width : 402px!important;
 padding:0px;
 margin:0px;
 }
-		
-.uldragdrop li{
+.uldragdrop div{
 list-style: none;
 background: #fff;
 border: 1px solid #ddd;
@@ -22,7 +21,7 @@ margin-bottom: 6px;
 text-align: left;
 }
 		
-.uldragdrop li:hover{
+.uldragdrop div:hover{
 color:#fff;		
 background: #b90140;
 border:1px solid #8a0024;
@@ -154,11 +153,22 @@ border:1px solid #8a0024;
   										
    									</div>
    									<div class=" col-sm-12 col-lg-3">
-   										<ul id="DragWordList" class="uldragdrop" runat="server">
+   										<div class="form-group" style="padding-bottom:35px;">
+                  							<div class="col-md-9 col-lg-9" style="">
+                  								<div class="btn-inline display-inline-block" style="width: 100%;">
+													<input class="form-control" style="height:36px;" required="" id="search_here" placeholder="Search by image name" value="">
+													<button class="btn btn-left-align btn-link no-shadow bg-transparent no-padding-top padding-right-10 right-auto left" type="button" id="searchBtn" title="Search"><i class="glyphicon glyphicon-search"></i></button>
+												</div>
+                  							</div>
+											<div class="col-md-3 col-lg-3" style="padding: 0px;">
+												<a href="<%= backendDirectory %>/image" class="btn btn-danger sm-btn" target="_blank" title="Add new image">+ New</a>
+											</div>
+                						</div>
+   										<div id="imageLibraryDiv" class="uldragdrop">
               							
-              							</ul>
+              							</div>
    									</div>
-   									<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %>
+   									<% if (typeof contentObj._id !== "undefined" && contentObj._id !== null) { %>
    									<!--<div class=" col-sm-12 col-lg-3">
    										<div class="form-group">
     										<label for="" class="col-sm-2 control-label">Image</label>
@@ -390,6 +400,7 @@ border:1px solid #8a0024;
 	<% include include/footer %>
 <!-- Footer Ends Here-->
 </div>
+
 <script src="js/jquery.validate.js"></script>
 <script SRC="plugins/tinymce/tinymce.min.js"></script>
 <script src="js/chosen.jquery.js" type="text/javascript"></script>
@@ -574,6 +585,20 @@ $(document).ready(function(){
 	
 	load_systems();
 	
+	loadImagesGallery();
+	
+	$("#search_here").change(function()	{
+		loadImagesGallery();
+	});	
+	$('#search_here').keypress(function (e) {
+  		if (e.which == 13) {
+    		loadImagesGallery();
+  		}
+	});
+	$("#searchBtn").click(function()	{
+		loadImagesGallery();
+	});
+	
 	$("#type").change(function(){
 		if($(this).val()=="blog"){
 			$(".blogComments").show();
@@ -668,7 +693,7 @@ $(document).ready(function(){
 				
 				dataAsJson('contentForm', form);
  			}
-		});		
+		});	
 });
 function load_systems(){
 	$("#select_systems").html("");
@@ -714,6 +739,25 @@ function load_systems(){
    		}
    		$("#select_systems").trigger("chosen:updated");
    		}
+	});
+}
+
+var xhrStatus;
+function loadImagesGallery(){
+	var jsonRow=backendDirectory+"/api_fetch_list?start=0&limit=20&collection=fs.files";
+	if($("#search_here").val()!=""){
+		jsonRow+="&s="+$("#search_here").val();
+	}
+	if(xhrStatus) xhrStatus.abort();
+	xhrStatus = $.getJSON(jsonRow,function(html){
+		var contentHtml="";
+		if(html.aaData.length>0){
+			var noImageStr= backendDirectory+'/images/no_image.png';
+			$.each(html.aaData, function(i,row){
+				contentHtml+='<div><img src="'+backendDirectory+"/file/"+row.metadata.uuid+'?'+$.now()+'" class="img-responsive" style="border-radius: 0 0 3px 3px; border: 1px solid #ddd;" onerror="this.src=\''+noImageStr+'\'"/></div>';
+			});
+     	}
+		$("#imageLibraryDiv").html(contentHtml);
 	});
 }
 </script>

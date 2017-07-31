@@ -13,7 +13,11 @@ if (typeof searched_keyword !== 'undefined' && searched_keyword !== null) {
 
 <!-- page specific css -->
 <link rel="stylesheet" href="css/basictable.css">
-
+<style>
+.alert{
+margin:10px;
+}
+</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 	<div class="wrapper">
@@ -82,8 +86,17 @@ if (typeof searched_keyword !== 'undefined' && searched_keyword !== null) {
 				</div>
 			</div>
 		<div class="row">
-	  		<div class="content table-responsive table-full-width" id="documents_data">
-		 		
+	  		<div class="content table-responsive table-full-width" id="display_content_div">
+		 		<div class="table-responsive" style="border:none;display:none;" id="listViewUI">
+		 			<table class="table table-striped  table-bordered table-hover custom-tbl-st bt" id="table-breakpoint"  style="background-color: rgb(255, 255, 255); border-radius: 4px;" >
+                    	<thead><th>File</th><th>File Name</th><th>File Type</th><th>Created On</th><th>Action</th></thead>
+                    	<tfoot><th>File</th><th>File Name</th><th>File Type</th><th>Created On</th><th>Action</th></tfoot>
+                    	<tbody id="documents_data"></tbody>
+                    </table>
+                </div>
+				<div id="gridViewUI">
+		 			
+                </div>	
 			</div>
 			<div style="text-align:center; display:none;" id="display_more_btn">
 				<a style="width: 60%; margin-bottom: 10px;" class="btn palette-carrot btn-danger" title="Load more" onclick="load_more()" href="javascript:void(0);">
@@ -113,7 +126,7 @@ var	access_right="<%= authenticatedUser.access_right %>";
 var access_right=0;
 <% } %>
 var xhrStatus;
-var pageSize=15, totalNum=0, totalDisplayedNum=0, checkAllFlag= false;
+var pageSize=3, totalNum=0, totalDisplayedNum=0, checkAllFlag= false;
 var start=0, end=pageSize;
 var accessRightCode=parseInt(access_right);
 var complete=false, completeScroll=false;
@@ -122,14 +135,25 @@ function __changeView(val)	{
 	$('.viewClass').removeClass('active');
 	$('#'+val).addClass("active");
 	displayedViewStr=val;
+	$('#listViewUI').hide();
+	$('#gridViewUI').hide();
+	
+	if(displayedViewStr=="list") {
+		$('#listViewUI').show();
+	}	else	{
+		$('#gridViewUI').show();
+	}
 	refresh_data();
 }
 	function searchKeyword(e){
 		var searchField= $("#"+e).val();
 		if(searchField!=""){
 			totalDisplayedNum=0;
-			$('#table-breakpoint').basictable('destroy');
+			if(displayedViewStr=="list") {
+				$('#table-breakpoint').basictable('destroy');
+			}
 			$("#documents_data").html('');
+			$('#gridViewUI').html('');
 			$("#"+e).removeClass("errorPlaceHolder");
 			$('#display_more_btn').hide();
 			$('#img_loading_div').show();
@@ -174,11 +198,14 @@ function __changeView(val)	{
 	});
 
 function refresh_data(){
-	totalDisplayedNum=0
-	$('#table-breakpoint').basictable('destroy');
+	totalDisplayedNum=0;
+	if(displayedViewStr=="list") {
+		$('#table-breakpoint').basictable('destroy');
+	}
 	searchStr="";
 	$(".searchFieldClass").val("");
 	$("#documents_data").html('');
+	$('#gridViewUI').html('');
 	$('#display_more_btn').hide();
 	$('#img_loading_div').show();
 	start=0;
@@ -186,7 +213,9 @@ function refresh_data(){
 	load_data();
 }
 function load_more(){
-	$('#table-breakpoint').basictable('destroy');
+	if(displayedViewStr=="list") {
+		$('#table-breakpoint').basictable('destroy');
+	}
 	$('#display_more_btn').hide();
 	$('#img_loading_div').show();
 	if(start==0)	{
@@ -207,7 +236,7 @@ function load_more(){
 			if(html.error){
 				complete=true;
 				$(".topOptionsClass").hide();
-				$("#documents_data").before('<div class="alert alert-danger">'+html.error+'</div>');
+				$("#display_content_div").before('<div class="alert alert-danger">'+html.error+'</div>');
 			}else{
 				var editorPage="javascript:void(0)";
 				
@@ -242,17 +271,17 @@ function load_more(){
 							contentHtml+='<td class="actions-list"><a href="image?-id='+row._id+'" title="Edit '+imageNameStr+'"><i class="fa fa-pencil"></i></a></td></tr>';
 						}	else	{
 							contentHtml+='<div class="item col-lg-3 col-sm-6 col-xs-12"><div class="thumbnail" style="overflow:hidden;">';
-                			contentHtml+='<img style="height:250px; width:300px;" class="group list-group-image" src="'+imageStr+'" onerror="this.src=\''+noImageStr+'\'"/><span style="float:left">'+imageNameStr+'</span><a style="float:right;" href="image?-id='+row._id+'" title="Edit '+imageNameStr+'"><i class="fa fa-pencil"></i></a>';
+                			contentHtml+='<img style="height:250px; width:300px;" class="group list-group-image" src="'+imageStr+'" onerror="this.src=\''+noImageStr+'\'"/><span style="float:left;font-weight:bold">'+imageNameStr+'</span><a style="float:right;" href="image?-id='+row._id+'" title="Edit '+imageNameStr+'"><i class="fa fa-pencil"></i></a>';
              				contentHtml+='</div></div>';
 						}
 					});
 					if(displayedViewStr=="list") {
-						var headFootStr='<th>File</th><th>File Name</th><th>File Type</th><th>Created On</th><th>Action</th>';
-						var mainContentHtml='<div class="table-responsive" style="border:none;" ><table class="table table-striped  table-bordered table-hover custom-tbl-st bt" id="table-breakpoint"  style="background-color: rgb(255, 255, 255); border-radius: 4px;" >';
-                    	mainContentHtml+='<thead>'+headFootStr+'</thead><tfoot>'+headFootStr+'</tfoot><tbody>'+contentHtml+'</tbody></table></div>';
-						$("#documents_data").append(mainContentHtml);
-					}else{
+						//var headFootStr='<th>File</th><th>File Name</th><th>File Type</th><th>Created On</th><th>Action</th>';
+						//var mainContentHtml='<div class="table-responsive" style="border:none;" ><table class="table table-striped  table-bordered table-hover custom-tbl-st bt" id="table-breakpoint"  style="background-color: rgb(255, 255, 255); border-radius: 4px;" >';
+                    	//mainContentHtml+='<thead>'+headFootStr+'</thead><tfoot>'+headFootStr+'</tfoot><tbody>'+contentHtml+'</tbody></table></div>';
 						$("#documents_data").append(contentHtml);
+					}else{
+						$("#gridViewUI").append(contentHtml);
 					}
 					if(html.total && html.iTotalRecordsReturned && html.iTotalRecordsReturned==html.total){
 						complete=true;
@@ -261,7 +290,7 @@ function load_more(){
 					}
      			}else{
      				complete=true;
-					$("#documents_data").before('<div class="alert alert-danger alert-dismissable"><button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>No more records found!</div>');
+					$("#display_content_div").before('<div class="alert alert-danger alert-dismissable"><button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>No more records found!</div>');
      			}
      			if(displayedViewStr=="list") {
      				//initialize table
