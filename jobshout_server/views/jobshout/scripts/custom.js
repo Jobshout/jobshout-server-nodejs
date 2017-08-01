@@ -44,7 +44,7 @@ function dateTimeFromUnix(UNIX_timestamp, showTimeBool){
 	return time;
 }
 
-function datepickerFormat(UNIX_timestamp){
+function datetime_picker_format(UNIX_timestamp){
 	var a = new Date(UNIX_timestamp * 1000);
     
 	var year = a.getFullYear();
@@ -54,6 +54,17 @@ function datepickerFormat(UNIX_timestamp){
 	var min = a.getMinutes();
 	var sec = a.getSeconds();
 	var time = year + '-' + month + '-' + dateNum + ' ' + hour + ':' + min ;
+
+	return time;
+}
+
+function date_picker_format(UNIX_timestamp){
+	var a = new Date(UNIX_timestamp * 1000);
+    
+	var year = a.getFullYear();
+	var month = a.getMonth()+1;
+	var dateNum = a.getDate();
+	var time = dateNum + '/' + month + '/' + year;
 
 	return time;
 }
@@ -330,6 +341,30 @@ function drawTagsUi(){
     	}
 	});
 }
+
+function fetch_default_list(codeStr, sVal, drawDivID){
+	var jsonRow=backendDirectory+"/api_fetch_list?collection=system_lists&findFieldName=code&findFieldValue="+codeStr;
+	$.getJSON(jsonRow,function(result){
+		var contentHtml="<option value=''>--Select--</option>";
+		
+		if(result.iTotalRecordsReturned>0){
+			$.each(result.aaData, function(i,row){
+				var iconsData= row;
+				if(iconsData.list && iconsData.list.length>0)	{
+					$.each(iconsData.list, function(j,rowData){
+						contentHtml+="<option value='"+rowData.label+"' ";
+						if(sVal==rowData.label){
+							contentHtml+="selected";
+						}
+						contentHtml+=" >"+rowData.label+"</option>";
+					});
+				}
+			});
+     	}
+		$("#"+drawDivID).html(contentHtml);
+	});
+}
+
 function generate_default_tags(val){
 	var codeStr=val;
     var postContentURL=backendDirectory+"/api_crud_post";

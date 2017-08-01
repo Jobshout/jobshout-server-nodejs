@@ -50,20 +50,7 @@ border:1px solid #8a0024;
     		<section class="content">
       			
 		<div class="row" id="printMessageDivID">
-			<% if (typeof queryStr !== 'undefined' && queryStr !== null) {
-    				if(queryStr.error_msg) {	%>
-			<div class="col-sm-12"><div class="alert alert-danger alert-dismissable">
-             	<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-                	<%= queryStr.error_msg %>
-            </div> </div>
-            <% }
-           		if(queryStr.success_msg) {	%>
-					<div class="col-sm-12"><div class="alert alert-success alert-dismissable">
-             		<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-                		<%= queryStr.success_msg %>
-            		</div></div>
-            <%	}
-            }	%>
+			<% include include/display_returned_msg %>
       		<div class="panel-body no-padding-top bg-white"> 
       			<form class="form-horizontal" action="<%= backendDirectory %>/save/document" method="POST" id="contentForm">
       				<input type="hidden" class="form-control" id="table_name" name="table_name" value="documents">
@@ -638,7 +625,7 @@ $(document).ready(function(){
 	});
 	
 	if($("#Published_timestamp").val()!=""){
-		var tempDisplayDate=datepickerFormat($("#Published_timestamp").val());
+		var tempDisplayDate=datetime_picker_format($("#Published_timestamp").val());
 		$("#published_date").val(tempDisplayDate)
 	}
 	// validate form on keyup and submit

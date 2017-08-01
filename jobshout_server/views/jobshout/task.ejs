@@ -1,8 +1,26 @@
 <% include include/main-header %>
-
+<link rel="stylesheet" href="plugins/combobox/autocomplete-ui.css"/>
 <link href="plugins/datetime-picker/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 <style>
-.box-primary h4 {
+.custom-combobox {
+		position: relative;
+		display: inline-block;
+	}
+	.custom-combobox-toggle {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		margin-left: -1px;
+		padding: 0;
+	}
+	.custom-combobox-input {
+		margin: 0;
+		padding: 5px 10px;
+	}
+	.ui-widget-overlay {
+		position: fixed;
+	}
+	.box-primary h4 {
     border-bottom: 1px solid #ddd;
     border-radius: 3px;
     font-size: 20px;
@@ -10,6 +28,7 @@
     padding: 9px;
 }
 </style>
+
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 	<div class="wrapper">	
@@ -32,23 +51,11 @@
     		<section class="content">
       			<div class="row">
             				<div class="panel-body no-padding-top bg-white"> 
-            					<% if (typeof queryStr !== 'undefined' && queryStr !== null) {
-    								if(queryStr.error_msg) {	%>
-									<div class="alert alert-danger alert-dismissable">
-             							<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-                						<%= queryStr.error_msg %>
-            						</div>
-            						<% }
-           							if(queryStr.success_msg) {	%>
-										<div class="alert alert-success alert-dismissable">
-             								<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-                							<%= queryStr.success_msg %>
-            							</div>
-            						<%	}
-            					}	%>
+            					<% include include/display_returned_msg %>
+      		
             					<form class="form-horizontal" action="<%= backendDirectory %>/save/task" method="POST" id="contentForm">
             						<input type="hidden" class="form-control" id="table_name" name="table_name" value="tasks">
-      								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="_id">
+      								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="name">
       								<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>">
       								<input type="hidden" class="form-control" id="editorField" name="editorField" value="<% if (typeof editorField !== 'undefined' && editorField !== null) { %><%= editorField %><% }else{ %>_id<% } %>">
       								<input type="hidden" class="form-control" id="editorValue" name="editorValue" value="<% if (typeof editorValue !== 'undefined' && editorValue !== null) { %><%= editorValue %><% } %>">
@@ -73,7 +80,7 @@
                 					<div class="form-group">
                   						<label class="control-label col-md-3" for="">Project<span class="required">*</span></label>
                   						<div class="col-md-6 col-lg-7">
-                  							<select required="required" class="form-control col-md-5 col-xs-12" name="project" id="project"></select>
+                  							<select required="required" class="form-control col-md-5 col-xs-12" name="project_mongo_id" id="project_mongo_id"></select>
                   						</div>
                 					</div>
                 					<div class="form-group">
@@ -172,6 +179,7 @@
 		<!-- Footer Ends Here-->
 </div>
 <!-- Page-Level Plugin Scripts-->
+<script src="plugins/combobox/autocomplete-ui.js"></script>
 <script src="js/jquery.validate.js"></script>
 <script type="text/javascript" src="plugins/datetime-picker/bootstrap-datetimepicker.js" charset="UTF-8"></script>
 
@@ -187,9 +195,52 @@
         showMeridian: 1,
 		pickTime: 0
 	});
+function fetch_projects(){
+	$("#project_mongo_id").html("");
+	
+	var sVal="";
+	<% if (typeof queryStr !== 'undefined' && queryStr !== null && typeof queryStr.customer_id !== 'undefined' && queryStr.customer_id !== null && queryStr.customer_id !=="") { %>
+		sVal="<%= queryStr.project_id %>";
+	<% }else if(typeof contentObj.project_mongo_id !== 'undefined' && contentObj.project_mongo_id !== null)	{ %>
+		sVal="<%= contentObj.project_mongo_id %>";
+	<% } %>
+	if(sVal!=""){
+		var jsonRow=backendDirectory+"/collection_details?id="+sVal+"&collection=projects";
+		$.getJSON(jsonRow,function(html){
+			var contentHtml="<option value=''></option>";
+			var contentObj=html.aaData;
+			if(contentObj){
+				contentHtml+="<option value='"+contentObj._id+"' ";
+				if(sVal==contentObj._id){
+					contentHtml+="selected";
+				}
+				contentHtml+=" >"+contentObj.name+"</option>";
+     		}
+			$("#project_mongo_id").html(contentHtml);
+			$("#project_mongo_id" ).combobox();
+		});
+	}else{
+		var jsonRow=backendDirectory+"/api_fetch_list?start=0&limit=20&collection=projects";
+	
+		$.getJSON(jsonRow,function(html){
+			var contentHtml="<option value=''></option>";
+			if(html.aaData.length>0){
+					$.each(html.aaData, function(i,row){
+						contentHtml+="<option value='"+row._id+"' ";
+						if(sVal==row._id){
+							contentHtml+="selected";
+						}
+						contentHtml+=" >"+row.name+"</option>";
+					});
+     		}
+			$("#project_mongo_id").html(contentHtml);
+			$("#project_mongo_id" ).combobox();
+		});
+	}	
+}
 
 $(function () {
-	load_projects();
+	fetch_projects();
 	// validate form on keyup and submit
 		$("#contentForm").validate({
 			ignore: "",
@@ -220,26 +271,181 @@ $(function () {
  			}
 		});	
 });
-function load_projects(){
-		var jsonRow=backendDirectory+"/api_fetch_list?start=0&limit=100&collection=projects";
-		var projectSelectedStr="";
-		<% if (typeof contentObj.project !== 'undefined' && contentObj.project !== null) { %>
-			projectSelectedStr="<%= contentObj.project %>";
-		<% } %>
-		$.getJSON(jsonRow,function(html){
-			var contentHtml="<option value=''>--Select--</option>";
-			if(html.aaData.length>0){
-					$.each(html.aaData, function(i,row){
-						contentHtml+="<option value='"+row._id+"' ";
-						if(row._id==projectSelectedStr){
-							contentHtml+=" selected ";
-						}
-						contentHtml+=">"+row.name+"</option>";
-					});
-     		}
-			$("#project").html(contentHtml);
+//autocomplete
+	var xhr;
+  (function( $ ) {
+    $.widget( "custom.combobox", {
+      _create: function() {
+        this.wrapper = $( "<span>" )
+          .addClass( "custom-combobox" )
+          .insertAfter( this.element );
+ 
+        this.element.hide();
+        this._createAutocomplete();
+        this._createShowAllButton();
+      },
+ 
+      _createAutocomplete: function() {
+        var selected = this.element.children( ":selected" ),
+          value = selected.val() ? selected.text() : "";
+ 
+        this.input = $( "<input>" )
+          .appendTo( this.wrapper )
+          .val( value )
+          .attr( "title", "" )
+          .addClass( "custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left" )
+          .autocomplete({
+            delay: 0,
+            minLength: 0,
+            source: $.proxy( this, "_source" )
+          })
+          .tooltip({
+            tooltipClass: "ui-state-highlight"
+          });
+ 
+        this._on( this.input, {
+          autocompleteselect: function( event, ui ) {
+		  	//alert("show all");
+            ui.item.option.selected = true;
+			
+            this._trigger( "select", event, {
+              item: ui.item.option
+            });
+          },
+ 
+          autocompletechange: "_removeIfInvalid"
+        });
+      },
+ 
+      _createShowAllButton: function() {
+        var input = this.input,
+          wasOpen = false;
+ 
+        $( "<a>" )
+          .attr( "tabIndex", -1 )
+          .attr( "title", "Show All Items" )
+          .tooltip()
+          .appendTo( this.wrapper )
+          .button({
+            icons: {
+              primary: "ui-icon-triangle-1-s"
+            },
+            text: false
+          })
+          .removeClass( "ui-corner-all" )
+          .addClass( "custom-combobox-toggle ui-corner-right" )
+          .mousedown(function() {
+            wasOpen = input.autocomplete( "widget" ).is( ":visible" );
+          })
+          .click(function() {
+            input.focus();
+ 
+            // Close if already visible
+            if ( wasOpen ) {
+              return;
+            }
+ 
+            // Pass last search string as value to search for, displaying last results
+            input.autocomplete( "search", 'SHOWALL' );
+          });
+      },
+ 
+      _source: function( request, response ) {
+        //var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+		var ele_select= this.element;
+		if(request.term=='SHOWALL'){
+			response(ele_select.children( "option" ).map(function() {
+          var text = $( this ).text();
+		 var value= $( this ).val();
+          //if ( this.value && ( !request.term || matcher.test(text) ) )
+            return {
+              label: text,
+              value: text,
+              option: this
+            };
+        }) );
+		
+		}
+		else
+		{
+		var jsonRow = backendDirectory+"/api_fetch_list?start=0&limit=20&collection=projects?s="+request.term;
+
+		//alert(jsonRowURLStr);
+		if(xhr) xhr.abort();
+		xhr=$.getJSON(jsonRow,function(result){
+			
+			if(result.aaData.length>0){
+				var html='<option value=""></option>';
+
+				$.each(result.aaData, function(i,item)
+				{
+					html += '<option value="'+item._id+'">'+item.name+'</option>';
+				});
+				ele_select.html(html);
+				
+				
+				response(ele_select.children( "option" ).map(function() {
+          var text = $( this ).text();
+		 var value= $( this ).val();
+          //if ( this.value && ( !request.term || matcher.test(text) ) )
+            return {
+              label: text,
+              value: text,
+              option: this
+            };
+        }) );
+				
+				
+			}
 		});
-}
+       
+	  } 
+		
+      },
+ 
+      _removeIfInvalid: function( event, ui ) {
+ 
+        // Selected an item, nothing to do
+        if ( ui.item ) {
+
+          return;
+        }
+ 
+        // Search for a match (case-insensitive)
+        var value = this.input.val(),
+          valueLowerCase = value.toLowerCase(),
+          valid = false;
+        this.element.children( "option" ).each(function() {
+          if ( $( this ).text().toLowerCase() === valueLowerCase ) {
+            this.selected = valid = true;	
+			
+            return false;
+          }
+        });
+ 
+        // Found a match, nothing to do
+        if ( valid ) {
+          return;
+        }
+ 
+        // Remove invalid value
+        this.input
+          .val( "" )
+          .attr( "title", value + " didn't match any item" )
+          .tooltip( "open" );
+        this.element.val( "" );
+        this._delay(function() {
+          this.input.tooltip( "close" ).attr( "title", "" );
+        }, 2500 );
+        this.input.data( "ui-autocomplete" ).term = "";
+      },
+ 
+      _destroy: function() {
+        this.wrapper.remove();
+        this.element.show();
+      }
+    });
+  })( jQuery ); 
 </script>
 </body>
 </html>

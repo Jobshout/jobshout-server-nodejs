@@ -256,7 +256,7 @@ function loadFixtureEventDetails(){
 			if(html.aaData.length>0){
 				var event_items = html.aaData[0];
 				if(event_items.date_time)	{
-					$("#date_time").val(datepickerFormat(event_items.date_time));
+					$("#date_time").val(datetime_picker_format(event_items.date_time));
 				}
 				if(event_items.venue_uuid && event_items.venue_name && event_items.venue_uuid!="" && event_items.venue_name!="")	{
 					$("#venue_uuid").html("<option value='"+event_items.venue_uuid+"' selected>"+event_items.venue_name+"</option>");

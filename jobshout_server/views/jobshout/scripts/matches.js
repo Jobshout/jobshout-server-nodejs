@@ -77,7 +77,7 @@ function loadFixtureEvents(){
     				if(events_items[i].fixture_type_id){
     					fixture_type_id=events_items[i].fixture_type_id;
     				}
-    				eventsHTML+='<td><input onChange="rowDataChange(\''+events_items[i].uuid+'\')" type="text" id="date_time" value="'+datepickerFormat(events_items[i].date_time)+'" class="form-control form_datetime"><input type="hidden" id="uuid" value="'+events_items[i].uuid+'"></td>';
+    				eventsHTML+='<td><input onChange="rowDataChange(\''+events_items[i].uuid+'\')" type="text" id="date_time" value="'+datetime_picker_format(events_items[i].date_time)+'" class="form-control form_datetime"><input type="hidden" id="uuid" value="'+events_items[i].uuid+'"></td>';
 					eventsHTML+='<td><div class="ui-widget"><select id="home_team" class="form-control combobox "><option value="'+events_items[i].home_team_uuid+'">'+events_items[i].home_team_name+'<option></select><a target="_blank" href="'+backendDirectory+'/team?_id='+events_items[i].home_team_uuid+'&fixture='+events_items[i].uuid+'" title="Check players availability" style="position:relative;"><i class="fa fa-link"></i></a></div></td>';
 					eventsHTML+='<td><div class="ui-widget"><select id="away_team" class="form-control combobox "><option value="'+events_items[i].away_team_uuid+'">'+events_items[i].away_team_name+'<option></select><a target="_blank" href="'+backendDirectory+'/team?_id='+events_items[i].away_team_uuid+'&fixture='+events_items[i].uuid+'" title="Check players availability" style="position:relative;"><i class="fa fa-link"></i></a></div></td>';
 					eventsHTML+='<td><div class="ui-widget"><select id="venue" class="form-control combobox"><option value="'+events_items[i].venue_uuid+'">'+events_items[i].venue_name+'<option></select></div></td>';

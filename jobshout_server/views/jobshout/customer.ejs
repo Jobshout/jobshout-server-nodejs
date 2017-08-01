@@ -27,10 +27,10 @@ font-size: 20px;
   		<div class="content-wrapper">
     		<!-- Content Header (Page header) -->
     		<section class="content-header">
-      			<h1> <% if (typeof contentObj.name !== 'undefined' && contentObj.name !== null) { %><%= contentObj.name %><% } else{	%>Add new<% }%><small>Company</small></h1>
+      			<h1> <% if (typeof contentObj.name !== 'undefined' && contentObj.name !== null) { %><%= contentObj.name %><% } else{	%>Add new<% }%><small>Customer</small></h1>
       			<ol class="breadcrumb">
         			<% include include/dashboard-breadcrumb %>
-        			<li class="active">Company</li>
+        			<li class="active">Customer</li>
       			</ol>
     		</section>
     		<!-- Main content -->
@@ -38,33 +38,21 @@ font-size: 20px;
 				<div class="row">
 					<section class="content">
 						<div class="nav-tabs-custom">
-								<% if (typeof queryStr !== 'undefined' && queryStr !== null) {
-    								if(queryStr.error_msg) {	%>
-									<div class="alert alert-danger alert-dismissable">
-             							<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-                						<%= queryStr.error_msg %>
-            						</div>
-            						<% }
-           							if(queryStr.success_msg) {	%>
-										<div class="alert alert-success alert-dismissable">
-             								<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-                							<%= queryStr.success_msg %>
-            							</div>
-            						<%	}
-            					}	%>
+							<% include include/display_returned_msg %>
             				<!-- Tabs within a box -->
            					<ul class="nav nav-tabs pull-left">
             					<li class="active"><a href="#first" data-toggle="tab">Details</a></li>
             					<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %>
-           						<li><a href="#second" data-toggle="tab">Notes</a></li>
+           						<li><a href="#second" data-toggle="tab">Contacts</a></li>
+            					<li><a href="#third" data-toggle="tab">Notes</a></li>
            						<% } %>
 							</ul>
             				<div class="tab-content ">
             					
               					<div class="chart tab-pane active" id="first" >
               					<form class="form-horizontal" action="<%= backendDirectory %>/save/customer" method="POST" id="contentForm">
-            						<input type="hidden" class="form-control" id="table_name" name="table_name" value="Companies">
-      								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="account_Number">
+            						<input type="hidden" class="form-control" id="table_name" name="table_name" value="customers">
+      								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="account_number">
       								<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>">
       								<input type="hidden" class="form-control" id="editorField" name="editorField" value="<% if (typeof editorField !== 'undefined' && editorField !== null) { %><%= editorField %><% }else{ %>_id<% } %>">
       								<input type="hidden" class="form-control" id="editorValue" name="editorValue" value="<% if (typeof editorValue !== 'undefined' && editorValue !== null) { %><%= editorValue %><% } %>">
@@ -76,40 +64,41 @@ font-size: 20px;
 		    									<h4>Main Details</h4>
             									<div class="box-body">
 														<div class="row">
-           		  											<div class=" col-sm-12 col-lg-11">
+           		  											<div class=" col-sm-12 col-lg-12">
    																<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">Company Name <sup class="required">*</sup></label>
-    																<div class="col-sm-9">
-      																	<input type="text" class="form-control" id="Company_Name" name="Company_Name" value="<% if (typeof contentObj.Company_Name !== 'undefined' && contentObj.Company_Name !== null) { %><%= contentObj.Company_Name %><% } %>">
+    																<label for="" class="col-sm-2 control-label">Name <sup class="required">*</sup></label>
+    																<div class="col-sm-10">
+      																	<input type="text" class="form-control" id="name" name="name" value="<% if (typeof contentObj.name !== 'undefined' && contentObj.name !== null) { %><%= contentObj.name %><% } %>">
     																</div>
   																</div>
   																<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">Account Number <sup class="required">*</sup></label>
-    																<div class="col-sm-6">
-      																	<input type="text" class="form-control" id="account_Number" name="account_Number" value="<% if (typeof contentObj.account_Number !== 'undefined' && contentObj.account_Number !== null) { %><%= contentObj.account_Number %><% } %>">
+    																<label for="" class="col-sm-2 control-label">Account Number <sup class="required">*</sup></label>
+    																<div class="col-sm-7">
+      																	<input type="text" class="form-control" id="account_number" name="account_number" value="<% if (typeof contentObj.account_number !== 'undefined' && contentObj.account_number !== null) { %><%= contentObj.account_number %><% } %>">
     																</div>
   																	<div class="col-sm-3">
 																		<label><input id="inactive" name="inactive" value="false" type="checkbox" <% if (typeof contentObj.inactive !== 'undefined' && contentObj.inactive !== null && contentObj.inactive == true) { %>checked<% } %>> Inactive</label>
     			  													</div>
   																</div>
   																<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">Follow Up Date </label>
-    																<div class="col-sm-6">
-      																	<input type="text" class="col-sm-4 datepicker form-control" id="followup_date" name="followup_date" data-date-format="dd/mm/yyyy"  readonly value="<% if (typeof contentObj.followup_date !== 'undefined' && contentObj.followup_date !== null) { %><%= contentObj.followup_date %><% } %>">
+    																<label for="" class="col-sm-2 control-label">Follow Up Date </label>
+    																<div class="col-sm-7">
+    																	<input type="hidden" class="form-control" id="followup_timestamp" name="followup_timestamp" value="<% if (typeof contentObj.followup_timestamp !== 'undefined' && contentObj.followup_timestamp !== null) { %><%= contentObj.followup_timestamp %><% } %>">
+      																	<input type="text" class="col-sm-4 datepicker form-control" id="followup_date" data-date-format="dd/mm/yyyy"  readonly value="">
     																</div>
     																<div class="col-sm-3">
 																		<label>	<input  name="is_supplier" type="checkbox" value="true" id="is_supplier" <% if (typeof contentObj.is_supplier !== 'undefined' && contentObj.is_supplier !== null && contentObj.is_supplier == true) { %>checked<% } %> > Supplier</label>	
 								 									</div>
   																</div>
   																<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">Website </label>
-    																<div class="col-sm-9">
+    																<label for="" class="col-sm-2 control-label">Website </label>
+    																<div class="col-sm-10">
       																	<input type="text" class="form-control" id="website" name="website" value="<% if (typeof contentObj.website !== 'undefined' && contentObj.website !== null) { %><%= contentObj.website %><% } %>">
     																</div>
   																</div>
   																<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">Comments</label>
-    																<div class="col-sm-9">
+    																<label for="" class="col-sm-2 control-label">Comments</label>
+    																<div class="col-sm-10">
       																	<textarea name="comments" class="form-control" rows="4" id="comments"><% if (typeof contentObj.comments !== 'undefined' && contentObj.comments !== null) { %><%= contentObj.comments %><% } %></textarea>
     																</div>
   																</div>
@@ -123,11 +112,11 @@ font-size: 20px;
 		    									<h4>Other Details</h4>
             									<div class="box-body">
 														<div class="row">
-           		  											<div class=" col-sm-12 col-lg-11">
+           		  											<div class=" col-sm-12 col-lg-12">
    																<div class="form-group">
     																<label for="" class="col-sm-3 control-label">Currency </label>
     																<div class="col-sm-9">
-      																	<input type="text" class="form-control" id="currency_code" name="currency_code" value="<% if (typeof contentObj.currency_code !== 'undefined' && contentObj.currency_code !== null) { %><%= contentObj.currency_code %><% } %>">
+      																	<select class="form-control" id="currency_code" name="currency_code"></select>
     																</div>
   																</div>
   																<div class="form-group">
@@ -177,13 +166,13 @@ font-size: 20px;
 														<div class="row">
            		  											<div class=" col-sm-12 col-lg-11">
    																<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">Name </label>
+    																<label for="" class="col-sm-2 control-label">Name </label>
     																<div class="col-sm-9">
       																	<input type="text" class="form-control" id="contact_name" name="contact_name" value="<% if (typeof contentObj.contact_name !== 'undefined' && contentObj.contact_name !== null) { %><%= contentObj.contact_name %><% } %>">
     																</div>
   																</div>
   																<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">Email</label>
+    																<label for="" class="col-sm-2 control-label">Email</label>
     																<div class="col-sm-9">
       																	<input type="text" class="form-control" id="contact_email" name="contact_email" value="<% if (typeof contentObj.contact_email !== 'undefined' && contentObj.contact_email !== null) { %><%= contentObj.contact_email %><% } %>">
     																</div>
@@ -201,65 +190,65 @@ font-size: 20px;
 		    									<h4>Contact & Address</h4>
             									<div class="box-body">
        		 											<div class="row">
-           		  											<div class=" col-sm-12 col-lg-11">
+           		  											<div class=" col-sm-12 col-lg-12">
            		  												<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">Contact Name</label>
-    																<div class="col-sm-9">
-      																	<input type="text" class="form-control" id="contact_name" name="contact_name" placeholder="" value="<% if (typeof contentObj.contact_name !== 'undefined' && contentObj.contact_name !== null) { %><%= contentObj.contact_name %><% } %>">
+    																<label for="" class="col-sm-2 control-label">Contact Name</label>
+    																<div class="col-sm-10">
+      																	<input type="text" class="form-control" id="contact_name" name="contact_name" onblur="copy_invoice_address();" onkeyup="copy_invoice_address();" placeholder="" value="<% if (typeof contentObj.contact_name !== 'undefined' && contentObj.contact_name !== null) { %><%= contentObj.contact_name %><% } %>">
     																</div>
   																</div>
   																<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">Contact Email</label>
-    																<div class="col-sm-9">
-      																	<input type="text" class="form-control" id="contact_email" name="contact_email" placeholder="" value="<% if (typeof contentObj.contact_email !== 'undefined' && contentObj.contact_email !== null) { %><%= contentObj.contact_email %><% } %>">
+    																<label for="" class="col-sm-2 control-label">Contact Email</label>
+    																<div class="col-sm-10">
+      																	<input type="text" class="form-control" id="contact_email" name="contact_email" onblur="copy_invoice_address();" onkeyup="copy_invoice_address();" placeholder="" value="<% if (typeof contentObj.contact_email !== 'undefined' && contentObj.contact_email !== null) { %><%= contentObj.contact_email %><% } %>">
     																</div>
   																</div>
    																<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">Address 1 <span style="color:#6E829B">*</span></label>
-    																<div class="col-sm-9">
-      																	<input type="text" class="form-control" id="address_line_1"  name="address_line_1" value="<% if (typeof contentObj.address_line_1 !== 'undefined' && contentObj.address_line_1 !== null) { %><%= contentObj.address_line_1 %><% } %>">
+    																<label for="" class="col-sm-2 control-label">Address 1 <span style="color:#6E829B">*</span></label>
+    																<div class="col-sm-10">
+      																	<input type="text" class="form-control" id="address_line_1" name="address_line_1" onblur="copy_invoice_address();" onkeyup="copy_invoice_address();" value="<% if (typeof contentObj.address_line_1 !== 'undefined' && contentObj.address_line_1 !== null) { %><%= contentObj.address_line_1 %><% } %>">
     																</div>
   																</div>
   																<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">Address 2</label>
-    																<div class="col-sm-9">
-      																	<input type="text" class="form-control" id="address_line_2"  name="address_line_2" value="<% if (typeof contentObj.address_line_2 !== 'undefined' && contentObj.address_line_2 !== null) { %><%= contentObj.address_line_2 %><% } %>">
+    																<label for="" class="col-sm-2 control-label">Address 2</label>
+    																<div class="col-sm-10">
+      																	<input type="text" class="form-control" id="address_line_2"  name="address_line_2" onblur="copy_invoice_address();" onkeyup="copy_invoice_address();" value="<% if (typeof contentObj.address_line_2 !== 'undefined' && contentObj.address_line_2 !== null) { %><%= contentObj.address_line_2 %><% } %>">
     																</div>
   																</div>
   																<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">City</label>
-    																<div class="col-sm-9">
-      																	<input type="text" class="form-control" id="city_or_town" name="city_or_town" value="<% if (typeof contentObj.city_or_town !== 'undefined' && contentObj.city_or_town !== null) { %><%= contentObj.city_or_town %><% } %>">
+    																<label for="" class="col-sm-2 control-label">City</label>
+    																<div class="col-sm-10">
+      																	<input type="text" class="form-control" id="city_or_town" name="city_or_town" onblur="copy_invoice_address();" onkeyup="copy_invoice_address();" value="<% if (typeof contentObj.city_or_town !== 'undefined' && contentObj.city_or_town !== null) { %><%= contentObj.city_or_town %><% } %>">
     																</div>
   																</div>
   																<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">County</label>
-    																<div class="col-sm-9">
-      																	<input type="text" class="form-control" id="county_or_state" name="county_or_state" value="<% if (typeof contentObj.county_or_state !== 'undefined' && contentObj.county_or_state !== null) { %><%= contentObj.county_or_state %><% } %>">
+    																<label for="" class="col-sm-2 control-label">County</label>
+    																<div class="col-sm-10">
+      																	<input type="text" class="form-control" id="county_or_state" name="county_or_state" onblur="copy_invoice_address();" onkeyup="copy_invoice_address();" value="<% if (typeof contentObj.county_or_state !== 'undefined' && contentObj.county_or_state !== null) { %><%= contentObj.county_or_state %><% } %>">
     																</div>
   																</div>
 																<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">Post Code</label>
-    																<div class="col-sm-9">
-      																	<input type="text" class="form-control" id="post_zip_code" name="post_zip_code" value="<% if (typeof contentObj.post_zip_code !== 'undefined' && contentObj.post_zip_code !== null) { %><%= contentObj.post_zip_code %><% } %>">
+    																<label for="" class="col-sm-2 control-label">Post Code</label>
+    																<div class="col-sm-4">
+      																	<input type="text" class="form-control" id="post_zip_code" name="post_zip_code" onblur="copy_invoice_address();" onkeyup="copy_invoice_address();" value="<% if (typeof contentObj.post_zip_code !== 'undefined' && contentObj.post_zip_code !== null) { %><%= contentObj.post_zip_code %><% } %>">
+    																</div>
+  																
+    																<label for="" class="col-sm-1 control-label">Country</label>
+    																<div class="col-sm-5">
+      																	<input type="text" class="form-control" id="country" name="country" onblur="copy_invoice_address();" onkeyup="copy_invoice_address();" value="<% if (typeof contentObj.country !== 'undefined' && contentObj.country !== null) { %><%= contentObj.country %><% } %>">
     																</div>
   																</div>
   																<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">Telephone</label>
+    																<label for="" class="col-sm-2 control-label">Telephone</label>
     																<div class="col-sm-4">
-      																	<input type="text" class="form-control" id="telephone" name="telephone" value="<% if (typeof contentObj.telephone !== 'undefined' && contentObj.telephone !== null) { %><%= contentObj.telephone %><% } %>">
+      																	<input type="text" class="form-control" id="telephone" name="telephone" onblur="copy_invoice_address();" onkeyup="copy_invoice_address();" value="<% if (typeof contentObj.telephone !== 'undefined' && contentObj.telephone !== null) { %><%= contentObj.telephone %><% } %>">
     																</div>
     																<label for="" class="col-sm-1 control-label">Fax</label>
-    																<div class="col-sm-4">
-      																	<input type="text" class="form-control" id="fax" name="fax" value="<% if (typeof contentObj.fax !== 'undefined' && contentObj.fax !== null) { %><%= contentObj.fax %><% } %>">
+    																<div class="col-sm-5">
+      																	<input type="text" class="form-control" id="fax" name="fax" onblur="copy_invoice_address();" onkeyup="copy_invoice_address();" value="<% if (typeof contentObj.fax !== 'undefined' && contentObj.fax !== null) { %><%= contentObj.fax %><% } %>">
     																</div>
   																</div>
-  																<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">Country</label>
-    																<div class="col-sm-9">
-      																	<input type="text" class="form-control" id="country" name="country" value="<% if (typeof contentObj.country !== 'undefined' && contentObj.country !== null) { %><%= contentObj.country %><% } %>">
-    																</div>
-  																</div>
+  																
   															</div>
        			 										</div>
 												</div>
@@ -270,13 +259,13 @@ font-size: 20px;
 		    									<h4>Invoice Details</h4>
             									<div class="box-body">
 														<div class="row">
-           		  											<div class=" col-sm-12 col-lg-11">
+           		  											<div class=" col-sm-12 col-lg-12">
            		  												<div class="form-group ">
 																	<label class="col-sm-3 control-label">&nbsp;</label>
-																	<div class=" col-sm-9">
-																	<label>	<input type="checkbox" value="true" id="copy_address" >
-								 									Copy Invoice details same as "Contact & Address"</label>
-								 									</div>
+																		<div class=" col-sm-9">
+																			<label>	<input type="checkbox" value="true" id="copy_address" >
+								 											Copy Invoice details same as "Contact & Address"</label>
+								 										</div>
 																</div>	
            		  												<div class="form-group">
     																<label for="" class="col-sm-3 control-label">Invoice Contact Name</label>
@@ -293,7 +282,7 @@ font-size: 20px;
            		  												<div class="form-group">
     																<label for="" class="col-sm-3 control-label">Invoice Address</label>
     																<div class="col-sm-9">
-      																	<textarea class="form-control" id="invoice_address" name="invoice_address"><% if (typeof contentObj.invoice_address !== 'undefined' && contentObj.invoice_address !== null) { %><%= contentObj.invoice_address %><% } %></textarea>
+      																	<textarea class="form-control" rows="5" id="invoice_address" name="invoice_address"><% if (typeof contentObj.invoice_address !== 'undefined' && contentObj.invoice_address !== null) { %><%= contentObj.invoice_address %><% } %></textarea>
     																</div>
   																</div>
 															</div>
@@ -315,12 +304,70 @@ font-size: 20px;
 									</form>
 	  							</div>
 	  							<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %>
-              					<div class="chart tab-pane" id="second" >
+	  							<div class="chart tab-pane" id="second">
+	  								
+              						<div CLASS="row" style="padding:15px;">
+			<div class="clearfix hidden-xs">
+				<div class="col-md-6" style="">
+					<span class="display_records_count" style="font-weight:bold;"></span>
+					
+				</div>
+				<div class="col-md-6 text-right">
+      				<div class="form-group no-margin">
+     					<div class="pull-right margin-bottom-10 ">
+							<div class="form-inline" style="">                 	          
+                 				<div class="btn-inline display-inline-block">
+									<input class="form-control searchFieldClass" style="min-width:225px; height:36px;" required id="searchField" placeholder="Search here..." value="">
+									<button class="btn btn-left-align btn-link no-shadow bg-transparent no-padding-top padding-right-10 right-auto left" type="button" id="searchBtn" title="Search"><i class="glyphicon glyphicon-search"></i></button>
+								</div>
+                				<a title="Add new contact" href="<%= backendDirectory %>/contact?customer_id=<%= contentObj._id %>" target="_blank" class="btn btn-danger">Add new contact</a>
+                			</div>
+         				</div>
+      				</div>
+				</div>
+			</div>
+				<div class="visible-xs" >
+					<div class="col-md-12 display_records_count" style="font-weight:bold;"></div>
+					<div class="col-lg-6 col-sm-12 col-xs-12" style="margin-bottom:10px;">
+						<form class="form-inline" method="get" action=""> 
+							<input class="form-control xs-margin-btm10 searchFieldClass" required id="smallSearchField" name="keyword" placeholder="Search..." type="text" value="">
+                     	</form>
+                     		<a title="Add new contact" href="<%= backendDirectory %>/contact?customer_id=<%= contentObj._id %>" target="_blank" class="btn btn-danger">Add new contact</a>
+                	</div>
+				</div>
+			</div>
+              						<div class="content table-responsive table-full-width" >
+		 								<div class="table-responsive" style="border:none;">
+                        					<table class="table table-striped  table-bordered table-hover custom-tbl-st bt" id="related_contacts" style="background-color: rgb(255, 255, 255); border-radius: 4px;" >
+												<thead>
+													<tr>
+		      											<th>First Name</th>
+		      											<th>Surname</th>
+		      											<th>Email</th>	      
+			 											<th>Mobile</th>
+			 											<th>Details</th>			  
+		  											</tr>
+												</thead>
+		  										<tbody id="related_contacts_data">
+		  											
+		  										</tbody>
+		  									</table>
+										</div>
+									</div>
+									<div style="text-align:center; display:none;" id="display_more_btn">
+										<a style="width: 60%; margin-bottom: 10px;" class="btn palette-carrot btn-danger" title="Load more" onclick="load_more()" href="javascript:void(0);">Load more</a>
+        							</div>
+        							<div style="text-align:center" id="img_loading_div">
+										Loading...<br /> <img id="imgAjaxLoading" src="img/loading.gif" width="109" height="25" style="border-width: 0px;">
+									</div>
+              					</div>
+              					
+              					<div class="chart tab-pane" id="third" >
               						<div class="col-sm-12" style="margin-top:20px;">
               							<a title="Add new note" onClick="$('#addNote').modal('show');" href="javascript:void(0)" class="btn btn-danger">Add new note</a>
               						</div>
-              						<div class="content table-responsive table-full-width">
-		 								<div class="table-responsive" style="border:none;" >
+              						<div class="content table-responsive table-full-width" >
+		 								<div class="table-responsive" style="border:none;" id="noteAlertMsgDiv">
                         					<table class="table table-striped  table-bordered table-hover custom-tbl-st bt" id="table-breakpoint" style="background-color: rgb(255, 255, 255); border-radius: 4px;" >
 												<thead>
 													<tr>
@@ -345,25 +392,9 @@ font-size: 20px;
 			</section>
 		</div>
 
-<div class="modal fade" id="addNote" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-	<div class="modal-dialog">
-        <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onClick="$('#add_note').val('');">
-                  <span aria-hidden="true">x</span></button>
-                	<h3 class="modal-title" id="globalMessage">Add new note</h3>
-              </div>
-              <div class="modal-body">
-                <textarea class="form-control" id="add_note" name="add_note" placeholder="Add note here"></textarea>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-danger" onClick="addNewNote()">Save</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" onClick="$('#add_note').val('');">Close</button>
-              </div>
-            </div>
-            <!-- /.modal-content -->
-	</div>
-</div>
+<!-- add_note_modal Starts Here-->
+<% include include/add_note_modal %>
+<!-- add_note_modal Ends Here-->
 
 		<!-- Footer Starts Here-->
 			<% include include/footer %>
@@ -371,144 +402,28 @@ font-size: 20px;
 	</div>
 <script src="js/bootstrap.datepicker.js"></script>
 <script src="js/jquery.validate.js"></script>
-
 <script src="js/basictable.js"></script>
 <script language="javascript">
-var collectionStr="Companies";
-function save() {
-	var row = $(this).parents('.item-row');
-	var noteUUID=$('.noteUUID').val();
-	var noteField=row.find('.noteField').val();
-	
-	if(noteUUID!='' && noteField!=''){
-		savenote(noteUUID, 'update', noteField);
-	}else{
-		alert('Please enter note!');
-	}
-}
-
-function edit() {
-	var row = $(this).parents('.item-row');
-	row.find('.noteSpan').hide();
-	row.find('.noteField').show();
-	row.find('.savelink').show();
-	row.find('.editlink').hide();
-	row.find('.cancellink').show();
-	row.find('.removelink').hide();
-	
-	row.find('.noteField').focus();
-}
-	
-function cancel() {
-	var row = $(this).parents('.item-row');
-	var noteUUIDStr=row.find('.noteUUID').val();
-	if(noteUUIDStr!=''){
-		row.find('.noteSpan').show();
-		row.find('.noteField').hide();
-		row.find('.savelink').hide();
-		row.find('.editlink').show();
-		row.find('.cancellink').hide();
-		row.find('.removelink').show();
-	}else{
-		row.hide();
-	}
-}
-	
-function remove() {
-	var row = $(this).parents('.item-row');
-	var noteUUIDStr=row.find('.noteUUID').val();
-	var Project_uuid="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>";
-	
-	var dataString = 'note_uuid='+noteUUIDStr+'&action=delete&uuid='+Project_uuid+'&table='+collectionStr;
-	$.ajax({
-		type: "POST",
-		dataType: "json",
-		url: "<%= backendDirectory %>/savenotes",
-		data: dataString,
-		cache: false,
-		success: function(html){
-			row.hide();
- 			bind();
-		}
+var table_row_id="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>";
+var auth_user_id="<% if (typeof authenticatedUser._id !== 'undefined' && authenticatedUser._id !== null) { %><%= authenticatedUser._id %><% } %>";
+var auth_user_name="<% if (typeof authenticatedUser.firstname !== 'undefined' && authenticatedUser.firstname !== null) { %><%= authenticatedUser.firstname %><% } %>";
+	auth_user_name+="<% if (typeof authenticatedUser.lastname !== 'undefined' && authenticatedUser.lastname !== null) { %>&nbsp;<%= authenticatedUser.lastname %><% } %>";
+<% if (typeof authenticatedUser.access_right !== 'undefined' && authenticatedUser.access_right !== null) {	%>
+var	access_right="<%= authenticatedUser.access_right %>";
+<% }	else{	 %>
+var access_right=0;
+<% } %>
+var relatedCollectionStr='contacts', tableDisplayID='related_contacts', relatedFieldName='customer_mongo_id', relatedFieldValue=table_row_id;
+function draw_content_html (aaData) {
+	var contentHtml="";
+	$.each(aaData, function(i,row){
+		contentHtml+='<tr><td>'+row.first_name+'</td><td>'+row.last_name+'</td><td>'+row.email_address+'</td><td>'+row.mobile+'</td><td><a href="'+backendDirectory+'/contact?_id='+row._id+'" target="_blank"><i class="fa fa-pencil"></i></a></td></tr>';
 	});
-}	
-
-function bind() {
-	$(".savelink").unbind();
-	$(".editlink").unbind();
-  	$(".cancellink").unbind();
-  	$(".removelink").unbind();
- 
-  	$(".savelink").click(save);
-  	$(".editlink").click(edit);
-  	$(".cancellink").click(cancel);
-  	$(".removelink").click(remove);
+	return contentHtml;
 }
 
-function fetchNotes(){
-	$("#notesTable").html("");
-	var Project_uuid="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>";
-	var jsonRow=backendDirectory+"/collection_details?id="+Project_uuid+"&collection="+collectionStr;
-	$.getJSON(jsonRow,function(html){
-			var contentHtml="";
-			if(html.aaData){
-				var notesArr=html.aaData.notes;
-					$.each(notesArr, function(i,row){
-						var added_by="Admin";
-						if(row.user_name){
-							added_by=row.user_name;
-						}
-						contentHtml+="<tr class='item-row'><td>"+added_by+"</td>";
-						contentHtml+="<td>"+row.modified+"<input type='hidden' class='noteUUID form-control' value='"+row.uuid+"' ></td>";
-						contentHtml+="<td><span class='noteSpan'>"+row.note+"</span><input type='text' class='noteField form-control' style='display:none;' value='"+row.note+"' ></td>";
-						contentHtml+='<td class="hidden-xs"><a href="javascript:void(0)" class="editlink"><i class="fa fa-pencil"></i></a><a href="javascript:void(0)" class="savelink" style="display:none;"><i class="fa fa-save"></i></a>';
-						contentHtml+='<a href="javascript:void(0)" class="removelink" style="margin-left:10px;"><i class="fa fa-trash"></i></a><a href="javascript:void(0)" class="cancellink" style="display:none; margin-left:10px;"><i class="fa fa-remove"></i></a></td>';
-						contentHtml+="</tr>";
-					});
-     		}
-			$("#notesTable").html(contentHtml);
-			bind();
-			$('#table-breakpoint').basictable({
-    				breakpoint: 751
-   			});	
-	});
-}
-
-function addNewNote(){
-	var noteStr= $("#add_note").val();
-	savenote('','create', noteStr);
-}
-
-function savenote(uuid,actionStr, note){
-	var Project_uuid="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>";
-	var user_id="<% if (typeof authenticatedUser._id !== 'undefined' && authenticatedUser._id !== null) { %><%= authenticatedUser._id %><% } %>";
-	var user_name="<% if (typeof authenticatedUser.firstname !== 'undefined' && authenticatedUser.firstname !== null) { %><%= authenticatedUser.firstname %><% } %>";
-	user_name+="<% if (typeof authenticatedUser.lastname !== 'undefined' && authenticatedUser.lastname !== null) { %>&nbsp;<%= authenticatedUser.lastname %><% } %>";
-	
-	var dataString = 'note_uuid='+uuid+'&uuid='+Project_uuid+'&table='+collectionStr+'&action='+actionStr+'&added_by='+user_id+'&note='+note+'&user_name='+user_name;
-	$.ajax({
-		type: "POST",
-		url: "<%= backendDirectory %>/savenotes",
-		data: dataString,
-		dataType: 'json',
-		cache: false,
-		success: function(html){
-			if(html.success){
-				fetchNotes();
-				alert(html.success);
-			} else if(html.error){
-				alert(html.error);
-			}
-		}
-	});
-	$('#addNote').modal('hide');
-	$('#add_note').val('');
-}
-
-	$(function () {
-		<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %>
-		fetchNotes();
-		<%	}	%>
+	$(function () {		
+		fetch_default_list("currency-list", "<% if (typeof contentObj.currency_code !== 'undefined' && contentObj.currency_code !== null) { %><%= contentObj.currency_code %><% } %>","currency_code");
 		
 		// validate form on keyup and submit
 		$("#contentForm").validate({
@@ -528,17 +443,40 @@ function savenote(uuid,actionStr, note){
 				}
 			},
 			rules: {
-				Company_Name: { required: true },
-				account_Number: { required: true },
+				name: { required: true },
+				account_number: { required: true },
 				address_line_1: { required: true }
 			},
 			submitHandler: function(form) {
+				var startTimestampNum=getTimestampFromDate($('#followup_date').val());
+				$('#followup_timestamp').val(startTimestampNum);
  				dataAsJson('contentForm', form);
  			}
 		});			
 		//
 		$('#copy_address').change(function(){
-			if($(this).is(":checked")){
+			copy_invoice_address();
+		});
+		 
+		 // datepicker plugin
+           <% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %>
+            	$("#followup_date").datepicker().on('changeDate', function (ev) {
+                	$(this).datepicker('hide');
+           	 	});
+           	 	if($('#followup_timestamp').val()!="")	{
+ 					var convertStr=date_picker_format($('#followup_timestamp').val());
+ 					$('#followup_date').val(convertStr);
+ 				}
+             
+			<%	}	else	{	%>
+            	$("#followup_date").datepicker().datepicker("setDate", new Date()).on('changeDate', function (ev) {
+                	$(this).datepicker('hide');
+             	});
+            <%	}	%>
+	});
+	
+		function copy_invoice_address (){
+			if($('#copy_address').is(":checked")){
 				var inv_addr='';
 				if($('#address_line_1').val()!=""){
 					inv_addr+=$('#address_line_1').val();
@@ -569,13 +507,11 @@ function savenote(uuid,actionStr, note){
 			}else{
 				$('#invoice_contact_name').val('');	$('#invoice_contact_email').val('');	$('#invoice_address').val('');
 			}
-		});
-		 
-            // datepicker plugin
-            $('.datepicker').datepicker().on('changeDate', function (ev) {
-                $(this).datepicker('hide');
-            });
-	});
+		}
 	</script>
+<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %>
+	<script src="scripts/manage_notes.js"></script>
+	<script src="scripts/list_by_collection.js"></script>
+<%	}	%>
 </body>
 </html>
