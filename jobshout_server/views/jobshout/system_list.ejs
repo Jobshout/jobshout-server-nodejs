@@ -23,20 +23,8 @@
     	<section class="content">
    			<div class="row">
             				<div class="panel-body no-padding-top bg-white"> 
-            					<% if (typeof queryStr !== 'undefined' && queryStr !== null) {
-    								if(queryStr.error_msg) {	%>
-									<div class="alert alert-danger alert-dismissable">
-             							<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-                						<%= queryStr.error_msg %>
-            						</div>
-            						<% }
-           							if(queryStr.success_msg) {	%>
-										<div class="alert alert-success alert-dismissable">
-             								<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-                							<%= queryStr.success_msg %>
-            							</div>
-            						<%	}
-            					}	%>
+            					<% include include/display_returned_msg %>
+            		
             					<form class="form-horizontal" action="<%= backendDirectory %>/save/system_list" method="POST" id="contentForm">
             						<input type="hidden" class="form-control" id="table_name" name="table_name" value="system_lists">
       								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="code">
@@ -252,8 +240,8 @@ function edit_item(e){
 		}else{
 			$("#item_active").val(0);
 		}
-		
 		$("#item_label").val(row.find('#labelField').val());
+		$("#item_value").val(row.find('#labelValueField').val());
 		$('#myModal').modal('show'); 
 	}
 }

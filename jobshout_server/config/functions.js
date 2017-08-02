@@ -215,6 +215,9 @@ var self = module.exports =
       			} else if (document_details) {
       				outputObj["aaData"]   = document_details;
       				cb(outputObj);
+     			}	else	{
+     				outputObj["error"]   = "Sorry, no record found!";
+					cb(outputObj);
      			}
      		});
 		}else{
@@ -535,10 +538,10 @@ var self = module.exports =
 			table_name="email_queue";
 		}else if(filename=="task" || filename=="calendar"){
 			table_name="tasks";
-		}else if(filename=="customer"){
-			table_name="Companies";
 		}else if(filename=="venue"){
 			table_name="venue";
+		}else if(filename=="category"){
+			table_name="categories";
 		}else if(filename=="image" || filename=="image_gallery"){
 			table_name="fs.files";
 		}else{

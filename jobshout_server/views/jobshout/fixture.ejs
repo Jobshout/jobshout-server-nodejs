@@ -50,22 +50,9 @@
     		</section>	
     		<section class="content">
       			<div class="row">
-      		<% if (typeof queryStr !== 'undefined' && queryStr !== null) {
-    				if(queryStr.error_msg) {	%>
-			<div class="col-sm-12"><div class="alert alert-danger alert-dismissable">
-             	<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-                	<%= queryStr.error_msg %>
-            </div> </div>
-            <% }
-           		if(queryStr.success_msg) {	%>
-					<div class="col-sm-12"><div class="alert alert-success alert-dismissable">
-             		<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-                		<%= queryStr.success_msg %>
-            		</div></div>
-            <%	}
-            }	%>
+					
             				<div class="panel-body no-padding-top bg-white"> 
-            					
+            					<% include include/display_returned_msg %>
             					<form class="form-horizontal" action="<%= backendDirectory %>/save/fixture" method="POST" id="contentForm">
             						<input type="hidden" class="form-control" id="table_name" name="table_name" value="fixtures">
       								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="name">

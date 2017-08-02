@@ -258,8 +258,10 @@ function load_more(){
 										}else{
 											if(row[col]==1 || row[col]=="1"){
 												contentHtml+='<td><span class="label label-success">Active</span></td>';
-											}else{
+											}else if(row[col]==0 || row[col]=="0"){
 												contentHtml+='<td><span class="label label-danger">Inactive</span></td>';
+											}else{
+												contentHtml+='<td><span class="label label-warning">'+row[col]+'</span></td>';
 											}
 										}
 									}else if(row.hasOwnProperty(col)){

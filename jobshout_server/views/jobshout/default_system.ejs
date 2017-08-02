@@ -31,21 +31,9 @@
     		</section>	
     		<section class="content">
       			<div class="row">
-            				<div class="panel-body no-padding-top bg-white"> 
-            					<% if (typeof queryStr !== 'undefined' && queryStr !== null) {
-    								if(queryStr.error_msg) {	%>
-									<div class="alert alert-danger alert-dismissable">
-             							<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-                						<%= queryStr.error_msg %>
-            						</div>
-            						<% }
-           							if(queryStr.success_msg) {	%>
-										<div class="alert alert-success alert-dismissable">
-             								<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-                							<%= queryStr.success_msg %>
-            							</div>
-            						<%	}
-            					}	%>
+      						<div class="panel-body no-padding-top bg-white"> 
+            					<div class="panel-body no-padding-top bg-white"> 
+            					<% include include/display_returned_msg %>
             					<% if (typeof queryStr.success !== 'undefined' && queryStr.success !== null) {	%>
             						<div class="alert alert-success alert-dismissable">
              								<%= queryStr.success %>

@@ -351,7 +351,10 @@ function fetch_default_list(codeStr, sVal, drawDivID){
 			$.each(result.aaData, function(i,row){
 				var iconsData= row;
 				if(iconsData.list && iconsData.list.length>0)	{
-					$.each(iconsData.list, function(j,rowData){
+					var iconsListArr= iconsData.list;
+					iconsListArr.sort(dynamicSort("item_sort_order"));
+				
+					$.each(iconsListArr, function(j,rowData){
 						contentHtml+="<option value='"+rowData.label+"' ";
 						if(sVal==rowData.label){
 							contentHtml+="selected";
@@ -378,7 +381,12 @@ function generate_default_tags(val){
 		}
 	});
 }
-	
+ function populate_bootstrap_datepicker(inputId, outputId)	{
+ 	if($('#'+inputId).val()!="" && $('#'+inputId).val()!="NaN")	{
+ 		var convertStr=date_picker_format($('#'+inputId).val());
+ 		$('#'+outputId).val(convertStr);
+ 	}
+ }
 function getAge(date) {
 	var now = new Date();
   	var birthDate = new Date(date * 1000);

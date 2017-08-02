@@ -51,7 +51,8 @@
     		<section class="content">
       			<div class="row">
             				<div class="panel-body no-padding-top bg-white"> 
-            					
+            					<% include include/display_returned_msg %>
+            				
             					<form class="form-horizontal" action=""id="contentForm">
             						<input type="hidden" id="fixture_id" name="fixture_id" value="<% if (typeof queryStr.fixture_id !== 'undefined' && queryStr.fixture_id !== null) { %><%= queryStr.fixture_id %><% } %>">
             						<input type="hidden" id="event_uuid" name="event_uuid" value="<% if (typeof queryStr.uuid !== 'undefined' && queryStr.uuid !== null) { %><%= queryStr.uuid %><% } %>">

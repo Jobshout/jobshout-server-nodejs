@@ -2314,8 +2314,8 @@ app.get(backendDirectoryPath+'/:id', requireLogin, function(req, res) {
 				}else{
 					if (typeof editFieldVal !== 'undefined' && editFieldVal !== null) {
 						if(editFieldName=="_id"){
-					 		initFunctions.returnFindOneByMongoID(db, table_name, editFieldVal, function(resultObject) {
-								if (resultObject.aaData) {
+							initFunctions.returnFindOneByMongoID(db, table_name, editFieldVal, function(resultObject) {
+					 			if (resultObject.aaData) {
       								contentObj=resultObject.aaData;
       							} 
       				

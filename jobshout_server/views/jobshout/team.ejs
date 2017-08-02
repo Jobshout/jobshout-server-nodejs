@@ -100,24 +100,12 @@
     		</section>	
     		<section class="content">
       			<div class="row">
-
+					
             				<div class="panel-body no-padding-top bg-white"> 
             					<div class="box box-primary"><div class="box-body"><div class="row"><div class=" col-sm-12 col-lg-12">
             						<h4 style="margin-bottom:20px;">Team details</h4>
-									<% if (typeof queryStr !== 'undefined' && queryStr !== null) {
-    									if(queryStr.error_msg) {	%>
-											<div class="col-sm-12" style="padding-top:10px;"><div class="alert alert-danger alert-dismissable">
-             									<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-                								<%= queryStr.error_msg %>
-            								</div> </div>
-            							<% }
-           								if(queryStr.success_msg) {	%>
-											<div class="col-sm-12" style="padding-top:10px;"><div class="alert alert-success alert-dismissable">
-             									<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-                								<%= queryStr.success_msg %>
-            								</div></div>
-            							<%	}
-            						}	%>
+									<% include include/display_returned_msg %>
+            				
             					<form class="form-horizontal" action="<%= backendDirectory %>/save/team" method="POST" id="contentForm">
             						<input type="hidden" class="form-control" id="table_name" name="table_name" value="teams">
       								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="name">

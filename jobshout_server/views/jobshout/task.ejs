@@ -1,6 +1,7 @@
 <% include include/main-header %>
 <link rel="stylesheet" href="plugins/combobox/autocomplete-ui.css"/>
-<link href="plugins/datetime-picker/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+<link href="css/bootstrap.datepicker.css" type="text/css" rel="stylesheet">
+<link rel="stylesheet" href="css/basictable.css">
 <style>
 .custom-combobox {
 		position: relative;
@@ -50,9 +51,19 @@
     		</section>	
     		<section class="content">
       			<div class="row">
-            				<div class="panel-body no-padding-top bg-white"> 
-            					<% include include/display_returned_msg %>
-      		
+      				
+      				<div class="panel-body no-padding-top bg-white"> 
+      				<% include include/display_returned_msg %>
+      					<div class="nav-tabs-custom">
+            				<!-- Tabs within a box -->
+           					<ul class="nav nav-tabs pull-left">
+            					<li class="active"><a href="#first" data-toggle="tab">Details</a></li>
+            					<% if (typeof contentObj._id !== "undefined" && contentObj._id !== null) { %>
+           						<li><a href="#second" data-toggle="tab">Notes</a></li>
+           						<% } %>
+							</ul>
+            				<div class="tab-content ">
+            					<div class="chart tab-pane active" id="first" >	
             					<form class="form-horizontal" action="<%= backendDirectory %>/save/task" method="POST" id="contentForm">
             						<input type="hidden" class="form-control" id="table_name" name="table_name" value="tasks">
       								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="name">
@@ -61,95 +72,86 @@
       								<input type="hidden" class="form-control" id="editorValue" name="editorValue" value="<% if (typeof editorValue !== 'undefined' && editorValue !== null) { %><%= editorValue %><% } %>">
             						<input type="hidden" class="form-control" id="data" name="data" value="">
             						
-            						<div class="row">
-            						<div class="col-xs-6"><div class="box box-primary">
+            						<div class="row" STYLE="margin-top:10px;">
+            						<div class="col-md-6 col-xs-12"><div class="box box-primary">
             						<h4>Main Details</h4>
-            						<div class="box-body"><div class="row"><div class=" col-sm-12 col-lg-11">
+            						<div class="box-body"><div class="row"><div class=" col-sm-12 col-lg-12">
             						<div class="form-group">
                   						<label class="control-label col-md-3" for="first-name">Name<span class="required">*</span></label>
-                  						<div class="col-md-6 col-lg-7">
+                  						<div class="col-md-9 col-lg-9">
                     						<input type="text" required="required" id="name" name="name" class="form-control col-md-5 col-xs-12" value="<% if (typeof contentObj.name !== 'undefined' && contentObj.name !== null) { %><%= contentObj.name %><% } %>">
                   						</div>
                 					</div>
               						<div class="form-group">
                   						<label class="control-label col-md-3" for="">Reported by<span class="required">*</span></label>
-                  						<div class="col-md-6 col-lg-7">
-                   							<input type="text" required="required" class="form-control col-md-5 col-xs-12" id="reported_by" name="reported_by" value="<% if (typeof contentObj.reported_by !== 'undefined' && contentObj.reported_by !== null) { %><%= contentObj.reported_by %><% } %>">
+                  						<div class="col-md-9 col-lg-9">
+                   							<input type="hidden" class="form-control col-md-5 col-xs-12" id="reported_by" name="reported_by" value="<% if (typeof contentObj.reported_by !== 'undefined' && contentObj.reported_by !== null) { %><%= contentObj.reported_by %><% } %>">
+                   							<select required="required" class="form-control col-md-5 col-xs-12" name="reported_by_user_id" id="reported_by_user_id"></select>
                   						</div>
                 					</div>
                 					<div class="form-group">
                   						<label class="control-label col-md-3" for="">Project<span class="required">*</span></label>
-                  						<div class="col-md-6 col-lg-7">
+                  						<div class="col-md-9 col-lg-9">
                   							<select required="required" class="form-control col-md-5 col-xs-12" name="project_mongo_id" id="project_mongo_id"></select>
                   						</div>
                 					</div>
                 					<div class="form-group">
                   						<label class="control-label col-md-3" for="">Assigned to<span class="required">*</span></label>
-                  						<div class="col-md-6 col-lg-7">
-                   							<input type="text" required="required" class="form-control col-md-5 col-xs-12" id="assigned_to" name="assigned_to" value="<% if (typeof contentObj.assigned_to !== 'undefined' && contentObj.assigned_to !== null) { %><%= contentObj.assigned_to %><% } %>">
+                  						<div class="col-md-9 col-lg-9">
+                   							<input type="hidden" class="form-control col-md-5 col-xs-12" id="assigned_to" name="assigned_to" value="<% if (typeof contentObj.assigned_to !== 'undefined' && contentObj.assigned_to !== null) { %><%= contentObj.assigned_to %><% } %>">
+                  							<select required="required" class="form-control col-md-5 col-xs-12" name="assigned_to_user_id" id="assigned_to_user_id"></select>
                   						</div>
                 					</div>
                 					<div class="form-group">
-                  						<label class="control-label col-md-3" for="">Description</label>
-                  						<div class="col-md-6 col-lg-7">
-                   							<textarea class="form-control col-md-5 col-xs-12" id="description" name="description"><% if (typeof contentObj.description !== 'undefined' && contentObj.description !== null) { %><%= contentObj.description %><% } %></textarea>
+                  						<label class="control-label col-md-3" for="">Description<span class="required">*</span></label>
+                  						<div class="col-md-9 col-lg-9">
+                   							<textarea class="form-control col-md-5 col-xs-12" rows="5" required id="description" name="description"><% if (typeof contentObj.description !== 'undefined' && contentObj.description !== null) { %><%= contentObj.description %><% } %></textarea>
                   						</div>
                 					</div>
-                					<div class="form-group" >
+                					<div class="form-group">
+                  						<label class="control-label col-md-3" for="">Status<span class="required">*</span></label>
+                  						<div class="col-md-6 col-lg-6">
+                   							<select class="form-control" id="status" name="status" required></select>
+                  						</div>
+                  						<div class="col-sm-3">
+											<label><input id="active" name="active" value="1" type="checkbox" <% if (typeof contentObj.active !== 'undefined' && contentObj.active !== null && contentObj.active == 1) { %>checked<% } %>> Active</label>
+    			  						</div>
+                					</div>
+									                                                  
+									<div class="form-group">
+										<label class="col-sm-3 control-label">Rate </label>
+										<div class="col-md-9 col-lg-9">
+											<input name="task_rate" class="form-control num" type="text" value="<% if (typeof contentObj.task_rate !== 'undefined' && contentObj.task_rate !== null) { %><%= contentObj.task_rate %><% } %>" id="task_rate">
+										</div>
+									</div>
+                					
+                            		</div></div>
+                            		</div></div></div>
+							        <div class="col-md-6 col-xs-12"><div class="box box-primary">
+							        <h4>Important Dates</h4>
+            						<div class="box-body"><div class="row"><div class=" col-sm-12 col-lg-12">
+							        
+                					<div class="form-group">
+    									<label for="" class="col-sm-3 control-label">Start  <sup class="required">*</sup></label>
+    									<div class="col-sm-6">
+    										<input type="hidden" class="form-control" id="start_timestamp" name="start_timestamp" value="<% if (typeof contentObj.start_timestamp !== 'undefined' && contentObj.start_timestamp !== null) { %><%= contentObj.start_timestamp %><% } %>">
+    										<input type="text" class="datepicker form-control" id="start_date" data-date-format="dd/mm/yyyy"  readonly value="">
+    									</div>
+  									</div>
+															
+  									<div class="form-group">
+ 										<label for="" class="col-sm-3 control-label">Expected Close</label>
+ 										<div class="col-sm-6">
+											<input type="hidden" class="form-control" id="end_timestamp" name="end_timestamp" value="<% if (typeof contentObj.end_timestamp !== 'undefined' && contentObj.end_timestamp !== null) { %><%= contentObj.end_timestamp %><% } %>">
+    										<input type="text" class="datepicker form-control" id="end_date" data-date-format="dd/mm/yyyy"  readonly value="">
+										</div>
+									</div>
+                            		<div class="form-group" >
 										<label class="col-sm-3 control-label">Estimated Hour </label>
 										<div class="col-md-6 col-lg-7">
 											<input name="task_estimated_hours" class="form-control num" type="text" value="<% if (typeof contentObj.task_estimated_hours !== 'undefined' && contentObj.task_estimated_hours !== null) { %><%= contentObj.task_estimated_hours %><% } %>" id="task_estimated_hours">
 										</div>
-									</div>                                                                 
-									<div class="form-group">
-										<label class="col-sm-3 control-label">Rate </label>
-										<div class="col-md-6 col-lg-7">
-											<input name="task_rate" class="form-control num" type="text" value="<% if (typeof contentObj.task_rate !== 'undefined' && contentObj.task_rate !== null) { %><%= contentObj.task_rate %><% } %>" id="task_rate">
-										</div>
-									</div>
-                					<div class="form-group">
-    									<label for="" class="col-sm-3 control-label">Status</label>
-    									<div class="col-sm-7" style="margin-top:6px;">
-    										<div STYLE="margin-right:10px;display:inline-block;">
-      		  									<label> <input type="radio" id="status" name="status" value="1" <% if (typeof contentObj.status !== 'undefined' && contentObj.status !== null && contentObj.status == 1) { %>checked<% } %> > <strong style="font-weight:600">Active</strong></label>
-    			  							</div>
-				  							<div STYLE="display:inline-block;">
-      		  									<label> <input type="radio" id="status" name="status" value="0" <% if (typeof contentObj.status !== 'undefined' && contentObj.status !== null && contentObj.status == 0) { %>checked<% } %> > <strong style="font-weight:600">Inactive</strong></label>
-    			  							</div>
-										</div>
-									</div>
-                            		</div></div>
-                            		</div></div></div>
-							        <div class="col-xs-6"><div class="box box-primary">
-							        <h4>Important Dates</h4>
-            						<div class="box-body"><div class="row"><div class=" col-sm-12 col-lg-11">
-							        <div class="form-group" style="margin-top:10px;">
-										<label class="col-sm-3 control-label">Expected Close </label>
-										<div class="col-md-6 col-lg-7">
-										<div class="input-group date form_datetime " style="max-width:300px;" >
-                    						<input class="form-control col-md-5 col-xs-12" required type="text" id="end_date" name="end_date" value="<% if (typeof contentObj.end_date !== 'undefined' && contentObj.end_date !== null) { %><%= contentObj.end_date %><% } %>" readonly>
-                    						<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
-                						</div>
-                						</div>
-                            		</div>
-                					<div class="form-group">
-										<label class="col-sm-3 control-label">Task Start </label>
-										<div class="col-md-8 col-lg-7">
-										<div class="input-group date form_datetime " style="max-width:300px;">
-                    						<input class="form-control col-md-5 col-xs-12" type="text" id="start_date" name="start_date" value="<% if (typeof contentObj.start_date !== 'undefined' && contentObj.start_date !== null) { %><%= contentObj.start_date %><% } %>" readonly>
-                    						<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
-                						</div>
-                						</div>
-                            		</div>
-									<div class="form-group">
-										<label class="col-sm-3 control-label">Due Date </label>
-										<div class="col-md-6 col-lg-7">
-											<div class="input-group date form_datetime " style="max-width:300px;" >
-                    							<input class="form-control col-md-5 col-xs-12" type="text" id="due_date" name="due_date" value="<% if (typeof contentObj.due_date !== 'undefined' && contentObj.due_date !== null) { %><%= contentObj.due_date %><% } %>" readonly>
-                    							<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
-                							</div>
-                            			</div>
-                            		</div>
+									</div>      
 									</div></div>
                 					</div></div></div>
                 					<div class="col-xs-12">
@@ -167,13 +169,42 @@
                 					</div>
                 					</div>
               					</form>
+              					</div>
+              					<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %>
+              					<div class="chart tab-pane" id="second" >
+              						<div class="col-sm-12" style="margin-top:20px;">
+              							<a title="Add new note" onClick="$('#addNote').modal('show');" href="javascript:void(0)" class="btn btn-danger">Add new note</a>
+              						</div>
+              						<div class="content table-responsive table-full-width">
+		 								<div class="table-responsive" style="border:none;" >
+                        					<table class="table table-striped  table-bordered table-hover custom-tbl-st bt" id="table-breakpoint" style="background-color: rgb(255, 255, 255); border-radius: 4px;" >
+												<thead>
+													<tr>
+		      											<th>Added by</th>
+		      											<th>Last Modified</th>	      
+			 											<th>Note</th>
+			 											<th class="hidden-xs">Action</th>			  
+		  											</tr>
+												</thead>
+		  										<tbody id="notesTable">
+		  											
+		  										</tbody>
+		  									</table>
+										</div>
+									</div>
+              					</div>
+              					<%	}	%>
               				</div>
+              			</div>
+              		</div>
             	</div>
       		</section>
     		<!--//body content--> 
   		</div>
   		<!--//Main Content--> 
-	
+<!-- add_note_modal Starts Here-->
+<% include include/add_note_modal %>
+<!-- add_note_modal Ends Here-->	
 		<!-- Footer Starts Here-->
 			<% include include/footer %>
 		<!-- Footer Ends Here-->
@@ -181,26 +212,87 @@
 <!-- Page-Level Plugin Scripts-->
 <script src="plugins/combobox/autocomplete-ui.js"></script>
 <script src="js/jquery.validate.js"></script>
-<script type="text/javascript" src="plugins/datetime-picker/bootstrap-datetimepicker.js" charset="UTF-8"></script>
-
+<script src="js/bootstrap.datepicker.js"></script>
+<script src="js/basictable.js"></script>
 <script type="text/javascript">
-	$('.form_datetime').datetimepicker({
-		weekStart: 1,
-        todayBtn:  1,
-		autoclose: 1,
-		todayHighlight: 1,
-		startView: 2,
-		forceParse: 0,
-		pickerPosition: "bottom-left",		
-        showMeridian: 1,
-		pickTime: 0
-	});
+var table_row_id="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>";
+var auth_user_id="<% if (typeof authenticatedUser._id !== 'undefined' && authenticatedUser._id !== null) { %><%= authenticatedUser._id %><% } %>";
+var auth_user_name="<% if (typeof authenticatedUser.firstname !== 'undefined' && authenticatedUser.firstname !== null) { %><%= authenticatedUser.firstname %><% } %>";
+	auth_user_name+="<% if (typeof authenticatedUser.lastname !== 'undefined' && authenticatedUser.lastname !== null) { %>&nbsp;<%= authenticatedUser.lastname %><% } %>";
+
+function fetch_employees(sVal, fieldNameID, drawAllBool){
+	if (typeof sVal === "undefined") { 
+		sVal = '';
+	}
+	if (typeof fieldNameID === "undefined") { 
+		fieldNameID = '';
+	}
+	if (typeof drawAllBool === "undefined") { 
+		drawAllBool = false;
+	}
+	
+	if(sVal!=="" && fieldNameID!==""){
+		var jsonRow=backendDirectory+"/collection_details?id="+sVal+"&collection=users";
+		$.getJSON(jsonRow,function(html){
+			var contentHtml="<option value=''></option>";
+			var contentObj=html.aaData;
+			if(contentObj){
+				contentHtml+="<option value='"+contentObj._id+"' ";
+				if(sVal==contentObj._id){
+					contentHtml+="selected";
+				}
+				var nameStr='';
+						if(contentObj.firstname){
+							nameStr+=contentObj.firstname;
+						}
+						if(contentObj.lastname){
+							nameStr+=" "+contentObj.lastname;
+						}
+				contentHtml+=" >"+nameStr+"</option>";
+     		}
+			$("#"+fieldNameID).html(contentHtml);
+			$("#"+fieldNameID).combobox();
+		});
+	}else{
+		var jsonRow=backendDirectory+"/api_fetch_list?start=0&limit=20&collection=users&findFieldName=user_type&findFieldValue=employer";
+	
+		$.getJSON(jsonRow,function(html){
+			var contentHtml="<option value=''></option>";
+			if(html.aaData.length>0){
+					$.each(html.aaData, function(i,row){
+						contentHtml+="<option value='"+row._id+"' ";
+						if(sVal==row._id){
+							contentHtml+="selected";
+						}
+						var nameStr='';
+						if(row.firstname){
+							nameStr+=row.firstname;
+						}
+						if(row.lastname){
+							nameStr+=" "+row.lastname;
+						}
+						contentHtml+=" >"+nameStr+"</option>";
+					});
+     		}
+     		if(drawAllBool)	{
+				$("#reported_by_user_id").html(contentHtml);
+				$("#reported_by_user_id").combobox();
+				
+				$("#assigned_to_user_id").html(contentHtml);
+				$("#assigned_to_user_id").combobox();
+			}else if(fieldNameID!==""){
+				$("#"+fieldNameID).html(contentHtml);
+				$("#"+fieldNameID).combobox();
+			}
+		});
+	}	
+}
 function fetch_projects(){
 	$("#project_mongo_id").html("");
 	
 	var sVal="";
 	<% if (typeof queryStr !== 'undefined' && queryStr !== null && typeof queryStr.customer_id !== 'undefined' && queryStr.customer_id !== null && queryStr.customer_id !=="") { %>
-		sVal="<%= queryStr.project_id %>";
+		sVal="<%= queryStr.customer_id %>";
 	<% }else if(typeof contentObj.project_mongo_id !== 'undefined' && contentObj.project_mongo_id !== null)	{ %>
 		sVal="<%= contentObj.project_mongo_id %>";
 	<% } %>
@@ -240,6 +332,19 @@ function fetch_projects(){
 }
 
 $(function () {
+	<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) {	%>
+		<% if (typeof contentObj.assigned_to_user_id !== 'undefined' && contentObj.assigned_to_user_id !== null && contentObj.assigned_to_user_id!=="") { %>
+			fetch_employees ('<%= contentObj.assigned_to_user_id %>', 'assigned_to_user_id', false);
+		<% } %>
+		<% if (typeof contentObj.reported_by_user_id !== 'undefined' && contentObj.reported_by_user_id !== null && contentObj.reported_by_user_id!=="") { %>
+			fetch_employees ('<%= contentObj.reported_by_user_id %>', 'reported_by_user_id', false);
+		<% } %>
+    <%	}else{	%>
+    	fetch_employees ('', '', true);
+    <% } %>
+		
+	fetch_default_list("tasks-status", "<% if (typeof contentObj.status !== 'undefined' && contentObj.status !== null) { %><%= contentObj.status %><% } %>","status");
+		
 	fetch_projects();
 	// validate form on keyup and submit
 		$("#contentForm").validate({
@@ -261,16 +366,61 @@ $(function () {
 			},
 			rules: {
 				name: { required: true },
-				reported_by: { required: true },
+				assigned_to_user_id: { required: true },
 				project: { required: true },
-				assigned_to: { required: true }
+				reported_by_user_id: { required: true },
+				description : { required: true },
+				start_date : { required: true },
+				status: { required: true }
 			},
 			submitHandler: function(form) {
+				$('#reported_by').val($('#reported_by_user_id option:selected').text());
+				$('#assigned_to').val($('#assigned_to_user_id option:selected').text());
+				
+				var startTimestampNum=getTimestampFromDate($('#start_date').val());
+				$('#start_timestamp').val(startTimestampNum);
+				
+				var endTimestampNum=getTimestampFromDate($('#end_date').val());
+				$('#end_timestamp').val(endTimestampNum);
+				
 				//save data as json in data field, use dataAsJson function to populate that field
  				dataAsJson('contentForm', form);
  			}
 		});	
+	/* datepicker plugin */
+		<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %>
+            $("#start_date").datepicker().on('changeDate', function (ev) {
+            	$(this).datepicker('hide');
+            	restrict_start_end_date('start_date', 'end_date', 'setStartDate');
+           	 });
+           	 
+           	 //show dates selected from timestamp 
+         	 populate_bootstrap_datepicker('start_timestamp', 'start_date');
+         	 populate_bootstrap_datepicker('end_timestamp', 'end_date');
+         	 //apply date range
+         	 restrict_start_end_date('start_date', 'end_date', 'setStartDate');  
+         	 restrict_start_end_date('end_date', 'start_date', 'setEndDate');           
+		<%	}	else	{	%>
+            $("#start_date").datepicker().datepicker("setDate", new Date()).on('changeDate', function (ev) {
+				$(this).datepicker('hide');
+				restrict_start_end_date('start_date', 'end_date', 'setStartDate');
+        	});
+        <%	}	%>
+			
+		$("#end_date").datepicker().on('changeDate', function (ev) {
+           	$(this).datepicker('hide');
+           	restrict_start_end_date('end_date', 'start_date', 'setEndDate');
+        });
 });
+
+function restrict_start_end_date(getdateID, setDateID, actionStr){
+	if($('#'+getdateID).val()!="" && $('#'+getdateID).val()!="NaN"){
+		var arrEndDate= $('#'+getdateID).val().split('/');
+		var dateText = new Date(arrEndDate[1]+'/'+arrEndDate[0]+'/'+arrEndDate[2]);
+				
+		$('#'+setDateID).datepicker(actionStr, dateText);
+	}
+}
 //autocomplete
 	var xhr;
   (function( $ ) {
@@ -286,6 +436,7 @@ $(function () {
       },
  
       _createAutocomplete: function() {
+      	var ele_select= this.element;
         var selected = this.element.children( ":selected" ),
           value = selected.val() ? selected.text() : "";
  
@@ -311,6 +462,10 @@ $(function () {
             this._trigger( "select", event, {
               item: ui.item.option
             });
+            if(ele_select.attr('id')=='assigned_to_user_id' || ele_select.attr('id')=='reported_by_user_id'){
+				$('#reported_by').val($('#reported_by_user_id option:selected').text());
+				$('#assigned_to').val($('#assigned_to_user_id option:selected').text());
+			}
           },
  
           autocompletechange: "_removeIfInvalid"
@@ -368,8 +523,12 @@ $(function () {
 		}
 		else
 		{
-		var jsonRow = backendDirectory+"/api_fetch_list?start=0&limit=20&collection=projects?s="+request.term;
-
+		
+		if(ele_select.attr('id')=='project_mongo_id'){
+			var jsonRow = backendDirectory+"/api_fetch_list?start=0&limit=20&collection=projects&s="+request.term;
+		}else if(ele_select.attr('id')=='assigned_to_user_id' || ele_select.attr('id')=='reported_by_user_id'){
+			var jsonRow = backendDirectory+"/api_fetch_list?start=0&limit=20&collection=collection=users&findFieldName=user_type&findFieldValue=employer&s="+request.term;
+		}
 		//alert(jsonRowURLStr);
 		if(xhr) xhr.abort();
 		xhr=$.getJSON(jsonRow,function(result){
@@ -379,7 +538,18 @@ $(function () {
 
 				$.each(result.aaData, function(i,item)
 				{
-					html += '<option value="'+item._id+'">'+item.name+'</option>';
+					if(ele_select.attr('id')=='project_mongo_id'){
+						html += '<option value="'+item._id+'">'+item.name+'</option>';
+					}else if(ele_select.attr('id')=='assigned_to_user_id' || ele_select.attr('id')=='reported_by_user_id'){
+						var nameStr='';
+						if(item.firstname){
+							nameStr+=item.firstname;
+						}
+						if(item.lastname){
+							nameStr+=" "+item.lastname;
+						}
+						html += '<option value="'+item._id+'">'+nameStr+'</option>';
+					}
 				});
 				ele_select.html(html);
 				
@@ -418,7 +588,10 @@ $(function () {
         this.element.children( "option" ).each(function() {
           if ( $( this ).text().toLowerCase() === valueLowerCase ) {
             this.selected = valid = true;	
-			
+			if(ele_select.attr('id')=='assigned_to_user_id' || ele_select.attr('id')=='reported_by_user_id'){
+				$('#reported_by').val($('#reported_by_user_id option:selected').text());
+				$('#assigned_to').val($('#assigned_to_user_id option:selected').text());
+			}
             return false;
           }
         });
@@ -447,5 +620,8 @@ $(function () {
     });
   })( jQuery ); 
 </script>
+<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %>
+	<script src="scripts/manage_notes.js"></script>
+<%	}	%>
 </body>
 </html>

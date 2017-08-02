@@ -90,9 +90,14 @@ function fetchNotes(){
 						contentHtml+="<tr class='item-row'><td>"+added_by+"</td>";
 						contentHtml+="<td>"+dateTimeFromUnix(row.modified)+"<input type='hidden' class='noteUUID form-control' value='"+row.uuid+"' ></td>";
 						contentHtml+="<td><span class='noteSpan'>"+row.note+"</span><input type='text' class='noteField form-control' style='display:none;' value='"+row.note+"' ></td>";
-						contentHtml+='<td class="hidden-xs"><a href="javascript:void(0)" class="editlink"><i class="fa fa-pencil"></i></a><a href="javascript:void(0)" class="savelink" style="display:none;"><i class="fa fa-save"></i></a>';
-						contentHtml+='<a href="javascript:void(0)" class="removelink" style="margin-left:10px;"><i class="fa fa-trash"></i></a><a href="javascript:void(0)" class="cancellink" style="display:none; margin-left:10px;"><i class="fa fa-remove"></i></a></td>';
-						contentHtml+="</tr>";
+						contentHtml+='<td class="hidden-xs">';
+						if(row.user_uuid==auth_user_id){
+							contentHtml+='<a href="javascript:void(0)" class="editlink"><i class="fa fa-pencil"></i></a><a href="javascript:void(0)" class="savelink" style="display:none;"><i class="fa fa-save"></i></a>';
+							contentHtml+='<a href="javascript:void(0)" class="removelink" style="margin-left:10px;"><i class="fa fa-trash"></i></a><a href="javascript:void(0)" class="cancellink" style="display:none; margin-left:10px;"><i class="fa fa-remove"></i></a>';
+						}else{
+							contentHtml+='No action available';
+						}
+						contentHtml+="</td></tr>";
 					});
      		}
 			$("#notesTable").html(contentHtml);

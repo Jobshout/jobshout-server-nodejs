@@ -99,14 +99,14 @@ font-size: 20px;
             						<input type="hidden" class="form-control" id="data" name="data" value="">
             						
 									<div class="row" STYLE="margin-top:10px;">
-										<div class="col-xs-6">
+										<div class="col-md-6 col-xs-12">
           									<div class="box box-primary">
 		    									<h4>Main Details</h4>
             									<div class="box-body">
 														<div class="row">
-           		  											<div class=" col-sm-12 col-lg-11">
+           		  											<div class=" col-sm-12 col-lg-12">
    																<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">Client <sup class="required">*</sup></label>
+    																<label for="" class="col-sm-3 control-label">Client<sup class="required">*</sup></label>
     																<div class="col-sm-9 autocomplete">
       																	<select id="customer_mongo_id" name="customer_mongo_id"  CLASS="form-control">
       																	</select>
@@ -114,14 +114,14 @@ font-size: 20px;
     																</div>
   																</div>
   																<div class="form-group">
-    																<label for="" class="col-sm-3 control-label">Project name <sup class="required">*</sup></label>
+    																<label for="" class="col-sm-3 control-label">Project name<sup class="required">*</sup></label>
     																<div class="col-sm-9">
       																	<input type="text" class="form-control" id="name" name="name" value="<% if (typeof contentObj.name !== 'undefined' && contentObj.name !== null) { %><%= contentObj.name %><% } %>">
     																</div>
   																</div>
 																<div class="form-group">
     																<label for="" class="col-sm-3 control-label">&nbsp;</label>
-    																<div class="col-sm-2">
+    																<div class="col-sm-3">
 																		<label><input id="status" name="status" value="1" type="radio" <% if (typeof contentObj.status !== 'undefined' && contentObj.status !== null && contentObj.status == 1) { %>checked<% } %>> Active</label>
     			  													</div>
     			  													<div class="col-sm-3">
@@ -143,12 +143,12 @@ font-size: 20px;
              									</div>
           									</div>
 										</div>
-										<div class="col-xs-6">
+										<div class="col-md-6 col-xs-12">
           									<div class="box box-primary">
 		    									<h4>Important Dates</h4>
             									<div class="box-body">
 														<div class="row">
-           		  											<div class=" col-sm-12 col-lg-11">
+           		  											<div class=" col-sm-12 col-lg-12">
    																<div class="form-group">
     																<label for="" class="col-sm-3 control-label">Start  <sup class="required">*</sup></label>
     																<div class="col-sm-9">
@@ -171,12 +171,12 @@ font-size: 20px;
 										</div>
 									</div>
 	  								<div class="row" STYLE="margin-top:10px;">
-										<div class="col-xs-6">
+										<div class="col-md-6 col-xs-12">
           									<div class="box box-primary">
 		    									<h4>Financial</h4>
             									<div class="box-body">
        		 											<div class="row">
-           		  											<div class=" col-sm-12 col-lg-11">
+           		  											<div class=" col-sm-12 col-lg-12">
    																<div class="form-group">
     																<label for="" class="col-sm-3 control-label">Budget</label>
     																<div class="col-sm-9">
@@ -201,12 +201,12 @@ font-size: 20px;
 												</div>
           									</div>
 										</div>
-										<div class="col-xs-6">
+										<div class="col-md-6 col-xs-12">
           									<div class="box box-primary">
 		    									<h4>Handler</h4>
             									<div class="box-body">
 														<div class="row">
-           		  											<div class=" col-sm-12 col-lg-11">
+           		  											<div class=" col-sm-12 col-lg-12">
    																<div class="form-group">
     																<label for="" class="col-sm-3 control-label">Incharge</label>
     																<div class="col-sm-9">
@@ -317,27 +317,9 @@ font-size: 20px;
     			</div>
 			</section>
 		</div>
-
-<div class="modal fade" id="addNote" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-	<div class="modal-dialog">
-        <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onClick="$('#add_note').val('');">
-                  <span aria-hidden="true">x</span></button>
-                	<h3 class="modal-title" id="globalMessage">Add new note</h3>
-              </div>
-              <div class="modal-body">
-                <textarea class="form-control" id="add_note" name="add_note" placeholder="Add note here"></textarea>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-danger" onClick="addNewNote()">Save</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" onClick="$('#add_note').val('');">Close</button>
-              </div>
-            </div>
-            <!-- /.modal-content -->
-	</div>
-</div>
-
+<!-- add_note_modal Starts Here-->
+<% include include/add_note_modal %>
+<!-- add_note_modal Ends Here-->
 		<!-- Footer Starts Here-->
 			<% include include/footer %>
 		<!-- Footer Ends Here-->
@@ -362,7 +344,7 @@ var relatedCollectionStr='tasks', tableDisplayID='related_tasks', relatedFieldNa
 function draw_content_html (aaData) {
 	var contentHtml="";
 	$.each(aaData, function(i,row){
-		contentHtml+='<tr><td>'+row.name+'</td><td>'+row.start_date+'</td><td>'+row.task_estimated_hours+'</td><td><a href="'+backendDirectory+'/task?_id='+row._id+'" target="_blank"><i class="fa fa-pencil"></i></a></td></tr>';
+		contentHtml+='<tr><td>'+row.name+'</td><td>'+dateTimeFromUnix(row.start_timestamp, false)+'</td><td>'+row.task_estimated_hours+'</td><td><a href="'+backendDirectory+'/task?_id='+row._id+'" target="_blank"><i class="fa fa-pencil"></i></a></td></tr>';
 	});
 	return contentHtml;
 }
@@ -451,7 +433,7 @@ function fetch_customers(){
             	$("#start_date").datepicker().on('changeDate', function (ev) {
                 	$(this).datepicker('hide');
            	 	});
-           	 	populate_date_field('start_timestamp', 'start_date');
+           	 	populate_bootstrap_datepicker('start_timestamp', 'start_date');
              
 			<%	}	else	{	%>
             	$("#start_date").datepicker().datepicker("setDate", new Date()).on('changeDate', function (ev) {
@@ -463,14 +445,9 @@ function fetch_customers(){
                 $(this).datepicker('hide');
              });
              
-             populate_date_field('deadline_timestamp', 'deadline_date');
+             populate_bootstrap_datepicker('deadline_timestamp', 'deadline_date');
 	});
- function populate_date_field(inputId, outputId)	{
- 	if($('#'+inputId).val()!="")	{
- 		var convertStr=date_picker_format($('#'+inputId).val());
- 		$('#'+outputId).val(convertStr);
- 	}
- }
+
 //autocomplete
 	var xhr;
   (function( $ ) {

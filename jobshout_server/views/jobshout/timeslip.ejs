@@ -1,0 +1,483 @@
+<% include include/main-header %>
+<link rel="stylesheet" href="plugins/combobox/autocomplete-ui.css"/>
+<link href="plugins/datetime-picker/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+<style>
+.custom-combobox {
+		position: relative;
+		display: inline-block;
+	}
+	.custom-combobox-toggle {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		margin-left: -1px;
+		padding: 0;
+	}
+	.custom-combobox-input {
+		margin: 0;
+		padding: 5px 10px;
+	}
+	.ui-widget-overlay {
+		position: fixed;
+	}
+	.box-primary h4 {
+    border-bottom: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 20px;
+    margin: 7px 5px 0 0;
+    padding: 9px;
+}
+</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+	<div class="wrapper">	
+   		<!-- Header Starts here-->
+  		<% include include/header %>
+  		<!-- Header Ends here-->
+  		
+  		<!-- Sidebar Starts Here-->
+  			<% include include/sidebar %>
+    	<!-- Sidebar Ends Here-->
+		<div class="content-wrapper">
+    	  	<!-- Content Header (Page header) -->
+    		<section class="content-header">
+      			<h1>Timeslip <small><% if (typeof contentObj.name !== 'undefined' && contentObj.name !== null) { %>Update<% } else{	%>Add new<% }%></small></h1>
+      			<ol class="breadcrumb">
+        			<% include include/dashboard-breadcrumb %>
+        			<li class="active">Timeslip</li>
+      			</ol>
+    		</section>	
+    		<section class="content">
+      			<div class="row">
+      						<div class="panel-body no-padding-top bg-white"> 
+            					<% include include/display_returned_msg %>
+            					<form class="form-horizontal" action="<%= backendDirectory %>/save/category" method="POST" id="contentForm">
+            						<input type="hidden" class="form-control" id="table_name" name="table_name" value="timeslips">
+      								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="_id">
+      								<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>">
+      								<input type="hidden" class="form-control" id="editorField" name="editorField" value="<% if (typeof editorField !== 'undefined' && editorField !== null) { %><%= editorField %><% }else{ %>_id<% } %>">
+      								<input type="hidden" class="form-control" id="editorValue" name="editorValue" value="<% if (typeof editorValue !== 'undefined' && editorValue !== null) { %><%= editorValue %><% } %>">
+            						<input type="hidden" class="form-control" id="data" name="data" value="">
+            						
+            						<div class="col-md-6 col-xs-12">
+          									<div class="box box-primary">
+		    									<h4>Main Details</h4>
+            									<div class="box-body">
+														<div class="row">
+           		  											<div class=" col-sm-12 col-lg-12">
+   																<div class="form-group">
+																	<label class="col-sm-2 control-label">Task <span style="color:#6E829B">*</span></label>
+																	<div class="col-sm-10">
+																		<select id="task_mongo_id" name="task_mongo_id" class="form-control">
+																		</select>
+																	</div>
+																</div> 
+																<div class="form-group">
+                  													<label class="control-label col-md-2" for="">Reported by<span class="required">*</span></label>
+                  													<div class="col-md-9 col-lg-10">
+                   														<input type="hidden" class="form-control col-md-5 col-xs-12" id="reported_by" name="reported_by" value="<% if (typeof contentObj.reported_by !== 'undefined' && contentObj.reported_by !== null) { %><%= contentObj.reported_by %><% } %>">
+                   														<select required="required" class="form-control col-md-5 col-xs-12" name="reported_by_user_id" id="reported_by_user_id"></select>
+                  													</div>
+                												</div>
+  																
+  																<div class="form-group">
+    																<label for="" class="col-sm-2 control-label">Description</label>
+    																<div class="col-sm-10">
+      																	<textarea name="description" class="form-control" rows="4" id="description"><% if (typeof contentObj.description !== 'undefined' && contentObj.description !== null) { %><%= contentObj.description %><% } %></textarea>
+    																</div>
+  																</div>
+  																<div class="form-group">
+    																<label for="" class="col-sm-2 control-label">Billing Status</label>
+    																<div class="col-sm-10">
+      																	<select required="required" class="form-control col-md-5 col-xs-12" name="billing_status" id="billing_status"></select>
+                  													</div>
+  																</div>
+   															</div>
+       			 										</div>
+             									</div>
+          									</div>
+										</div>
+										<div class="col-md-6 col-xs-12">
+          									<div class="box box-primary">
+		    									<h4>Slip Duration</h4>
+            									<div class="box-body">
+														<div class="row">
+           		  											<div class=" col-sm-12 col-lg-12">
+   																<div class="form-group">
+    																<label for="" class="col-sm-3 control-label">Start Duration</label>
+    																<input class="form-control col-md-5 col-xs-12" type="hidden" id="start_timestamp" name="start_timestamp" value="<% if (typeof contentObj.start_timestamp !== 'undefined' && contentObj.start_timestamp !== null) {  %><%= contentObj.start_timestamp %><% } %>" readonly>
+                    								
+                													<div class="input-group date form_datetime " style="max-width:300px;" >
+                    													<input class="form-control col-md-9 col-xs-12" required type="text" id="start_date" value="" readonly>
+                    													<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                													</div>
+  																</div>
+  																<div class="form-group">
+    																<label for="" class="col-sm-3 control-label">End Duration</label>
+    																<input class="form-control col-md-9 col-xs-12" type="hidden" id="end_timestamp" name="end_timestamp" value="<% if (typeof contentObj.end_timestamp !== 'undefined' && contentObj.end_timestamp !== null) {  %><%= contentObj.end_timestamp %><% } %>" readonly>
+                    								
+                													<div class="input-group date form_datetime " style="max-width:300px;" >
+                    													<input class="form-control col-md-5 col-xs-12" required type="text" id="end_date" value="" readonly>
+                    													<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                													</div>
+  																</div>
+  																<div class="form-group">
+    																<label for="" class="col-sm-3 control-label"></label>
+																	<div class="col-sm-3">
+																		<label><input id="interval" name="interval" value="true" type="checkbox" <% if (typeof contentObj.interval !== 'undefined' && contentObj.interval !== null && (contentObj.interval == true || contentObj.interval == 'true')) { %>checked<% } %>> Exclude break time</label>
+    			  													</div>
+    			  													<label for="" class="col-sm-3 control-label">Break time </label>
+    																<div class="col-sm-3">
+      																	<input type="text" class="form-control" id="iban" name="iban" value="<% if (typeof contentObj.iban !== 'undefined' && contentObj.iban !== null) { %><%= contentObj.iban %><% } %>">
+    																</div>
+  																</div>
+  																
+   																<div class="form-group">
+    																<label for="" class="col-sm-3 control-label">Hours Spent</label>
+    																<div class="col-sm-9">
+      																	<input type="text" class="form-control" id="relationship" name="relationship" placeholder="" value="<% if (typeof contentObj.relationship !== 'undefined' && contentObj.relationship !== null) { %><%= contentObj.relationship %><% } %>">
+    																</div>
+  																</div>
+   															</div>
+       			 										</div>
+            									</div>
+          									</div>
+										</div>
+                					<div class="form-group">
+                   						<div class="col-md-12 col-lg-12" align="CENTER">
+               								<div class="submit-btn-setting"> <button type="submit" class="btn btn-primary btn-color margin-right-5 btn-sm">Submit</button>
+               								<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) {	%>
+               									<a href="<%= backendDirectory %>/list/timeslips" class="btn btn-danger btn-sm">Cancel</a>
+               								<%	}else{	%>
+               									<button type="reset" class="btn btn-danger btn-sm">Reset</button>
+               								<% } %>
+               								</div>
+               							</div>
+                					</div>
+              					</form>
+              				</div>
+            	</div>
+      		</section>
+    		<!--//body content--> 
+  		</div>
+  		<!--//Main Content--> 
+	
+		<!-- Footer Starts Here-->
+			<% include include/footer %>
+		<!-- Footer Ends Here-->
+</div>
+<!-- Page-Level Plugin Scripts-->
+<script src="plugins/combobox/autocomplete-ui.js"></script>
+<script src="js/jquery.validate.js"></script>
+<script type="text/javascript" src="plugins/datetime-picker/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script language="javascript">
+$('.form_datetime').datetimepicker({
+	weekStart: 1,
+    todayBtn:  1,
+	autoclose: 1,
+	todayHighlight: 1,
+	startView: 2,
+	forceParse: 0,
+	pickerPosition: "bottom-left",		
+	showMeridian: 1,
+	pickTime: 0
+});
+function fetch_collection_list(collectionStr, fieldID, sVal){
+	$("#"+fieldID).html("");
+	if(sVal!=""){
+		var jsonRow=backendDirectory+"/collection_details?id="+sVal+"&collection="+collectionStr;
+		$.getJSON(jsonRow,function(html){
+			var contentHtml="<option value=''></option>";
+			var contentObj=html.aaData;
+			if(contentObj){
+				contentHtml+="<option value='"+contentObj._id+"' ";
+				if(sVal==contentObj._id){
+					contentHtml+="selected";
+				}
+					var nameStr='';
+					if(collectionStr=='users'){
+						if(item.firstname){
+							nameStr+=item.firstname;
+						}
+						if(item.lastname){
+							nameStr+=" "+item.lastname;
+						}
+					} else{
+						nameStr=contentObj.name;
+					}
+				contentHtml+=" >"+nameStr+"</option>";
+     		}
+			$("#"+fieldID).html(contentHtml);
+			$("#"+fieldID).combobox();
+		});
+	}else{
+		var jsonRow=backendDirectory+"/api_fetch_list?start=0&limit=20&collection="+collectionStr;
+		if(collectionStr=='users'){
+			jsonRow+='&findFieldName=user_type&findFieldValue=employer';
+		}
+		$.getJSON(jsonRow,function(html){
+			var contentHtml="<option value=''></option>";
+			if(html.aaData.length>0){
+					$.each(html.aaData, function(i,row){
+						contentHtml+="<option value='"+row._id+"' ";
+						if(sVal==row._id){
+							contentHtml+="selected";
+						}
+						var nameStr='';
+						if(collectionStr=='users'){
+							if(row.firstname){
+								nameStr+=row.firstname;
+							}
+							if(row.lastname){
+								nameStr+=" "+row.lastname;
+							}
+						} else{
+							nameStr=row.name;
+						}
+						contentHtml+=" >"+nameStr+"</option>";
+					});
+     		}
+			$("#"+fieldID).html(contentHtml);
+			$("#"+fieldID).combobox();
+		});
+	}	
+}
+	$(function () {
+		fetch_default_list("billing-status", "<% if (typeof contentObj.billing_status !== 'undefined' && contentObj.billing_status !== null) { %><%= contentObj.billing_status %><% } %>","billing_status");
+	
+		var sVal="";
+		<% if (typeof queryStr !== 'undefined' && queryStr !== null && typeof queryStr.customer_id !== 'undefined' && queryStr.customer_id !== null && queryStr.customer_id !=="") { %>
+			sVal="<%= queryStr.customer_id %>";
+		<% }else if(typeof contentObj.task_mongo_id !== 'undefined' && contentObj.task_mongo_id !== null)	{ %>
+			sVal="<%= contentObj.task_mongo_id %>";
+		<% } %>
+		fetch_collection_list('tasks', 'task_mongo_id', sVal);
+		fetch_collection_list('users', 'reported_by_user_id', sVal);
+
+		// validate form on keyup and submit
+		$("#EntryForm").validate({
+			ignore: "",
+			onkeyup: false,
+			errorClass: 'error',
+			validClass: 'valid',
+			errorElement: "em",
+			errorPlacement: function(error, element) {
+				$(element).closest('div').append(error);
+			},
+			onfocusout: false,
+			invalidHandler: function(form, validator) {
+				var errors = validator.numberOfInvalids();
+				if (errors) {                    
+					validator.errorList[0].element.focus();
+				}
+			},
+			rules: {
+				task_mongo_id: { required: true },
+				first_name: { required: true },
+				email_address: { required: true, email :true },
+			},
+			submitHandler: function(form) {
+				dataAsJson('EntryForm', form);
+ 			}
+		});			
+	});
+
+//autocomplete
+	var xhr;
+  (function( $ ) {
+    $.widget( "custom.combobox", {
+      _create: function() {
+        this.wrapper = $( "<span>" )
+          .addClass( "custom-combobox" )
+          .insertAfter( this.element );
+ 
+        this.element.hide();
+        this._createAutocomplete();
+        this._createShowAllButton();
+      },
+ 
+      _createAutocomplete: function() {
+      	var ele_select= this.element;
+        var selected = this.element.children( ":selected" ),
+          value = selected.val() ? selected.text() : "";
+ 
+        this.input = $( "<input>" )
+          .appendTo( this.wrapper )
+          .val( value )
+          .attr( "title", "" )
+          .addClass( "custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left" )
+          .autocomplete({
+            delay: 0,
+            minLength: 0,
+            source: $.proxy( this, "_source" )
+          })
+          .tooltip({
+            tooltipClass: "ui-state-highlight"
+          });
+ 
+        this._on( this.input, {
+          autocompleteselect: function( event, ui ) {
+		  	//alert("show all");
+            ui.item.option.selected = true;
+			
+            this._trigger( "select", event, {
+              item: ui.item.option
+            });
+            if(ele_select.attr('id')=='reported_by_user_id'){
+				$('#reported_by').val($('#reported_by_user_id option:selected').text());
+			}
+          },
+ 
+          autocompletechange: "_removeIfInvalid"
+        });
+      },
+ 
+      _createShowAllButton: function() {
+        var input = this.input,
+          wasOpen = false;
+ 
+        $( "<a>" )
+          .attr( "tabIndex", -1 )
+          .attr( "title", "Show All Items" )
+          .tooltip()
+          .appendTo( this.wrapper )
+          .button({
+            icons: {
+              primary: "ui-icon-triangle-1-s"
+            },
+            text: false
+          })
+          .removeClass( "ui-corner-all" )
+          .addClass( "custom-combobox-toggle ui-corner-right" )
+          .mousedown(function() {
+            wasOpen = input.autocomplete( "widget" ).is( ":visible" );
+          })
+          .click(function() {
+            input.focus();
+ 
+            // Close if already visible
+            if ( wasOpen ) {
+              return;
+            }
+ 
+            // Pass last search string as value to search for, displaying last results
+            input.autocomplete( "search", 'SHOWALL' );
+          });
+      },
+ 
+      _source: function( request, response ) {
+        //var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+		var ele_select= this.element;
+		if(request.term=='SHOWALL'){
+			response(ele_select.children( "option" ).map(function() {
+          var text = $( this ).text();
+		 var value= $( this ).val();
+          //if ( this.value && ( !request.term || matcher.test(text) ) )
+            return {
+              label: text,
+              value: text,
+              option: this
+            };
+        }) );
+		
+		}
+		else
+		{
+		
+		if(ele_select.attr('id')=='task_mongo_id'){
+			var jsonRow = backendDirectory+"/api_fetch_list?start=0&limit=20&collection=tasks&s="+request.term;
+		}else if(ele_select.attr('id')=='reported_by_user_id'){
+			var jsonRow = backendDirectory+"/api_fetch_list?start=0&limit=20&collection=collection=users&findFieldName=user_type&findFieldValue=employer&s="+request.term;
+		}
+		//alert(jsonRowURLStr);
+		if(xhr) xhr.abort();
+		xhr=$.getJSON(jsonRow,function(result){
+			
+			if(result.aaData.length>0){
+				var html='<option value=""></option>';
+
+				$.each(result.aaData, function(i,item)
+				{
+					if(ele_select.attr('id')=='task_mongo_id'){
+						html += '<option value="'+item._id+'">'+item.name+'</option>';
+					}else if(ele_select.attr('id')=='reported_by_user_id'){
+						var nameStr='';
+						if(item.firstname){
+							nameStr+=item.firstname;
+						}
+						if(item.lastname){
+							nameStr+=" "+item.lastname;
+						}
+						html += '<option value="'+item._id+'">'+nameStr+'</option>';
+					}
+				});
+				ele_select.html(html);
+				
+				
+				response(ele_select.children( "option" ).map(function() {
+          var text = $( this ).text();
+		 var value= $( this ).val();
+          //if ( this.value && ( !request.term || matcher.test(text) ) )
+            return {
+              label: text,
+              value: text,
+              option: this
+            };
+        }) );
+				
+				
+			}
+		});
+       
+	  } 
+		
+      },
+ 
+      _removeIfInvalid: function( event, ui ) {
+ 
+        // Selected an item, nothing to do
+        if ( ui.item ) {
+
+          return;
+        }
+ 
+        // Search for a match (case-insensitive)
+        var value = this.input.val(),
+          valueLowerCase = value.toLowerCase(),
+          valid = false;
+        this.element.children( "option" ).each(function() {
+          if ( $( this ).text().toLowerCase() === valueLowerCase ) {
+            this.selected = valid = true;	
+			if(ele_select.attr('id')=='reported_by_user_id'){
+				$('#reported_by').val($('#reported_by_user_id option:selected').text());
+			}
+            return false;
+          }
+        });
+ 
+        // Found a match, nothing to do
+        if ( valid ) {
+          return;
+        }
+ 
+        // Remove invalid value
+        this.input
+          .val( "" )
+          .attr( "title", value + " didn't match any item" )
+          .tooltip( "open" );
+        this.element.val( "" );
+        this._delay(function() {
+          this.input.tooltip( "close" ).attr( "title", "" );
+        }, 2500 );
+        this.input.data( "ui-autocomplete" ).term = "";
+      },
+ 
+      _destroy: function() {
+        this.wrapper.remove();
+        this.element.show();
+      }
+    });
+  })( jQuery ); 
+	</script>
+</body>
+</html>

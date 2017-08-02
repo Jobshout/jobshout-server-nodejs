@@ -54,8 +54,9 @@
     		</section>	
     		<section class="content">
       			<div class="row">
-      				<div class="panel-body no-padding-top bg-white"> 
-      					<form class="form-horizontal" action="<%= backendDirectory %>/save/user" method="POST" id="contentForm">
+      				<div class="panel-body no-padding-top bg-white">
+      					<% include include/display_returned_msg %>
+            			<form class="form-horizontal" action="<%= backendDirectory %>/save/user" method="POST" id="contentForm">
       					<div class="nav-tabs-custom">
       						<ul class="nav nav-tabs pull-left">
             					<li class="active"><a href="#first" data-toggle="tab">Details</a></li>
@@ -69,21 +70,6 @@
 							<div class="tab-content ">
 								
 								<div class="chart tab-pane active" id="first" ><div STYLE="margin-top:10px;">
-            					<% if (typeof queryStr !== 'undefined' && queryStr !== null) {
-    								if(queryStr.error_msg) {	%>
-									<div class="alert alert-danger alert-dismissable">
-             							<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-                						<%= queryStr.error_msg %>
-            						</div>
-            						<% }
-           							if(queryStr.success_msg) {	%>
-										<div class="alert alert-success alert-dismissable">
-             								<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-                							<%= queryStr.success_msg %>
-            							</div>
-            						<%	}
-            					}	%>
-            					
             					
             						<input type="hidden" class="form-control" id="editorField" name="editorField" value="<% if (typeof editorField !== 'undefined' && editorField !== null) { %><%= editorField %><% }else{ %>_id<% } %>">
       								<input type="hidden" class="form-control" id="editorValue" name="editorValue" value="<% if (typeof editorValue !== 'undefined' && editorValue !== null) { %><%= editorValue %><% } %>">
