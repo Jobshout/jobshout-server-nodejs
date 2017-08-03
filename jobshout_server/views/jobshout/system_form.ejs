@@ -27,10 +27,11 @@
                 					 <div class="form-group" style="margin-top:10px;">
 										<label class="col-sm-3 control-label">Established Date </label>
 										<div class="col-md-6 col-lg-7">
-										<div class="input-group date form_datetime " style="max-width:300px;" >
-                    						<input class="form-control col-md-5 col-xs-12" required type="text" id="established_on" name="established_on" value="<% if (typeof contentObj.established_on !== 'undefined' && contentObj.established_on !== null) { %><%= contentObj.established_on %><% } %>" readonly>
-                    						<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
-                						</div>
+												<input class="form-control col-md-5 col-xs-12" type="hidden" id="established_timestamp" name="established_timestamp" value="<% if (typeof contentObj.established_timestamp !== 'undefined' && contentObj.established_timestamp !== null) {  %><%= contentObj.established_timestamp %><% } %>" readonly>
+                    							<div class='input-group date' id='datetime_picker'>
+                    								<input type='text' class="form-control" id="established_on" value=""/>
+                    								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                								</div>	
                 						</div>
                             		</div>
                 					<div class="form-group">

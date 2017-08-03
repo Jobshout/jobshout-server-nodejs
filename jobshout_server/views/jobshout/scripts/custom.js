@@ -44,6 +44,31 @@ function dateTimeFromUnix(UNIX_timestamp, showTimeBool){
 	return time;
 }
 
+function return_datetimepicker_from_timestamp(UNIX_timestamp,showDateBool){
+	if (typeof showDateBool === "undefined") { 
+		showDateBool = true;
+	}
+	var a = new Date(UNIX_timestamp * 1000);
+    if(showDateBool){
+		var time = a.getMonth()+1 + '/' + a.getDate() + '/' + a.getFullYear();
+		time += ' ';
+	}else{
+		var time='';
+	}
+	var hour = a.getHours();
+	var timeStr="AM";
+  	if(hour>12){
+  		timeStr="PM";
+  		hour= hour-12;
+  	} 
+  	var min = a.getMinutes().toString();
+  	if(min.length==1)	{
+  		min = "0"+min;
+  	}
+  	time += hour + ':' + min + " " + timeStr ;
+	return time;
+}
+
 function datetime_picker_format(UNIX_timestamp){
 	var a = new Date(UNIX_timestamp * 1000);
     
@@ -83,6 +108,28 @@ function getTimestampFromDate(dateString, dateFrom){
 		date.setHours(23,59,59,0);
 	}
 	
+	date= date.getTime();
+	date= parseInt(date)/1000;
+	return date;
+}
+
+function return_timestamp_from_datetimepicker(dateString){
+	var dateTimeParts = dateString.split(' '),
+	timeParts = dateTimeParts[1].split(':'),
+	dateParts = dateTimeParts[0].split('/'),
+	timeFormat = dateTimeParts[2],
+	date, hoursNum = parseInt(timeParts[0]);
+	
+	if(timeFormat=="PM"){
+		if(hoursNum == 12) {
+            hoursNum =hoursNum;
+        } else {
+            hoursNum = parseInt(hoursNum) + 12;
+        }
+	}
+	date = new Date(dateParts[2], parseInt(dateParts[0])-1, dateParts[1], hoursNum, timeParts[1]);
+	
+	//date = new Date(dateParts[1], parseInt(dateParts[0])-1, dateParts[2], hoursNum, timeParts[1]);
 	date= date.getTime();
 	date= parseInt(date)/1000;
 	return date;

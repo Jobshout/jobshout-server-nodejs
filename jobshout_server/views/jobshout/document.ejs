@@ -1,7 +1,6 @@
 <% include include/main-header %>
 <link rel="stylesheet" href="css/chosen.css">
-<!-- page specific css -->
-<link href="plugins/datetime-picker/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+<link href="css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet">
 <style>
 #select_systems_chosen{
 width : 402px!important;
@@ -118,11 +117,10 @@ border:1px solid #8a0024;
               								<label for="dtp_input1" class="col-md-2 control-label" >Published On  <span class="required">*</span></label>
                   							<div class="col-md-6 col-lg-4" >
                   								<input class="form-control col-md-5 col-xs-12" type="hidden" id="Published_timestamp" name="Published_timestamp" value="<% if (typeof contentObj.Published_timestamp !== 'undefined' && contentObj.Published_timestamp !== null) {  %><%= contentObj.Published_timestamp %><% } %>" readonly>
-                    								
-                								<div class="input-group date form_datetime " style="max-width:300px;" >
-                    								<input class="form-control col-md-5 col-xs-12" required type="text" id="published_date" value="" readonly>
-                    								<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
-                								</div>
+                    							<div class='input-group date' id='datetime_picker'>
+                    								<input type='text' class="form-control" id="published_date" value=""/>
+                    								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                								</div>	
                   							</div>
             							</div>
   										
@@ -143,7 +141,7 @@ border:1px solid #8a0024;
    										<div class="form-group" style="padding-bottom:35px;">
                   							<div class="col-md-9 col-lg-9" style="">
                   								<div class="btn-inline display-inline-block" style="width: 100%;">
-													<input class="form-control" style="height:36px;" required="" id="search_here" placeholder="Search by image name" value="">
+													<input class="form-control" style="height:36px;" id="search_here" placeholder="Search by image name" value="">
 													<button class="btn btn-left-align btn-link no-shadow bg-transparent no-padding-top padding-right-10 right-auto left" type="button" id="searchBtn" title="Search"><i class="glyphicon glyphicon-search"></i></button>
 												</div>
                   							</div>
@@ -394,6 +392,8 @@ border:1px solid #8a0024;
 
  <script src="js/jquery.caret.min.js"></script>
  <script src="js/jquery.tag-editor.min.js"></script>
+ <script src="js/moment.js"></script>
+<script src="js/bootstrap-datetimepicker.min.js"></script>
 <script>
 var tiny_options=new Array();
 tiny_options['selector']= "textarea#Body";
@@ -625,9 +625,11 @@ $(document).ready(function(){
 	});
 	
 	if($("#Published_timestamp").val()!=""){
-		var tempDisplayDate=datetime_picker_format($("#Published_timestamp").val());
+		var tempDisplayDate=return_datetimepicker_from_timestamp($("#Published_timestamp").val());
 		$("#published_date").val(tempDisplayDate)
 	}
+	$('#datetime_picker').datetimepicker();
+		
 	// validate form on keyup and submit
 		$("#contentForm").validate({
 			ignore: '',
@@ -675,7 +677,7 @@ $(document).ready(function(){
 				var bodyContent=tinyMCE.get('Body').getContent();
 				$("#Body").val(bodyContent);
 				
-				var publishedDateNum=getTimestampFromDateTime($("#published_date").val());
+				var publishedDateNum=return_timestamp_from_datetimepicker($("#published_date").val());
 				$("#Published_timestamp").val(publishedDateNum);
 				
 				dataAsJson('contentForm', form);
@@ -747,20 +749,6 @@ function loadImagesGallery(){
 		$("#imageLibraryDiv").html(contentHtml);
 	});
 }
-</script>
-<script type="text/javascript" src="plugins/datetime-picker/bootstrap-datetimepicker.js" charset="UTF-8"></script>
-<script type="text/javascript">
-	$('.form_datetime').datetimepicker({
-		weekStart: 1,
-        todayBtn:  1,
-		autoclose: 1,
-		todayHighlight: 1,
-		startView: 2,
-		forceParse: 0,
-		pickerPosition: "bottom-left",		
-        showMeridian: 1,
-		pickTime: 0
-	});
 </script>
 </body>
 </html>

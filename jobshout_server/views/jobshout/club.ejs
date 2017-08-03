@@ -1,6 +1,4 @@
 <% include include/main-header %>
-
-<link href="plugins/datetime-picker/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 <style>
 .box-primary h4 {
     border-bottom: 1px solid #ddd;
@@ -166,21 +164,7 @@
 </div>
 <!-- Page-Level Plugin Scripts-->
 <script src="js/jquery.validate.js"></script>
-<script type="text/javascript" src="plugins/datetime-picker/bootstrap-datetimepicker.js" charset="UTF-8"></script>
-
 <script type="text/javascript">
-	$('.form_datetime').datetimepicker({
-		weekStart: 1,
-        todayBtn:  1,
-		autoclose: 1,
-		todayHighlight: 1,
-		startView: 2,
-		forceParse: 0,
-		pickerPosition: "bottom-left",		
-        showMeridian: 1,
-		pickTime: 0
-	});
-
 $(function () {
 	<% if (typeof contentObj._id == 'undefined' && contentObj._id == null) { %>
 		$("input[name=status][value=1]").prop("checked",true);
