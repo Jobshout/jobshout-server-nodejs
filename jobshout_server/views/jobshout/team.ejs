@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="css/basictable.css">
 <link rel="stylesheet" href="plugins/combobox/autocomplete-ui.css"/>
 <link rel="stylesheet" href="css/jquery.tag-editor.css">
-<link rel="stylesheet" href="css/bootstrap.datepicker.css">
+<link href="css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet">
 <style>
 	.custom-combobox {
 		position: relative;
@@ -257,7 +257,10 @@
 					<div class="row">
 						<div class="col-md-12 ui-widget">
                    			<label>Select date <span style="font-size:11px; font-style: italic;">(to find available players on selected date)</span></label>
-                   			<input class="form-control" id="selected_date" value="" data-date-format="dd/mm/yyyy">
+                   			<div class='input-group date' id='datetime_picker'>
+                    			<input type='text' class="form-control" id="selected_date" value=""/>
+                    			<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                			</div>	
 						</div>
 						<div class="col-md-12 ui-widget" id="select_players" style="margin-top:10px;">
 							<label>Search & select player</label>
@@ -337,7 +340,8 @@
 <script src="js/jquery.tag-editor.min.js"></script>
 
 <script src="js/jquery.caret.min.js"></script>
-<script src="js/bootstrap.datepicker.js"></script>
+<script src="js/moment.js"></script>
+<script src="js/bootstrap-datetimepicker.min.js"></script>
 <script>
 var timestampNum="";
 var loadDefinedPlayertypes= new Array(), teamFixturesArr= new Array();
@@ -593,12 +597,13 @@ $(document).ready(function(){
 		$('#fixture_id').val($(this).val());
 		load_fixtures_details();
 	});
-		
-	$('#selected_date').datepicker().on('changeDate', function (ev) {
-		$(this).datepicker('hide');
-		loadPlayers();
-	});
 	
+	$('#datetime_picker').datetimepicker({
+		format: 'L'
+	}).on("dp.change", function (e) {
+		loadPlayers();
+    });
+		
 	<%  if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %>
 			load_team_fixtures();
 			load_data();
@@ -901,7 +906,7 @@ function add_comment (id) {
 function loadPlayers(){
 	var fetchPlayers= "api_fetch_players?start=0&limit=20&s=" ;
 	if($("#selected_date").val()!=="" && $("#selected_date").val()!==null && $("#selected_date").val()!=="null"){
-		fetchPlayers+="&availability=Available&timestamp="+getTimestampFromDate($("#selected_date").val());
+		fetchPlayers+="&availability=Available&timestamp="+return_timestamp_from_datetimepicker($("#selected_date").val(),false);
 	}
 	$.getJSON(fetchPlayers, function(result){
 		var dropdownStr='<option value=""></option>';

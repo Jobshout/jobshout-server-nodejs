@@ -68,7 +68,8 @@
    																<div class="form-group">
 																	<label class="col-sm-2 control-label">Task <span style="color:#6E829B">*</span></label>
 																	<div class="col-sm-10">
-																		<select id="task_mongo_id" name="task_mongo_id" class="form-control">
+																		<input type="hidden" class="form-control col-md-5 col-xs-12" id="task_name" name="task_name" value="<% if (typeof contentObj.task_name !== 'undefined' && contentObj.task_name !== null) { %><%= contentObj.task_name %><% } %>">
+                   														<select id="task_mongo_id" name="task_mongo_id" class="form-control">
 																		</select>
 																	</div>
 																</div> 
@@ -492,6 +493,9 @@ function return_timestamp_from_timepicker (startDateStr, timeStr)	{
             if(ele_select.attr('id')=='reported_by_user_id'){
 				$('#reported_by').val($('#reported_by_user_id option:selected').text());
 			}
+			if(ele_select.attr('id')=='task_mongo_id'){
+				$('#task_name').val($('#task_mongo_id option:selected').text());
+			}
           },
  
           autocompletechange: "_removeIfInvalid"
@@ -616,6 +620,9 @@ function return_timestamp_from_timepicker (startDateStr, timeStr)	{
             this.selected = valid = true;	
 			if(ele_select.attr('id')=='reported_by_user_id'){
 				$('#reported_by').val($('#reported_by_user_id option:selected').text());
+			}
+			if(ele_select.attr('id')=='task_mongo_id'){
+				$('#task_name').val($('#task_mongo_id option:selected').text());
 			}
             return false;
           }

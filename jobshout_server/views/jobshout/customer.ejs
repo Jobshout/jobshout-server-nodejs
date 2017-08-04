@@ -1,5 +1,5 @@
 <% include include/main-header %>
-<link href="css/bootstrap.datepicker.css" type="text/css" rel="stylesheet">
+<link href="css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet">
 <!-- page specific css -->
 <link rel="stylesheet" href="css/basictable.css">
 </head>
@@ -83,9 +83,12 @@ font-size: 20px;
   																<div class="form-group">
     																<label for="" class="col-sm-2 control-label">Follow Up Date </label>
     																<div class="col-sm-7">
+    																	<div class='input-group date' id='datetime_picker'>
+                    														<input type='text' class="form-control" id="followup_date" value=""/>
+                    														<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                														</div>	
     																	<input type="hidden" class="form-control" id="followup_timestamp" name="followup_timestamp" value="<% if (typeof contentObj.followup_timestamp !== 'undefined' && contentObj.followup_timestamp !== null) { %><%= contentObj.followup_timestamp %><% } %>">
-      																	<input type="text" class="col-sm-4 datepicker form-control" id="followup_date" data-date-format="dd/mm/yyyy"  readonly value="">
-    																</div>
+      																</div>
     																<div class="col-sm-3">
 																		<label>	<input  name="is_supplier" type="checkbox" value="true" id="is_supplier" <% if (typeof contentObj.is_supplier !== 'undefined' && contentObj.is_supplier !== null && contentObj.is_supplier == true) { %>checked<% } %> > Supplier</label>	
 								 									</div>
@@ -400,7 +403,8 @@ font-size: 20px;
 			<% include include/footer %>
 		<!-- Footer Ends Here-->
 	</div>
-<script src="js/bootstrap.datepicker.js"></script>
+<script src="js/moment.js"></script>
+<script src="js/bootstrap-datetimepicker.min.js"></script>
 <script src="js/jquery.validate.js"></script>
 <script src="js/basictable.js"></script>
 <script language="javascript">
@@ -448,7 +452,8 @@ function draw_content_html (aaData) {
 				address_line_1: { required: true }
 			},
 			submitHandler: function(form) {
-				var startTimestampNum=getTimestampFromDate($('#followup_date').val());
+				var startTimestampNum=return_timestamp_from_datetimepicker($('#followup_date').val(), false);
+				
 				$('#followup_timestamp').val(startTimestampNum);
  				dataAsJson('contentForm', form);
  			}
@@ -459,20 +464,18 @@ function draw_content_html (aaData) {
 		});
 		 
 		 // datepicker plugin
-           <% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %>
-            	$("#followup_date").datepicker().on('changeDate', function (ev) {
-                	$(this).datepicker('hide');
-           	 	});
-           	 	if($('#followup_timestamp').val()!="")	{
- 					var convertStr=date_picker_format($('#followup_timestamp').val());
- 					$('#followup_date').val(convertStr);
- 				}
-             
-			<%	}	else	{	%>
-            	$("#followup_date").datepicker().datepicker("setDate", new Date()).on('changeDate', function (ev) {
-                	$(this).datepicker('hide');
-             	});
-            <%	}	%>
+		if($("#followup_timestamp").val()!=""){
+			var tempDisplayDate=return_datetimepicker_from_timestamp($("#followup_timestamp").val());
+			$("#followup_date").val(tempDisplayDate);
+		} else {
+			var aDate = new Date();
+  			var todayStr = aDate.getMonth()+1 + '/' + aDate.getDate() + '/' + aDate.getFullYear()
+  			$('#followup_date').val(todayStr);
+		}
+		$('#datetime_picker').datetimepicker({
+			format: 'L'
+		});
+		
 	});
 	
 		function copy_invoice_address (){

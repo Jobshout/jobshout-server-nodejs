@@ -2,9 +2,7 @@
 <link rel="stylesheet" href="plugins/combobox/autocomplete-ui.css"/>
 <link rel="stylesheet" href="css/chosen.css">
 <link rel="stylesheet" href="css/jquery.tag-editor.css">
-
-<link rel="stylesheet" href="css/bootstrap.datepicker.css">
-
+<link href="css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet">
 <style>
 .custom-combobox {
 		position: relative;
@@ -108,7 +106,10 @@
                   						<label class="control-label col-md-3" for="">DOB</label>
                   						<div class="col-md-3 col-lg-4">
                    							<input type="hidden" id="dob" name="dob" readonly value="<% if (typeof contentObj.dob !== 'undefined' && contentObj.dob !== null) { %><%= contentObj.dob %><% } %>">
-                   							<input type="text" readonly class="form-control col-md-5 col-xs-12 datepicker" id="date_of_birth" value="" data-date-format="dd/mm/yyyy">
+                   							<div class='input-group date' id='datetime_picker'>
+                    							<input type='text' class="form-control" id="date_of_birth" value=""/>
+                    							<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                							</div>	
                   						</div>
                   						<label class="control-label col-md-2 ageClass" style="display:none;">Age</label>
                   						<div class="col-md-3 col-lg-2 ageClass"  style="display:none;">
@@ -343,8 +344,11 @@
                 						<div class="form-group" id="amount_paidDiv">
                   							<label class="control-label col-md-2" for="">Fee Paid On</label>
                   							<div class="col-md-3">
-                   								<input type="text" class="form-control col-md-5 col-xs-12 datepicker" id="paid_date" readonly  data-date-format="dd/mm/yyyy" value="">
-                  							</div>
+                  								<div class='input-group date' id='paid_datetime_picker'>
+                    								<input type='text' class="form-control" id="paid_date" value=""/>
+                    								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                								</div>
+                   							</div>
                   							<label class="control-label col-md-1" for="">Amount paid</label>
                   							<div class="col-md-3">
                    								<input type="text" class="form-control col-md-5 col-xs-12" id="new_amount_paid" value="">
@@ -407,7 +411,8 @@
 <script src="js/jquery.validate.js"></script>
 <script src="js/jquery.tag-editor.min.js"></script>
 <script src="js/jquery.caret.min.js"></script>
-<script src="js/bootstrap.datepicker.js"></script>
+<script src="js/moment.js"></script>
+<script src="js/bootstrap-datetimepicker.min.js"></script>
 <script>
 var pageSize=5, totalAvaNum=0, startAva=0, endAva=pageSize;
 
@@ -572,14 +577,16 @@ function payMemberShip(e){
 	$(".membershipFeeAlert").remove();
 	
 	var amountPaid=$("#new_amount_paid").val();
-	var paid_date=getTimestampFromDate($("#paid_date").val());
+	var paid_date=return_timestamp_from_datetimepicker($("#paid_date").val(),false);
     var postContentURL=backendDirectory+"/api_crud_post";
+    var uuidSystemStr=	"<% if (typeof authenticatedUser.active_system_uuid !== 'undefined' && authenticatedUser.active_system_uuid !== null && authenticatedUser.active_system_uuid !== "") {	 %><%= authenticatedUser.active_system_uuid %><% } %>";
+		
     if(amountPaid!="" && $("#paid_date").val()!=""){
    		$.ajax({
 			type: "POST",
 			dataType: "json",
 			url: postContentURL,
-			data: {"collection" : "membership_fee_details", "action" : "create", "fieldName": "_id", "fieldValue" : "", "user_mongo_id" : e, "amount_paid" : amountPaid, "paid_on_timestamp" : paid_date},
+			data: {"collection" : "membership_fee_details", "action" : "create", "fieldName": "_id", "fieldValue" : "", "user_mongo_id" : e, "amount_paid" : amountPaid, "paid_on_timestamp" : paid_date,"uuid_system" : uuidSystemStr},
 			success: function(response){
 				$("#new_amount_paid").val('');
 				$("#paid_date").val('');
@@ -818,16 +825,24 @@ $(document).ready(function() {
     	var month = a.getMonth()+1;
 		$("#date_of_birth").val(a.getDate() + '/' + month + '/' + a.getFullYear());
 	}
-	
-	$('.datepicker').datepicker().on('changeDate', function (ev) {
-		var timestampnum= getTimestampFromDate($(this).val());
-		$("#dob").val(timestampnum);
-		$("#age").val(getAge(timestampnum));
-		$('.ageClass').show();
+	 // datetimepicker plugin
+		if($("#dob").val()!=""){
+			var tempDisplayDate=return_datetimepicker_from_timestamp($("#dob").val());
+			$("#date_of_birth").val(tempDisplayDate);
+		}
+		$('#datetime_picker').datetimepicker({
+			format: 'L'
+		});
+		$('#paid_datetime_picker').datetimepicker({
+			format: 'L'
+		});
+		$("#datetime_picker").on("dp.change", function (e) {
+        	var timestampnum= return_timestamp_from_datetimepicker($("#date_of_birth").val(),false);
+        	$("#dob").val(timestampnum);
+			$("#age").val(getAge(timestampnum));
+			$('.ageClass').show();
+        });
 		
-		
-		$(this).datepicker('hide');
-	});
 	// validate form on keyup and submit
 		$("#contentForm").validate({
 			ignore: "",
