@@ -31,6 +31,6 @@
 		adminTablesArr : definedAdminTablesArr,
 		system_name : "Tenthmatrix Website",
 		recipientStr : 'bwalia@tenthmatrix.co.uk',
-		websiteUrl : 'http://www.tenthmatrix.co.uk',
-		appUrl : 'http://www.tenthmatrix.co.uk/jobshout'
+		websiteUrl : 'http://hh4.tenthmatrix.co.uk:3004',
+		appUrl : 'http://hh4.tenthmatrix.co.uk:3004/jobshout'
 	};

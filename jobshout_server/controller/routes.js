@@ -72,6 +72,7 @@ app.post(backendDirectoryPath+'/upload', requireLogin, function(req, res) {
 				res.send(myObj);
 			} else	{
 				myObj["_id"]=req.file.id;
+				myObj["mimetype"]=req.file.mimetype;
 				myObj["success"]="Uploaded successfully!";
 				res.send(myObj);
 			}
@@ -80,6 +81,37 @@ app.post(backendDirectoryPath+'/upload', requireLogin, function(req, res) {
   		myObj["error"]   = "Sorry you are not authorized to add note!";
 		res.send(myObj);
   	}
+});
+
+//download file
+app.get(backendDirectoryPath+'/download/:uuid', requireLogin, function(req, res) {
+    var outputObj = new Object();
+	gfs.files.findOne({'metadata.uuid': req.params.uuid}, function(err, file) {
+		if (err) {
+			return res.status(400).send(err);
+    	}    else if (!file) {
+        	return res.status(404).send('Error on the database looking for the file.');
+   		}
+   		var fileNameStr= file.filename;
+   		
+		if(file.metadata && file.metadata['originalname'] && file.metadata['originalname']!=""){
+			fileNameStr=file.metadata['originalname'];
+		}
+		
+    	res.set('Content-Type', file.contentType);
+    	res.set('Content-Disposition', 'attachment; filename="' + fileNameStr + '"');
+		
+		var readstream = gfs.createReadStream({
+      		_id: req.params.uuid,
+      		root: 'resume'
+    	});
+
+    	readstream.on("error", function(err) { 
+       		res.end();
+    	});
+    	readstream.pipe(res);
+    	//gfs.createReadStream({ filename: fileNameStr }).pipe(res);
+    });
 });
 
 //find and remove file

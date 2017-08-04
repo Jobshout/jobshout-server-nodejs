@@ -60,7 +60,6 @@
                 					<div class="form-group">
     									<label for="" class="col-sm-2 control-label">Upload image <sup class="required">*</sup></label>
     									<div class="col-sm-9  ">
-    										<input type="hidden" id="file_type" value="document_image">
     										<input type="file" id="file" class="form-control col-md-5 col-xs-12" value="">
     									</div>
   									</div>
@@ -68,7 +67,7 @@
                    						<div class="col-md-9 col-lg-6" align="CENTER">
                								<div class="submit-btn-setting"> <button type="submit" class="btn btn-primary btn-color margin-right-5 btn-sm">Submit</button>
                								<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) {	%>
-               									<a href="<%= backendDirectory %>/list/image_library" class="btn btn-danger btn-sm">Cancel</a>
+               									<a href="<%= backendDirectory %>/image_gallery" class="btn btn-danger btn-sm">Cancel</a>
                								<%	}else{	%>
                									<button type="reset" class="btn btn-danger btn-sm">Reset</button>
                								<% } %>
@@ -101,7 +100,7 @@ function upload_single_file(){
 		data.append('related_collection', "");
 		data.append('uuid', guidStr);
 		data.append('collection_id', "");
-		data.append('type', $('#file_type').val());
+		data.append('type', 'image');
 		
 		var filesize=Number($('#file')[0].files[0].size)/(1024*1024);
 		
@@ -110,42 +109,49 @@ function upload_single_file(){
 			$('#file').focus();
 		}else{
 			var files= $('#file')[0].files;
-			$.each(files, function(key, value){
-				data.append('file', value);
-			});
+			var fileTypeStr=files[0]['type'];
 			
-			$.ajax({
-				url: backendDirectory+'/find_remove_file',
-				type: 'POST',
-				data: {'uuid' : guidStr},
-				dataType: 'json',
-				success: function(response){
-					if(response.success){
-						$.ajax({
-							url: backendDirectory+'/upload',
-							type: 'POST',
-							data: data,
-							dataType: 'json',
-							contentType: false,
-							enctype: 'multipart/form-data',
-							cache: false,
-							processData: false, // Don't process the files
-							success: function(response){
-								if(response.success && response._id && response._id!=""){
-									window.location.href = backendDirectory+"/image?_id="+response._id;
-								} else if(response.error) {
-									$('#contentForm').before('<div class="alert alert-error alert-dismissable uploadFile"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>'+response.error+'</div>');
-								}else {
-									$('#contentForm').before('<div class="alert alert-error alert-dismissable uploadFile"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>Sorry, error in uploading file!</div>');
+			var ValidImageTypes = ["image/gif", "image/jpeg", "image/png", "image/gif"];
+			if ($.inArray(fileTypeStr, ValidImageTypes) < 0) {
+				$('#contentForm').before('<div class="alert alert-error alert-dismissable uploadFile"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>Only image upload is allowed!</div>');
+				$('#file').focus();
+			}else{
+				$.each(files, function(key, value){
+					data.append('file', value);
+				});
+			
+				$.ajax({
+					url: backendDirectory+'/find_remove_file',
+					type: 'POST',
+					data: {'uuid' : guidStr},
+					dataType: 'json',
+					success: function(response){
+						if(response.success){
+							$.ajax({
+								url: backendDirectory+'/upload',
+								type: 'POST',
+								data: data,
+								dataType: 'json',
+								contentType: false,
+								enctype: 'multipart/form-data',
+								cache: false,
+								processData: false, // Don't process the files
+								success: function(response){
+									if(response.success && response._id && response._id!=""){
+										window.location.href = backendDirectory+"/image?_id="+response._id;
+									} else if(response.error) {
+										$('#contentForm').before('<div class="alert alert-error alert-dismissable uploadFile"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>'+response.error+'</div>');
+									}else {
+										$('#contentForm').before('<div class="alert alert-error alert-dismissable uploadFile"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>Sorry, error in uploading file!</div>');
+									}
 								}
-							}
-						});
-					}else {
-						$('#contentForm').before('<div class="alert alert-error alert-dismissable uploadFile"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>Sorry, error in uploading file!</div>');
+							});
+						}else {
+							$('#contentForm').before('<div class="alert alert-error alert-dismissable uploadFile"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>Sorry, error in uploading file!</div>');
+						}
 					}
-				}
-			});
-			
+				});
+			}
 		}
 	}	else {
 		$('#contentForm').before('<div class="alert alert-error alert-dismissable uploadFile"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>Please select file to upload!</div>');
