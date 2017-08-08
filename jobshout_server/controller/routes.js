@@ -21,6 +21,8 @@ var GridFsStorage = require('multer-gridfs-storage');
 var Grid = require('gridfs-stream');
 var jwt = require('jwt-simple');
 
+const fs = require('fs');
+
 module.exports = function(init, app,db){
 var mongodb=init.mongodb;
 var gfs = Grid(db, mongodb);
@@ -65,16 +67,37 @@ var upload = multer({ //multer settings for single upload
 /** API path that will upload the files */
 app.post(backendDirectoryPath+'/upload', requireLogin, function(req, res) {
 	var myObj = new Object();
+	
 	if(req.authenticationBool){
-		upload(req,res,function(err){
+		var requested_Object=req;
+		initFunctions.create_file_on_disk_to_extract_content(db, requested_Object, function(resultObject) {
+			if(resultObject.path && resultObject.path!=""){
+				fs.unlinkSync(resultObject.path);
+			}
+			if(resultObject.extracted_data && resultObject.extracted_data!="" && resultObject.fields && resultObject.fields.related_collection && resultObject.fields.related_collection=="job_applications"){
+				myObj["cv_content"]=resultObject.extracted_data;
+			}
+		});
+		//upload file in database
+     	upload(req,res,function(err){
 			if(err){
 				myObj["error"]=err;
 				res.send(myObj);
 			} else	{
-				myObj["_id"]=req.file.id;
-				myObj["mimetype"]=req.file.mimetype;
-				myObj["success"]="Uploaded successfully!";
-				res.send(myObj);
+				//set the timeout to hold the response to get extracted cv_content for job_applications
+				if(req.file.metadata && req.file.metadata.related_collection && req.file.metadata.related_collection=="job_applications"){
+					setTimeout(function() {
+						myObj["_id"]=req.file.id;
+						myObj["mimetype"]=req.file.mimetype;
+						myObj["success"]="Uploaded successfully!";
+						res.send(myObj);
+					}, 3000);
+				}else{
+					myObj["_id"]=req.file.id;
+					myObj["mimetype"]=req.file.mimetype;
+					myObj["success"]="Uploaded successfully!";
+					res.send(myObj);
+				}
 			}
 		});
 	}else{
@@ -85,8 +108,7 @@ app.post(backendDirectoryPath+'/upload', requireLogin, function(req, res) {
 
 //download file
 app.get(backendDirectoryPath+'/download/:uuid', requireLogin, function(req, res) {
-    var outputObj = new Object();
-	gfs.files.findOne({'metadata.uuid': req.params.uuid}, function(err, file) {
+    gfs.files.findOne({'metadata.uuid': req.params.uuid}, function(err, file) {
 		if (err) {
 			return res.status(400).send(err);
     	}    else if (!file) {
@@ -97,20 +119,18 @@ app.get(backendDirectoryPath+'/download/:uuid', requireLogin, function(req, res)
 		if(file.metadata && file.metadata['originalname'] && file.metadata['originalname']!=""){
 			fileNameStr=file.metadata['originalname'];
 		}
-		
+
     	res.set('Content-Type', file.contentType);
+    	res.set('mode', 'w');
     	res.set('Content-Disposition', 'attachment; filename="' + fileNameStr + '"');
 		
 		var readstream = gfs.createReadStream({
-      		_id: req.params.uuid,
-      		root: 'resume'
+      		_id: file._id
     	});
-
-    	readstream.on("error", function(err) { 
+		readstream.on("error", function(err) { 
        		res.end();
     	});
     	readstream.pipe(res);
-    	//gfs.createReadStream({ filename: fileNameStr }).pipe(res);
     });
 });
 
@@ -458,7 +478,6 @@ app.get(backendDirectoryPath+'/403', requireLogin, function(req, res) {
 //launchpad
 app.get(backendDirectoryPath+'/launchpad', requireLogin, function(req, res) {
 	if(req.authenticationBool){
-		const fs = require('fs');
 		var filesArr= new Array(), i=0;
 		fs.readdirSync('views/jobshout').forEach(file => {
  			filesArr[i]=file;

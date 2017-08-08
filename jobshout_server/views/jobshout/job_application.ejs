@@ -39,6 +39,7 @@
   									<div class="form-group">
     									<label for="" class="col-sm-3 control-label">Name<sup class="required">*</sup></label>
     									<div class="col-sm-8 ">
+    										<input class="form-control" id="cv_content" name="cv_content" type="hidden" value="<% if (typeof contentObj.cv_content !== 'undefined' && contentObj.cv_content !== null) { %><%= contentObj.cv_content %><%	} %>">
        										<input class="form-control" id="name" name="name" type="text" value="<% if (typeof contentObj.name !== 'undefined' && contentObj.name !== null) { %><%= contentObj.name %><%	} %>">
     									</div>
   									</div>
@@ -64,7 +65,7 @@
   									<div class="form-group">
     									<label for="" class="col-sm-3 control-label">Download Original CV</label>
     									<div class="col-sm-8 ">
-     										<a target="_blank" href="download_cv.php?uuid=<%= contentObj.uploaded_file_uuid %>" title="Download CV"><i class="fa fa-download"></i> <%= contentObj.uploaded_file_name %></a>
+     										<a target="_blank" href="download/<%= contentObj.uploaded_file_uuid %>" title="Download CV"><i class="fa fa-download"></i> <%= contentObj.uploaded_file_name %></a>
     									</div>
   									</div>
   									<%	}	%>
@@ -86,7 +87,7 @@
   									<div class="col-sm-12 margin-top-15 " align="CENTER">
                								<div class="submit-btn-setting"> <button type="submit" class="btn btn-primary btn-color margin-right-5 btn-sm">Submit</button>
                								<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) {	%>
-               									<a href="<%= backendDirectory %>/list/modules" class="btn btn-danger btn-sm">Cancel</a>
+               									<a href="<%= backendDirectory %>/job_applications" class="btn btn-danger btn-sm">Cancel</a>
                								<%	}else{	%>
                									<button type="reset" class="btn btn-danger btn-sm">Reset</button>
                								<% } %>
@@ -103,22 +104,15 @@
 									<ul id="new-customer-tab" class="nav nav-tabs" role="tablist">
       									<li role="presentation" class="active"><a href="#contentPreview" id="home-tab" role="tab" data-toggle="tab" aria-controls="customer-info" aria-expanded="true"> CV Preview</a></li>
       									<li role="presentation"><a href="#licenceno" role="tab" id="profile-tab" data-toggle="tab" aria-controls="licenceno">  CV Extracted Information</a></li>  
-	  									<li role="presentation"> <a href="#tabdata" role="tab" id="tab3" data-toggle="tab" aria-controls="tabdata"> CV Content</a></li>
-    								</ul>
+	  								</ul>
     								<div id="myTabContent" class="tab-content" style="padding-top:25px; border-left: 1px solid #ddd; border-right: 1px solid #ddd;  border-bottom: 1px solid #ddd; padding-bottom:25px; padding-left:15px; padding-right:15px;">
       									<div role="tabpanel" class="tab-pane fade in active" id="contentPreview" aria-labelledby="home-tab">
-      										PDF Design
+      										
       									</div>
       									<div role="tabpanel" class="tab-pane fade" id="licenceno" aria-labelledby="profile-tab">
-       		 								<table class="table table-striped table-bordered dataTable no-footer">
-												<thead><tr><th>Key</th><th>Value</th></tr></thead>
-												<tbody></tbody>
-											</table>   
+       		 								<% if (typeof contentObj.cv_content !== 'undefined' && contentObj.cv_content !== null) { %><%= contentObj.cv_content %><%	} %>
       									</div>
       								</div>
-	  								<div role="tabpanel" class="tab-pane fade" id="tabdata" aria-labelledby="tab3">
-       		 						
-       		 						</div>
       							</div>
   							</div>
    						</div>
@@ -198,7 +192,11 @@ function upload_single_file(form){
 										$("#uploaded_file_uuid").val(guidStr);
 										$("#uploaded_file_name").val(fileNameStr);
 										$("#uploaded_file_type").val(response.mimetype);
-										
+										if(response.cv_content && response.cv_content!=""){
+											$("#cv_content").val(response.cv_content);
+										}else{
+											$("#cv_content").val('');
+										}
 										$("#file").prop('disabled', true);
 										dataAsJson('contentForm', form);
 									} else if(response.error) {

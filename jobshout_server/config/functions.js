@@ -710,6 +710,52 @@ var self = module.exports =
 		}
 	},
 	
+	create_file_on_disk_to_extract_content : function (db, req, cb){
+		var outputObj = new Object();
+		if(req){
+			var formidable = require('formidable'); 
+			var path = require('path'), fs = require('fs');
+			var form = new formidable.IncomingForm(), savedFilePathStr='';
+			
+			// store all uploads in the /uploads directory
+  			form.uploadDir = path.join(__dirname, '/../uploads');
+			form.on('file', function(field, file) {
+				savedFilePathStr= path.join(form.uploadDir, Date.now()+'_'+file.name);
+				fs.rename(file.path, savedFilePathStr);
+  			});
+			form.parse(req, function (diskUploadErr, fields, files) {
+				var files_parameters=files['file'];
+					
+				outputObj["path"]   = savedFilePathStr;
+      			outputObj["fields"]   = fields;
+      			
+				if(files_parameters['type']=='application/pdf'){
+					var PDFParser = require("pdf2json");
+ 					let pdfParser = new PDFParser(this,1);
+ 
+    				pdfParser.on("pdfParser_dataError", errData => {
+    					outputObj["extracted_data"]   = errData.parserError;
+        				cb(outputObj);
+    				});
+   					pdfParser.on("pdfParser_dataReady", pdfData => {
+        				outputObj["extracted_data"]   = pdfParser.getRawTextContent();
+        				cb(outputObj);
+    				});
+    				pdfParser.loadPDF(savedFilePathStr);
+				} else	{
+					var textract = require('textract');
+					textract.fromFileWithPath(savedFilePathStr, function( textract_error, textract_text ) {
+						outputObj["extracted_data"]   = textract_text;
+						cb(outputObj);
+					})
+				}
+			});
+      	} else	{
+      		outputObj["error"]   = "Error, while saving this in history!";
+      		cb(outputObj);
+      	}
+	},
+	
 	create_fixtures_history : function (db, fixtureHistoryObj, clearTeamPlayersArr, cb){
 		var outputObj = new Object();
 		if(fixtureHistoryObj){
