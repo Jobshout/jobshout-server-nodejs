@@ -20,6 +20,8 @@
 	
 	var _db;
 	var definedAdminTablesArr= new Array("systems", "Country", "availability", "authentication_token", "email_queue", "system_lists", "system_tables", "tags", "modules");
+	var definedMaintainHistoryTablesArr= new Array("documents", "tokens", "templates");
+	
 	module.exports = {
     	mongodb : mongodbRe,
     	MongoClient : MongoClient,
@@ -29,6 +31,8 @@
 		backendDirectoryPath : "/jobshout",
 		backendDirectoryName : "jobshout",
 		adminTablesArr : definedAdminTablesArr,
+		maintainHistoryTablesArr : definedMaintainHistoryTablesArr,
+		historyDatabaseName : 'jobshout_live_history',
 		system_name : "Tenthmatrix Website",
 		recipientStr : 'bwalia@tenthmatrix.co.uk',
 		websiteUrl : 'http://hh4.tenthmatrix.co.uk:3004',

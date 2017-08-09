@@ -1643,6 +1643,54 @@ app.get(backendDirectoryPath+'/api_fetch_list/', requireLogin, function(req, res
 	}
 }); 
 
+//fetch history listing depending upon collection
+app.get(backendDirectoryPath+'/api_fetch_history/', requireLogin, function(req, res) {
+	var itemsPerPage = 10, pageNum=1, collectionStr="", findFieldValueStr="";
+	var outputObj = new Object();
+	
+	if(req.query.collection){
+		collectionStr=req.query.collection;
+	}
+	if(req.query.start){
+		pageNum=parseInt(req.query.start);
+	}
+	if(req.query.limit){
+		itemsPerPage=parseInt(req.query.limit);
+	}
+	
+	if(pageNum==0){
+		pageNum=1;
+	}
+	if(req.query.id){
+		findFieldValueStr=req.query.id;
+	}
+	if(req.authenticationBool){
+		if(collectionStr!=""){
+			init.MongoClient.connect('mongodb://localhost:27017/'+init.historyDatabaseName, function (connErr, historyDB) {
+				if (connErr) {
+    				outputObj["error"]  = 'Unable to connect to the mongoDB server.';	cb(outputObj);
+  				} else {
+					historyDB.collection(collectionStr).find({'history_row_id': new mongodb.ObjectID(findFieldValueStr)}).sort({history_created_timestamp: -1}).skip(pageNum-1).limit(itemsPerPage).toArray(function(err, items) {
+						if (err) {
+							outputObj["error"]   = 'Sorry, no history found!';
+						} else if (items) {
+      						outputObj["aaData"]   = items;
+						}
+						historyDB.close();
+     					res.send(outputObj);
+					});
+				}
+			});
+		}else{
+			outputObj["error"]   = "Please pass the table name!";
+			res.send(outputObj);
+		}
+	}else{
+		outputObj["error"]   = "Authorization error!";
+		res.send(outputObj);
+	}
+}); 
+
 //api_fixture_history
 app.get(backendDirectoryPath+'/api_fixture_history/', requireLogin, function(req, res) {
 	var itemsPerPage = 10, pageNum=1, collectionStr="fixtures_history", selectedTeamUUIDStr="", total_records=0;
@@ -2782,7 +2830,14 @@ app.post(backendDirectoryPath+'/save/:id', requireLogin, (req, res) => {
 	}
 	
 	if(callMongoQueriesBool){
-		initFunctions.saveEntry(db, table_nameStr, checkForExistence, contentJson, req.params.id, mongoIDField, unique_fieldStr, unique_fieldVal, function(result) {
+		var loggedInUserNameStr='';
+		if(req.authenticatedUser.firstname && req.authenticatedUser.firstname!="")	{
+			loggedInUserNameStr += req.authenticatedUser.firstname;
+		}
+		if(req.authenticatedUser.lastname && req.authenticatedUser.lastname!="")	{
+			loggedInUserNameStr += ' '+req.authenticatedUser.lastname;
+		}
+		initFunctions.saveEntry(db, table_nameStr, checkForExistence, contentJson, req.params.id, mongoIDField, unique_fieldStr, unique_fieldVal, loggedInUserNameStr, function(result) {
 			
 			var tempLink="";
 			if(editorFieldName!="" && editorFieldVal!=""){

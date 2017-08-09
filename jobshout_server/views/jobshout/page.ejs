@@ -5,26 +5,6 @@
 #select_systems_chosen{
 width : 402px!important;
 }
-.uldragdrop{
-padding:0px;
-margin:0px;
-}
-.uldragdrop div{
-list-style: none;
-background: #fff;
-border: 1px solid #ddd;
-border-radius: 4px;
-cursor: pointer;
-padding: 7px 12px;
-margin-bottom: 6px;
-text-align: left;
-}
-		
-.uldragdrop div:hover{
-color:#fff;		
-background: #b90140;
-border:1px solid #8a0024;
-}
 </style>
 <link rel="stylesheet" href="css/jquery.tag-editor.css" />
 </head>
@@ -40,17 +20,18 @@ border:1px solid #8a0024;
     	<div class="content-wrapper">
     	  	<!-- Content Header (Page header) -->
     		<section class="content-header">
-      			<h1>Document <small><% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj.Document %><% } else{	%>Add new<% }%></small></h1>
+      			<h1>Page <small><% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj.Document %><% } else{	%>Add new<% }%></small></h1>
       			<ol class="breadcrumb">
         			<% include include/dashboard-breadcrumb %>
-        			<li class="active">Document</li>
+        			<li class="active">Page</li>
       			</ol>
     		</section>	
     		<section class="content">
       			
 		<div class="row" id="printMessageDivID">
 			
-      		<div class="panel-body no-padding-top bg-white"> <% include include/display_returned_msg %>
+      		<div class="panel-body no-padding-top bg-white">
+      			<% include include/display_returned_msg %>
       			<form class="form-horizontal" action="<%= backendDirectory %>/save/document" method="POST" id="contentForm">
       				<input type="hidden" class="form-control" id="table_name" name="table_name" value="documents">
       				<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="Code">
@@ -67,7 +48,6 @@ border:1px solid #8a0024;
       						<li role="presentation" class="active"><a href="#customerinfo" id="home-tab" role="tab" data-toggle="tab" aria-controls="customer-info" aria-expanded="true">Page Editor</a></li>
      						<li role="presentation"><a href="#licenceno" role="tab" id="profile-tab" data-toggle="tab" aria-controls="licenceno">Search Optimisation</a></li>  
      						<li role="presentation"><a href="#tab3" role="tab" id="profile-tab" data-toggle="tab" aria-controls="tab3">Objects</a></li>  
-     						<li role="presentation" class="blogComments" <% if (typeof contentObj.Type !== 'undefined' && contentObj.Type !== null && contentObj.Type == "blog") {  }else{	%>style="display:none"<% } %>><a href="#tab4" role="tab" id="profile-tab" data-toggle="tab" aria-controls="tab4">Blog Comments</a></li>  
      						<% if (typeof authenticatedUser.access_right !== 'undefined' && authenticatedUser.access_right !== null  && authenticatedUser.access_right == "11"  && authenticatedUser.access_right == 11) {
      							if (typeof authenticatedUser.active_system_uuid !== 'undefined' && authenticatedUser.active_system_uuid !== null  && typeof contentObj.uuid_system !== 'undefined' && contentObj.uuid_system !== null && authenticatedUser.active_system_uuid==contentObj.uuid_system) {	%>
             					<li role="presentation"><a href="#tab5" role="tab" id="sharing-tab" data-toggle="tab" aria-controls="tab5">Sharing</a></li>
@@ -104,22 +84,12 @@ border:1px solid #8a0024;
     											<textarea type="text" class="form-control" name="tags" id="tags" rows="1"></textarea>
 											</div>
                   						</div>
-										<div class="form-group">
-    										<label for="firstname" class="col-sm-2  control-label">Type </label>
-    										<div class="col-sm-10">
-    											<select  required="required" class="form-control col-md-5 col-xs-12" name="Type" id="Type">
-                  									<option value="page" <% if (typeof contentObj.Type !== 'undefined' && contentObj.Type !== null && contentObj.Type == "page") { %>selected<% } %>>Page</option>
-                  									<option value="blog" <% if (typeof contentObj.Type !== 'undefined' && contentObj.Type !== null && contentObj.Type == "blog") { %>selected<% } %>>Blog</option>
-                  									<option value="news" <% if (typeof contentObj.Type !== 'undefined' && contentObj.Type !== null && contentObj.Type == "news") { %>selected<% } %>>News</option>
-                  									<option value="clients-testimonial" <% if (typeof contentObj.Type !== 'undefined' && contentObj.Type !== null && contentObj.Type == "clients-testimonial") { %>selected<% } %>>Clients testimonial</option>
-                    								<option value="resource-centre" <% if (typeof contentObj.Type !== 'undefined' && contentObj.Type !== null && contentObj.Type == "resource-centre") { %>selected<% } %>>Resource Centre</option>
-                    							</select>
-      										</div>
-  										</div>
   										
   										<div class="form-group no-margn-bottom">
               								<label for="dtp_input1" class="col-md-2 control-label" >Published On  <span class="required">*</span></label>
                   							<div class="col-md-6 col-lg-4" >
+                  								<input class="" type="hidden" id="Type" name="Type" value="page">
+                    							
                   								<input class="form-control col-md-5 col-xs-12" type="hidden" id="Published_timestamp" name="Published_timestamp" value="<% if (typeof contentObj.Published_timestamp !== 'undefined' && contentObj.Published_timestamp !== null) {  %><%= contentObj.Published_timestamp %><% } %>" readonly>
                     							<div class='input-group date' id='datetime_picker'>
                     								<input type='text' class="form-control" id="published_date" value=""/>
@@ -293,69 +263,7 @@ border:1px solid #8a0024;
                 				</div>
                 				
       						</div>
-      						<div role="tabpanel" class="tab-pane fade blogComments" id="tab4" aria-labelledby="profile-tab" <% if (typeof contentObj.Type !== 'undefined' && contentObj.Type !== null && contentObj.Type == "blog") {  }else{	%>style="display:none"<% } %>>
-      							<% if (typeof contentObj.BlogComments !== 'undefined' && contentObj.BlogComments !== null) {	%>
-      							<input type="hidden" name="BlogComments" id="BlogComments" value="" />
-      							<%
-      								var objectArr=contentObj.BlogComments;
-      								for(var i=0; i < objectArr.length; i++){
-      								%>
-      								<div class="row blogCommentsClass" style="background-color: aliceblue; padding: 20px; margin: 5px 5px 20px; border-radius: 5px;">
-                					<div class="col-sm-10  col-md-12 col-lg-7">
-                						<input type="hidden" class="span10" name="blog_id" id="blog_uuid" value="<%=  objectArr[i].uuid %>" />
-										
-										<div class="form-group">
-                              				<label for="" class="col-sm-2 control-label">Name<sup class="required">*</sup></label>
-                             				<div class="col-sm-9">
-                              					<input type="text" class="form-control" id="blog_name_<%=  objectArr[i].uuid %>" value="<%=  objectArr[i].name %>">
-                             				</div>
-                        				</div>
-                       					<div class="form-group">
-                              				<label for="" class="col-sm-2 control-label">Email<sup class="required">*</sup></label>
-                             				<div class="col-sm-9">
-                              					<input type="text" class="form-control" id="blog_email_<%=  objectArr[i].uuid %>" placeholder="" value="<%=  objectArr[i].email %>">
-							  				</div>
-                        				</div>
-                        				<div class="form-group">
-                              				<label for="" class="col-sm-2 control-label">Website<sup class="required">*</sup></label>
-                             				<div class="col-sm-9">
-                              					<input type="text" class="form-control" id="blog_website_<%=  objectArr[i].uuid %>"  value="<%=  objectArr[i].website %>">
-							  				</div>
-                        				</div>                     				
-                        				<div class="form-group">
-                              				<label for="" class="col-sm-2 control-label">Comment</label>
-                             				<div class="col-sm-9">
-                             					<TEXTAREA CLASS="form-control" STYLE="height:220px;" id="blog_comment_<%=  objectArr[i].uuid %>"><%=  objectArr[i].comment %></TEXTAREA>
-							 				</div>
-                        				</div>
-                        			</div>
-                     				<div class="col-lg-5">
-                     					<div class="form-group">
-                              				<label for="" class="col-sm-2 control-label">Posted On<sup class="required">*</sup></label>
-                             				<div class="col-sm-9">
-                              					<input type="hidden" class="form-control" id="blog_created__<%=  objectArr[i].uuid %>" readonly value="<%=  objectArr[i].created %>">
-                              					<input type="text" class="form-control" readonly value="<%=  dateTimeFromUnix(objectArr[i].created) %>">
-                             				</div>
-                        				</div>
-                        				<div class="form-group">
-    										<label for="" class="col-sm-2 control-label">Status</label>
-    										<div class="col-sm-9" style="margin-top:6px;">
-    											<div  STYLE="float:left; margin-right:10px;display:inline-block;">
-      		  										<label> <input type="radio" id="blog_status__<%=  objectArr[i].uuid %>" value="1" <% if (objectArr[i].status == 1 || objectArr[i].status == "1") { %>checked<% } %> > <strong style="font-weight:600">Active</strong></label>
-    			  								</div>
-				  								<div STYLE="float:left;display:inline-block;">
-      		  										<label> <input type="radio" id="blog_status__<%=  objectArr[i].uuid %>" value="0" <% if (objectArr[i].status == 0 || objectArr[i].status == "0") { %>checked<% } %>> <strong style="font-weight:600">Inactive</strong></label>
-    			  								</div>
-											</div>
-										</div>
-                     				</div>
-                     				
-                				</div>
-                				<% } 
-                				}else{	%>
-                					<div class="alert alert-danger">No blog comments posted!</div>
-                				<% } %>
-      						</div>
+      						
       						<% if (typeof authenticatedUser.access_right !== 'undefined' && authenticatedUser.access_right !== null  && authenticatedUser.access_right == "11"  && authenticatedUser.access_right == 11) {
       						if (typeof authenticatedUser.active_system_uuid !== 'undefined' && authenticatedUser.active_system_uuid !== null  && typeof contentObj.uuid_system !== 'undefined' && contentObj.uuid_system !== null && authenticatedUser.active_system_uuid==contentObj.uuid_system) {	%>
             				<div role="tabpanel" class="tab-pane fade" id="tab5" aria-labelledby="profile-tab">
@@ -425,6 +333,14 @@ var defaultAssignedSystemVal='', selectedSharedSystemArr = new Array();
 		selectedSharedSystemArr = JSON.parse(tempselectedSearchArr);
 	}
 <% } %>
+$(document).ready(function(){
+	<% if (typeof contentObj.Type !== 'undefined' && contentObj.Type !== null) { %>
+		var typeStr='<%= contentObj.Type %>';
+		if(typeStr!="page"){
+			window.location.href=backendDirectory+'/page';
+		}
+	<% } %>
+});
 </script>
 <script src="scripts/document.js"></script>
 

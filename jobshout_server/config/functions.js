@@ -226,6 +226,37 @@ var self = module.exports =
 		}
 	},
 	
+	maintain_table_history : function (collectionName, postContent, createEntryBool, modifiedByUser, cb){
+		var outputObj = new Object();
+		if((createEntryBool==true || createEntryBool=="true") && collectionName!="" && collectionName!="undefined" && collectionName!=null && init.maintainHistoryTablesArr.indexOf(collectionName)>=0){
+			if(postContent._id){
+				postContent.history_row_id=postContent._id;
+				delete postContent._id;
+			}
+			postContent.history_created_timestamp = self.currentTimestamp();
+      		postContent.history_created_uuid = self.guid();
+      		postContent.modified_by_user = modifiedByUser;
+			init.MongoClient.connect('mongodb://localhost:27017/'+init.historyDatabaseName, function (connErr, historyDB) {
+				if (connErr) {
+    				outputObj["error"]  = 'Unable to connect to the mongoDB server.';	cb(outputObj);
+  				} else {
+   					historyDB.collection(collectionName).save(postContent, (err4, result) => {
+      					if (err4) {
+      						outputObj["error"]  = "Error occurred while saving ["+err4+"], please try after some time!";
+      					}else{
+    					outputObj["success"]  = "Saved successfully!";
+    					}
+    					historyDB.close();
+						cb(outputObj);
+  					});
+  				}
+			});
+		}else{
+			outputObj["error"]   = "Please pass collection name!";
+			cb(outputObj);
+		}
+	},
+	
 	createIndexes : function (db, collectionName, columnsArr, cb){
 		var outputObj = new Object();
 		var fetchFieldsObj="";
@@ -380,7 +411,7 @@ var self = module.exports =
 		}
 	},
 	
-	saveEntry : function(db, table_nameStr, checkForExistence, postContent, parameterStr, findmongoID, unique_fieldStr, unique_fieldVal, cb){
+	saveEntry : function(db, table_nameStr, checkForExistence, postContent, parameterStr, findmongoID, unique_fieldStr, unique_fieldVal, modifiedByUser, cb){
 		for(var key in postContent) {
 			var contentStr=postContent[key];
 			var tempStr=contentStr.toString();
@@ -424,23 +455,30 @@ var self = module.exports =
 						link+="error_msg=This "+parameterStr+" already exists!"
       					cb(link);
 					}else{
-						if(existingDocument.created){
-							postContent["created"]=existingDocument.created;
-						}else{
-							postContent['created']=self.currentTimestamp();
+						var addHistoryBool=false;
+						if(postContent.maintain_history){
+							addHistoryBool = postContent.maintain_history;
+							delete postContent.maintain_history;
 						}
-						if(existingDocument.uuid){
-							postContent["uuid"]=existingDocument.uuid;
-						}else{
-							postContent['uuid']=self.guid();
-						}
-      					db.collection(table_nameStr).update({_id:findmongoID}, postContent, (err1	, result) => {
-    						if (err1){
-    							link+="error_msg=Error occurred while saving ["+err1+"], please try after some time!";	
-    						}else{
-    							link+="success_msg=Updated successfully!";
-    						}
-    						cb(link);
+						self.maintain_table_history(table_nameStr, existingDocument, addHistoryBool, modifiedByUser, function(result) {
+							if(existingDocument.created){
+								postContent["created"]=existingDocument.created;
+							}else{
+								postContent['created']=self.currentTimestamp();
+							}
+							if(existingDocument.uuid){
+								postContent["uuid"]=existingDocument.uuid;
+							}else{
+								postContent['uuid']=self.guid();
+							}
+      						db.collection(table_nameStr).update({_id:findmongoID}, postContent, (err1	, result) => {
+    							if (err1){
+    								link+="error_msg=Error occurred while saving ["+err1+"], please try after some time!";	
+    							}else{
+    								link+="success_msg=Updated successfully!";
+    							}
+    							cb(link);
+  							});
   						});
 					}
 				});
@@ -534,7 +572,9 @@ var self = module.exports =
 	// (This is hard coded right now, will make this option dynamic from system_templates)
 	fetchTableName : function (filename){
 		var table_name="";
-		if(filename=="emails" || filename=="email"){
+		if(filename=="document" || filename=="blog" || filename=="job" || filename=="page"){
+			table_name="documents";
+		}else if(filename=="emails" || filename=="email"){
 			table_name="email_queue";
 		}else if(filename=="task" || filename=="calendar"){
 			table_name="tasks";

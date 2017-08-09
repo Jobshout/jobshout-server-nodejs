@@ -142,13 +142,11 @@ function return_timestamp_from_datetimepicker(dateString, getTimeBool, dateFrom)
         	}
 		}
 		date = new Date(dateParts[2], parseInt(dateParts[0])-1, dateParts[1], hoursNum, timeParts[1]);
-		console.log('1')
 	} else	{
 		var dateParts = dateString.split('/'),	date;
 		date = new Date(dateParts[2], parseInt(dateParts[0])-1, dateParts[1]);
-		console.log('2')
 	}
-	console.log(dateFrom);
+	//console.log(dateFrom);
 	if(dateFrom == 'start'){
 		date.setHours(0,0,0,0);
 	} else if(dateFrom == 'end'){

@@ -101,9 +101,10 @@ $(function () {
 				organisation_type : { required: true },
 			},
 			submitHandler: function(form) {
-				var publishedDateNum=return_timestamp_from_datetimepicker($("#established_on").val());
-				$("#established_timestamp").val(publishedDateNum);
-				
+				if($("#established_on").val()!=""){
+					var publishedDateNum=return_timestamp_from_datetimepicker($("#established_on").val());
+					$("#established_timestamp").val(publishedDateNum);
+				}
 				//save data as json in data field, use dataAsJson function to populate that field
  				dataAsJson('contentForm', form);
  			}
