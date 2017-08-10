@@ -24,7 +24,9 @@ color:#fff;
 background: #b90140;
 border:1px solid #8a0024;
 }
-
+#select_systems_chosen{
+width : 100%!important;
+}
 </style>
 	<div class="wrapper">	
    		<!-- Header Starts here-->
@@ -47,7 +49,7 @@ border:1px solid #8a0024;
       			<div class="row">
       					<div class="panel-body no-padding-top bg-white"> 
       						<% include include/display_returned_msg %>
-            				<div class="col-sm-9">
+            				<div class="col-md-8 col-sm-12">
             					<form class="form-horizontal" action="<%= backendDirectory %>/save/template/" method="POST" id="contentForm">
             						<input type="hidden" class="form-control" id="editorField" name="editorField" value="<% if (typeof editorField !== 'undefined' && editorField !== null) { %><%= editorField %><% }else{ %>_id<% } %>">
       								<input type="hidden" class="form-control" id="editorValue" name="editorValue" value="<% if (typeof editorValue !== 'undefined' && editorValue !== null) { %><%= editorValue %><% } %>">
@@ -55,8 +57,8 @@ border:1px solid #8a0024;
       								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="code">
       								<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>">
       								<input type="hidden" class="form-control" id="data" name="data" value="">
-      								
-      								
+      								<input type="hidden" class="form-control" id="maintain_history" name="maintain_history" value="false">
+     								      								
             						<div class="form-group">
                   						<label class="control-label col-md-2" for="first-name">Name<span class="required">*</span></label>
                   						<div class="col-md-6 col-lg-4">
@@ -72,7 +74,7 @@ border:1px solid #8a0024;
                 					<div class="form-group">
                   						<label class="control-label col-md-2" for="">Content<span class="required">*</span></label>
                   						<div class="col-md-10 col-lg-10">
-                   							<textarea rows="20" required="required" class="form-control col-md-5 col-xs-12" id="template_content" name="template_content"><% if (typeof contentObj.template_content !== 'undefined' && contentObj.template_content !== null) { %><%= contentObj.template_content %><% } %></textarea>
+                   							<textarea rows="30" required="required" class="form-control col-md-5 col-xs-12" id="template_content" name="template_content"><% if (typeof contentObj.template_content !== 'undefined' && contentObj.template_content !== null) { %><%= contentObj.template_content %><% } %></textarea>
                   						</div>
                 					</div>
                 					<div class="form-group">
@@ -106,18 +108,28 @@ border:1px solid #8a0024;
                 					</div>
               					</form>
               				</div>
-              				<div class="col-md-2 col-sm-12 col-xs-12  pull-right">
-              					<div class="form-group" style="padding-bottom:50px;">
-                  					<div class="col-md-12 col-lg-12">
-                  						<div class="btn-inline display-inline-block">
-											<input class="form-control" style="min-width:225px; height:36px;" required="" id="search_here" placeholder="Search here..." value="">
+              				<div class="col-md-4 col-sm-12 pull-right">
+              					<div class="well" style="overflow:hidden;"><div class="form-horizontal ">
+              						<h4 style="margin-top:0px;">Drag and drop tokens in "Content"</h4>
+              						<div class="form-group" style=""><div class="col-md-12 col-lg-12" style="padding: 0px 15px;">
+                  						<div class="btn-inline display-inline-block" style="width: 100%;">
+											<input class="form-control" style="height:36px;" required="" id="search_here" placeholder="Search here..." value="">
 											<button class="btn btn-left-align btn-link no-shadow bg-transparent no-padding-top padding-right-10 right-auto left" type="button" id="searchBtn" title="Search"><i class="glyphicon glyphicon-search"></i></button>
 										</div>
-                  					</div>
-                				</div>
+                  					</div></div>
+                				
               					<ul id="DragWordList" class="uldragdrop" runat="server">
               					
                   				</ul>
+                  				</div></div>
+                  				<% if (typeof contentObj._id !== "undefined" && contentObj._id !== null) { %>
+                  						<div class="well historyClass" style="overflow:hidden;display:none;"><div class="form-horizontal ">
+   											<h4 style="margin-top:0px;">History</h4>
+   											<div id="history_content">
+   											
+   											</div>
+  										</div></div>
+  									<% } %>
               				</div>
             		</div>
             	</div>
@@ -162,6 +174,26 @@ function loadTokens(){
 }
 
 $(function() {
+	 
+	$("#template_content").change(function() {
+     	$('#maintain_history').val(true);
+    });
+    $("#template_content").blur(function() {
+    	$('#maintain_history').val(true);
+    });
+
+	
+	$('form input').change(function() {
+    	if(this.id == "name" || this.id == "code"){
+     		$(this).change(function() {
+     			$('#maintain_history').val(true);
+     		});
+    		$(this).blur(function() {
+    			$('#maintain_history').val(true);
+     		});
+     	}
+	});
+	
 	drawTagsUi();	// call this method to initialise tags
 	
 	loadTokens();
@@ -184,6 +216,7 @@ $(function() {
                 var str1 = val.substring(0, range1);
                 var str3 = val.substring(range1, val.length);
                 droparea.value = str1 + dropText + str3;
+                $('#maintain_history').val(true);
             }
     	});
     }
@@ -232,7 +265,51 @@ $(function() {
 	$("#searchBtn").click(function()	{
 		loadTokens();
 	});
+	fetch_history();
 });
+
+function roll_back(btnID, btnsClass, uniqueIDStr, replaceIDStr, fieldName){
+	$("."+btnsClass+"_"+uniqueIDStr).hide();
+	$("#"+btnID+"_"+uniqueIDStr).show();
+	$('#maintain_history').val(true);
+	var replaceStr = $("#"+replaceIDStr+"_"+uniqueIDStr).val();
+	
+	if(fieldName=="Body"){
+		tinyMCE.activeEditor.setContent(replaceStr);
+	}else{
+		$("#"+fieldName).val(replaceStr);
+	}
+}
+
+function fetch_history(){
+	$('.historyClass').hide();
+	if($("#id").val()!=""){
+		var jsonRow=backendDirectory+"/api_fetch_history?start=0&limit=5&collection="+$('#table_name').val()+"&id="+$("#id").val();
+		$.getJSON(jsonRow,function(response){
+			if(response.aaData && response.aaData.length>0){
+				var contentHtml="", documentStr=$('#name').val(), bodyStr=$('#template_content').val(), codeStr=$('#code').val();
+				
+				$.each(response.aaData, function(i,row){
+					var tempContentHTMLStr='';
+					if(documentStr!==row.name){
+						tempContentHTMLStr+='<div class="col-sm-6 col-md-4" style="margin-top:10px;padding-left: 0px;">Name : <input type="hidden" id="d_rollback_val_'+row.history_created_uuid+'" value="'+row.name+'"><button id="d_rollback_'+row.history_created_uuid+'" class="btn btn-danger btn-sm d_btns_'+row.history_created_uuid+'" onClick="roll_back(\'d_cancel\', \'d_btns\', \''+row.history_created_uuid+'\', \'d_rollback_val\', \'name\'); return false;">Rollback</button><input type="hidden" id="d_original_val_'+row.history_created_uuid+'" value="'+documentStr+'"><button id="d_cancel_'+row.history_created_uuid+'" class="btn btn-primary btn-sm d_btns_'+row.history_created_uuid+'" style="display:none;" onClick="roll_back(\'d_rollback\', \'d_btns\', \''+row.history_created_uuid+'\', \'d_original_val\', \'name\'); return false;">Cancel</button></div>';
+					}
+					if(codeStr!==row.code){
+						tempContentHTMLStr+='<div class="col-sm-6 col-md-4" style="margin-top:10px;padding-left: 0px;">Code : <input type="hidden" id="c_rollback_val_'+row.history_created_uuid+'" value="'+row.code+'"><button id="c_rollback_'+row.history_created_uuid+'" class="btn btn-danger btn-sm c_btns_'+row.history_created_uuid+'" onClick="roll_back(\'c_cancel\', \'c_btns\', \''+row.history_created_uuid+'\', \'c_rollback_val\', \'code\'); return false;">Rollback</button><input type="hidden" id="c_original_val_'+row.history_created_uuid+'" value="'+codeStr+'"><button id="c_cancel_'+row.history_created_uuid+'" class="btn btn-primary btn-sm c_btns_'+row.history_created_uuid+'" style="display:none;" onClick="roll_back(\'c_rollback\', \'c_btns\', \''+row.history_created_uuid+'\', \'c_original_val\', \'code\'); return false;">Cancel</button></div>';
+					}
+					if(bodyStr!==row.template_content){
+						tempContentHTMLStr+='<div class="col-sm-6 col-md-4" style="margin-top:10px;padding-left: 0px;padding-right: 0px;">Content : <textarea style="display:none;" id="b_rollback_val_'+row.history_created_uuid+'">'+row.template_content+'</textarea><button id="b_rollback_'+row.history_created_uuid+'" class="btn btn-danger btn-sm b_btns_'+row.history_created_uuid+'" onClick="roll_back(\'b_cancel\', \'b_btns\', \''+row.history_created_uuid+'\', \'b_rollback_val\', \'template_content\'); return false;">Rollback</button><textarea style="display:none;" id="b_original_val_'+row.history_created_uuid+'">'+bodyStr+'</textarea><button id="b_cancel_'+row.history_created_uuid+'" class="btn btn-primary btn-sm b_btns_'+row.history_created_uuid+'" style="display:none;" onClick="roll_back(\'b_rollback\', \'b_btns\', \''+row.history_created_uuid+'\', \'b_original_val\', \'template_content\'); return false;">Cancel</button></div>';
+					}
+					if(tempContentHTMLStr!=""){
+						contentHtml+='<div class="col-md-12 col-sm-12" style="padding-left:0px;"><h5 style="font-weight:bold;">'+row.modified_by_user+' ('+return_datetimepicker_from_timestamp(row.history_created_timestamp)+')</h5>'+tempContentHTMLStr+'</div>';
+					}
+				});
+				$('.historyClass').show();
+     			$("#history_content").html(contentHtml);
+     		}
+		});
+	}
+}
 </script>
 </body>
 </html>

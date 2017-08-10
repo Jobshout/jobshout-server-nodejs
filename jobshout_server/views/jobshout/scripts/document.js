@@ -14,6 +14,9 @@ tiny_options['setup'] = function(ed){
             ed.on('blur', function() {
                 $("textarea#Body").html( tinyMCE.activeEditor.getContent() );
             });
+            ed.on('change', function() {
+               	$('#maintain_history').val(true);
+            });
         }
 tinymce.init(tiny_options);
 
@@ -331,10 +334,11 @@ function load_systems(){
 	});
 }
 
-function roll_back(btnID, btnsClass, uniqueIDStr, replaceStr, fieldName){
+function roll_back(btnID, btnsClass, uniqueIDStr, replaceIDStr, fieldName){
 	$("."+btnsClass+"_"+uniqueIDStr).hide();
 	$("#"+btnID+"_"+uniqueIDStr).show();
 	$('#maintain_history').val(true);
+	var replaceStr = $("#"+replaceIDStr+"_"+uniqueIDStr).val();
 	if(fieldName=="Body"){
 		tinyMCE.activeEditor.setContent(replaceStr);
 	}else{
@@ -352,21 +356,23 @@ function fetch_history(){
 				
 				$.each(response.aaData, function(i,row){
 					var tempContentHTMLStr='';
+					
 					if(documentStr!==row.Document){
-						tempContentHTMLStr+='<div class="col-sm-6 col-md-6" style="margin-top:10px;">Heading : <button id="d_rollback_'+row.history_created_uuid+'" class="btn btn-danger btn-sm d_btns_'+row.history_created_uuid+'" onClick="roll_back(\'d_cancel\', \'d_btns\', \''+row.history_created_uuid+'\', \''+row.Document+'\', \'Document\'); return false;">Rollback</button><button id="d_cancel_'+row.history_created_uuid+'" class="btn btn-primary btn-sm d_btns_'+row.history_created_uuid+'" style="display:none;" onClick="roll_back(\'d_rollback\', \'d_btns\', \''+row.history_created_uuid+'\', \''+documentStr+'\', \'Document\'); return false;">Cancel</button></div>';
+						tempContentHTMLStr+='<div class="col-sm-6 col-md-6" style="margin-top:10px;">Heading : <input type="hidden" id="d_rollback_val_'+row.history_created_uuid+'" value="'+row.Document+'"><button id="d_rollback_'+row.history_created_uuid+'" class="btn btn-danger btn-sm d_btns_'+row.history_created_uuid+'" onClick="roll_back(\'d_cancel\', \'d_btns\', \''+row.history_created_uuid+'\', \'d_rollback_val\', \'Document\'); return false;">Rollback</button><input type="hidden" id="d_original_val_'+row.history_created_uuid+'" value="'+documentStr+'"><button id="d_cancel_'+row.history_created_uuid+'" class="btn btn-primary btn-sm d_btns_'+row.history_created_uuid+'" style="display:none;" onClick="roll_back(\'d_rollback\', \'d_btns\', \''+row.history_created_uuid+'\', \'d_original_val\', \'Document\'); return false;">Cancel</button></div>';
 					}
 					if(titleStr!==row.Title){
-						tempContentHTMLStr+='<div class="col-sm-6 col-md-6" style="margin-top:10px;">&nbsp;Title : <button id="t_rollback_'+row.history_created_uuid+'"class="btn btn-danger btn-sm t_btns_'+row.history_created_uuid+'" onClick="roll_back(\'t_cancel\', \'t_btns\', \''+row.history_created_uuid+'\', \''+row.Title+'\', \'Title\'); return false;">Rollback</button><button id="t_cancel_'+row.history_created_uuid+'" class="btn btn-primary btn-sm t_btns_'+row.history_created_uuid+'" style="display:none;" onClick="roll_back(\'t_rollback\', \'t_btns\',  \''+row.history_created_uuid+'\', \''+titleStr+'\', \'Title\'); return false;">Cancel</button></div>';
-					}
-					if(bodyStr!==row.Body){
-						tempContentHTMLStr+='<div class="col-sm-6 col-md-6" style="margin-top:10px;">&nbsp;Body : <button id="b_rollback_'+row.history_created_uuid+'" class="btn btn-danger btn-sm b_btns_'+row.history_created_uuid+'" onClick="roll_back(\'b_cancel\', \'b_btns\', \''+row.history_created_uuid+'\', \''+row.Body+'\', \'Body\'); return false;">Rollback</button><button id="b_cancel_'+row.history_created_uuid+'" class="btn btn-primary btn-sm b_btns_'+row.history_created_uuid+'" style="display:none;" onClick="roll_back(\'b_rollback\', \'b_btns\', \''+row.history_created_uuid+'\', \''+bodyStr+'\', \'Body\'); return false;">Cancel</button></div>';
+						tempContentHTMLStr+='<div class="col-sm-6 col-md-6" style="margin-top:10px;">Title : <input type="hidden" id="t_rollback_val_'+row.history_created_uuid+'" value="'+row.Title+'"><button id="t_rollback_'+row.history_created_uuid+'" class="btn btn-danger btn-sm t_btns_'+row.history_created_uuid+'" onClick="roll_back(\'t_cancel\', \'t_btns\', \''+row.history_created_uuid+'\', \'t_rollback_val\', \'Title\'); return false;">Rollback</button><input type="hidden" id="t_original_val_'+row.history_created_uuid+'" value="'+titleStr+'"><button id="t_cancel_'+row.history_created_uuid+'" class="btn btn-primary btn-sm t_btns_'+row.history_created_uuid+'" style="display:none;" onClick="roll_back(\'t_rollback\', \'t_btns\', \''+row.history_created_uuid+'\', \'t_original_val\', \'Title\'); return false;">Cancel</button></div>';
 					}
 					if(codeStr!==row.Code){
-						tempContentHTMLStr+='<div class="col-sm-6 col-md-6" style="margin-top:10px;">&nbsp;Code : <button id="c_rollback_'+row.history_created_uuid+'" class="btn btn-danger btn-sm c_btns_'+row.history_created_uuid+'" onClick="roll_back(\'c_cancel\', \'c_btns\', \''+row.history_created_uuid+'\', \''+row.Code+'\', \'Code\'); return false;">Rollback</button><button id="c_cancel_'+row.history_created_uuid+'" class="btn btn-primary btn-sm c_btns_'+row.history_created_uuid+'" style="display:none;" onClick="roll_back(\'c_rollback\', \'c_btns\', \''+row.history_created_uuid+'\', \''+codeStr+'\', \'Code\'); return false;">Cancel</button></div>';
+						tempContentHTMLStr+='<div class="col-sm-6 col-md-6" style="margin-top:10px;">Code : <input type="hidden" id="c_rollback_val_'+row.history_created_uuid+'" value="'+row.Code+'"><button id="c_rollback_'+row.history_created_uuid+'" class="btn btn-danger btn-sm c_btns_'+row.history_created_uuid+'" onClick="roll_back(\'c_cancel\', \'c_btns\', \''+row.history_created_uuid+'\', \'c_rollback_val\', \'Code\'); return false;">Rollback</button><input type="hidden" id="c_original_val_'+row.history_created_uuid+'" value="'+codeStr+'"><button id="c_cancel_'+row.history_created_uuid+'" class="btn btn-primary btn-sm c_btns_'+row.history_created_uuid+'" style="display:none;" onClick="roll_back(\'c_rollback\', \'c_btns\', \''+row.history_created_uuid+'\', \'c_original_val\', \'Code\'); return false;">Cancel</button></div>';
+					}
+					if(bodyStr!==row.Body){
+						tempContentHTMLStr+='<div class="col-sm-6 col-md-6" style="margin-top:10px;">Content : <textarea style="display:none;" id="b_rollback_val_'+row.history_created_uuid+'">'+row.Body+'</textarea><button id="b_rollback_'+row.history_created_uuid+'" class="btn btn-danger btn-sm b_btns_'+row.history_created_uuid+'" onClick="roll_back(\'b_cancel\', \'b_btns\', \''+row.history_created_uuid+'\', \'b_rollback_val\', \'Body\'); return false;">Rollback</button><textarea style="display:none;" id="b_original_val_'+row.history_created_uuid+'">'+bodyStr+'</textarea><button id="b_cancel_'+row.history_created_uuid+'" class="btn btn-primary btn-sm b_btns_'+row.history_created_uuid+'" style="display:none;" onClick="roll_back(\'b_rollback\', \'b_btns\', \''+row.history_created_uuid+'\', \'b_original_val\', \'Body\'); return false;">Cancel</button></div>';
 					}
 					if(tempContentHTMLStr!=""){
-						contentHtml+='<div class="col-md-12 col-sm-12" style="margin-top:10px;"><h5 style="font-weight:bold;">'+row.modified_by_user+' ('+return_datetimepicker_from_timestamp(row.history_created_timestamp)+')</h5>'+tempContentHTMLStr+'</div>';
+						contentHtml+='<div class="col-md-12 col-sm-12" style="padding-left:0px;"><h5 style="font-weight:bold;">'+row.modified_by_user+' ('+return_datetimepicker_from_timestamp(row.history_created_timestamp)+')</h5>'+tempContentHTMLStr+'</div>';
 					}
+					
 				});
 				$('.historyClass').show();
      			$("#history_content").html(contentHtml);

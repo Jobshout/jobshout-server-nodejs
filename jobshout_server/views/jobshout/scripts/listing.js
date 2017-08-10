@@ -207,7 +207,7 @@ function load_more(){
 				}
 				if (typeof html.display_columns !== 'undefined' && html.display_columns !== null && html.display_columns!="" && start==0){
 					var headFootStr="";
-					if (typeof html.uniqueField !== 'undefined' && html.uniqueField !== null && uniqueFieldVal!="" && accessRightCode>0){
+					if (typeof html.uniqueField !== 'undefined' && html.uniqueField !== null && accessRightCode>0){
 						headFootStr='<th class="hidden-xs"><input type="checkbox" class="check_all" onClick="set_check_all(this);"></th>';
 					}
 					$.each(html.display_columns, function(i,row){
