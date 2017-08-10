@@ -19,7 +19,7 @@
 	var url = 'mongodb://localhost:27017/jobshout_live';
 	
 	var _db;
-	var definedAdminTablesArr= new Array("systems", "Country", "availability", "authentication_token", "email_queue", "system_lists", "system_tables", "tags", "modules");
+	var definedAdminTablesArr= new Array("systems", "Country", "availability", "authentication_token", "email_queue", "system_lists", "system_tables", "tags", "modules", "uk_towns_cities");
 	var definedMaintainHistoryTablesArr= new Array("documents", "tokens", "templates");
 	
 	module.exports = {

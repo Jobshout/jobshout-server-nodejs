@@ -206,7 +206,10 @@ function load_more(){
 					$(".display_records_count").hide();
 				}
 				if (typeof html.display_columns !== 'undefined' && html.display_columns !== null && html.display_columns!="" && start==0){
-					var headFootStr='<th class="hidden-xs"><input type="checkbox" class="check_all" onClick="set_check_all(this);"></th>';
+					var headFootStr="";
+					if (typeof html.uniqueField !== 'undefined' && html.uniqueField !== null && uniqueFieldVal!="" && accessRightCode>0){
+						headFootStr='<th class="hidden-xs"><input type="checkbox" class="check_all" onClick="set_check_all(this);"></th>';
+					}
 					$.each(html.display_columns, function(i,row){
 						headFootStr+="<th>"+generateHeading(row)+"</th>";
 					});
@@ -252,7 +255,9 @@ function load_more(){
 										contentHtml+="<td>"+timeConverter(row[col])+"</td>";
 									}else if(row.hasOwnProperty(col)==true && (col=="Status" || col=="status" || col=="active")){
 										statusFieldNameStr = col;
-										$("#statusActionDiv").show();
+										if (typeof html.uniqueField !== 'undefined' && html.uniqueField !== null && uniqueFieldVal!="" && accessRightCode>0){
+											$("#statusActionDiv").show();
+										}
 										if (typeof html.table !== 'undefined' && html.table !== null && html.table=="email_queue"){
 											contentHtml+="<td>"+row[col]+"</td>";
 										}else{

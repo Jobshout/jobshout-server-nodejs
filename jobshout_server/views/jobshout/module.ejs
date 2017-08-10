@@ -195,8 +195,19 @@
                   </div>
                   
                   <div class="form-group">
-                    <label for="item_type" id="itemlinklabel"><strong>Link</strong><span class="f_req">*</span></label>
-                	<input type="text" class="form-control " id="item_link" placeholder="Link"/>
+                    <label for="item_type" id="itemlinklabel"><strong>Form Type</label>
+                	<select id="form_type" class="itemTargetDivClass form-control" style="margin-right:37px;">
+						<option value='manual'>Add manually</option>
+						<option value='defined'>Defined admin templates</option>
+					</select>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="item_type" id="itemlinklabel" class="col-md-12" style="padding-left:0px;"><strong>Link</strong><span class="f_req">*</span></label>
+                	<div class=" col-md-2 col-sm-4" style="padding-left:0px;"><input type="button" class="form-control" id="item_prefix_link" value="/"/></div>
+                	<div class=" col-md-10 col-sm-8" style="padding-left:0px;padding-right:0px;">
+                		<input type="text" class="form-control" id="item_link" name="item_link" placeholder="Link"/>
+                	</div>
                   </div>
                   
                  <div class="form-group" style="margin-top:5px;">
@@ -224,7 +235,7 @@
             <!-- Modal Footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" onClick="resetItemForm()">
-                            Close
+                	Close
                 </button>
                 <button type="button" class="btn btn-primary" onClick="savelinkitem()">
                     Add
@@ -247,7 +258,20 @@ function showIcon(val){
 	$("#showIconDiv").html('<i class="'+val+'"></i>');
 }
 $(document).ready(function(){
+	$("#form_type").change(function(){
+		$('#item_link').val('');
+		if(this.value=="defined")	{
+			$("#item_prefix_link").val("/list/");
+			$('#item_defined_link').show();
+			$("#item_link").replaceWith('<select id="item_link" name="item_link" class="form-control"></select>');
+			fetch_admin_templates();
+		} else {
+			$("#item_prefix_link").val("/");
+			$("#item_link").replaceWith('<input type="text" class="form-control" id="item_link" name="item_link" placeholder="Link"/>');
+		}
+	});
 	returnAllCollections();
+	
 	// validate form on keyup and submit
 		$("#contentForm").validate({
 			ignore: "",
@@ -274,32 +298,18 @@ $(document).ready(function(){
  				dataAsJson('contentForm', form);
  			}
 		});		
-	fetchIconsList();
+	fetch_default_list("icons-list", "<% if (typeof contentObj.icon_class !== 'undefined' && contentObj.icon_class !== null) { %><%= contentObj.icon_class %><% } %>","icon_class");
 });
-function fetchIconsList(){
-	var jsonRow=backendDirectory+"/api_fetch_list?collection=system_lists&findFieldName=code&findFieldValue=icons-list";
-	var sVal="<% if (typeof contentObj.icon_class !== 'undefined' && contentObj.icon_class !== null) { %><%= contentObj.icon_class %><% } %>";
-	if(sVal!=""){
-		showIcon(sVal);
-	}
-	$.getJSON(jsonRow,function(result){
-		var contentHtml="<option value=''>--Select--</option>";
-		
-		if(result.iTotalRecordsReturned>0){
-			$.each(result.aaData, function(i,row){
-				var iconsData= row;
-				if(iconsData.list && iconsData.list.length>0)	{
-					$.each(iconsData.list, function(j,rowData){
-						contentHtml+="<option value='"+rowData.label+"' ";
-						if(sVal==rowData.label){
-							contentHtml+="selected";
-						}
-						contentHtml+=" >"+rowData.label+"</option>";
-					});
-				}
+function fetch_admin_templates(){
+	var jsonRow=backendDirectory+"/api_fetch_list?limit=all&collection=system_templates";
+	$.getJSON(jsonRow,function(html){
+		var contentHtml="<option value=''></option>";
+		if(html.aaData.length>0){
+			$.each(html.aaData, function(i,row){
+				contentHtml+="<option value='"+row.code+"' >"+row.code+"</option>";
 			});
      	}
-		$("#icon_class").html(contentHtml);
+		$("#item_link").html(contentHtml);
 	});
 }
 function returnAllCollections(){
@@ -355,11 +365,24 @@ function edit_item(e){
 	if(e!=""){
 		var row= $(".itemtr_"+e).parents('.itemClass');	
 		var label=row.find('#label').html();
+		var tempLinkStr = row.find('#link').html(), temp_prefix_link='/';
+		var tempPositionNum=tempLinkStr.lastIndexOf("/");
+		if(tempPositionNum>=0){
+			tempPositionNum = tempPositionNum+1;
+			if(tempPositionNum==0){
+				$("#form_type").val("manual");
+			} else {
+				$("#form_type").val("defined");
+			}
+			temp_prefix_link = tempLinkStr.substr(0, tempPositionNum);
+			tempLinkStr = tempLinkStr.substr(tempPositionNum);
+		}
 		$("#item_uuid").val(e);
 		$("#item_sort_order").val(row.find('#sort_order').html());
 		$("#item_target").val(row.find('#target').html());
 		$("#item_label").val(row.find('#label').html());
-		$("#item_link").val(row.find('#link').html());
+		$("#item_prefix_link").val(temp_prefix_link);
+		$("#item_link").val(tempLinkStr);
 		$('#myModal').modal('show'); 
 	}
 }
@@ -368,10 +391,12 @@ function savelinkitem(){
 	$("#msgSpan").remove();
 	var item_uuid=$("#item_uuid").val();
 	var item_label=$("#item_label").val();
-	var item_link=$("#item_link").val();
+	var item_prefix_link=$("#item_prefix_link").val();
+	var temp_item_link=$("#item_link").val();
 	var item_sort_order=$("#item_sort_order").val();
 	var item_target=$("#item_target").val();
 	var item_active=$("#item_active").val();
+	var item_link= item_prefix_link+temp_item_link;
 	
 	if(item_label!="" && item_link!=""){
 		
@@ -385,13 +410,13 @@ function savelinkitem(){
 				htmlStr+='<td id="target">'+item_target+'</td><td id="status">'+itemStatus+'</td><td><a href="javascript:void(0)" title="Edit" onClick="edit_item(\''+item_uuid+'\')"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" onClick="remove_item(\''+item_uuid+'\')" title="Remove"><i class="fa fa-trash"></i></a></td></tr>';
 			
 				$("#link_items").append(htmlStr);
-				$("#contentField_"+item_uuid).val(item_link);
+				//$("#contentField_"+item_uuid).val(item_link);
 			}else{
 				var htmlStr='<td><input type="checkbox" value="'+item_uuid+'" id="Select" class="check itemtr_'+item_uuid+'" name="Select"></td><td id="label">'+item_label+'</td><td id="link">'+item_link+'</td><td id="sort_order">'+item_sort_order+'</td>';
 				htmlStr+='<td id="target">'+item_target+'</td><td id="status">'+itemStatus+'</td><td><a href="javascript:void(0)" title="Edit" onClick="edit_item(\''+item_uuid+'\')"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" onClick="remove_item(\''+item_uuid+'\')" title="Remove"><i class="fa fa-trash"></i></a></td>';
 			
 				$(".item_"+item_uuid).html(htmlStr);
-				$("#contentField_"+item_uuid).val(item_link);
+				//$("#contentField_"+item_uuid).val(item_link);
 			}
 			generateObjectJson();
 			$('#myModal').modal('hide');
@@ -406,7 +431,9 @@ function resetItemForm(){
 	$("#msgSpan").remove();
 	$("#item_uuid").val("");
 	$("#item_label").val('');
+	$("#form_type").val('manual');
 	$("#item_link").val('');
+	$("#item_prefix_link").val('/');
 	$("#item_sort_order").val(0);
 	$("#item_target").val(1);
 	$("#item_active").val(1);

@@ -1,11 +1,32 @@
 <% include include/main-header %>
 <link rel="stylesheet" href="css/chosen.css">
 <link href="css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet">
+<link rel="stylesheet" href="plugins/combobox/autocomplete-ui.css"/>
 <style>
 #select_systems_chosen{
 width : 402px!important;
 }
+.custom-combobox {
+		position: relative;
+		display: inline-block;
+		width: 100%!important;
+	}
+	.custom-combobox-toggle {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		margin-left: -1px;
+		padding: 0;
+	}
+	.custom-combobox-input {
+		margin: 0;
+		padding: 5px 10px;		
+	}
+	.ui-widget-overlay {
+		position: fixed;
+	}
 </style>
+
 <link rel="stylesheet" href="css/jquery.tag-editor.css" />
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -32,7 +53,7 @@ width : 402px!important;
 			
       		<div class="panel-body no-padding-top bg-white">
       			<% include include/display_returned_msg %>
-      			<form class="form-horizontal" action="<%= backendDirectory %>/save/document" method="POST" id="contentForm">
+      			<form class="form-horizontal" action="<%= backendDirectory %>/save/job" method="POST" id="contentForm">
       				<input type="hidden" class="form-control" id="table_name" name="table_name" value="documents">
       				<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="Code">
       				<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>">
@@ -77,35 +98,77 @@ width : 402px!important;
      											<TEXTAREA CLASS="form-control" STYLE="height:400px;" name="Body" id="Body"><% if (typeof contentObj.Body !== 'undefined' && contentObj.Body !== null) { %><%= contentObj.Body %><% } %></TEXTAREA>
     										</div>
 										</div>
+										
+  										<div class="form-group">
+    										<label for="firstname" class="col-sm-2  control-label">Job Type <sup class="required">*</sup></label>
+    										<div class="col-sm-10">
+    											<select class="form-control" required name="job_type" id="job_type">
+												</select>
+      										</div>
+  										</div>
+  										<div class="form-group">
+    										<label for="firstname" class="col-sm-2  control-label">Salary<sup class="required">*</sup></label>
+    										<div class="col-sm-2">
+      											<input type="text" class="form-control" required id="minimum_salary" name="minimum_salary" value="<% if (typeof contentObj.minimum_salary !== 'undefined' && contentObj.minimum_salary !== null) { %><%= contentObj.minimum_salary %><% } %>">
+    										</div>
+    										<label for="firstname" class="col-sm-1  control-label">To</label>
+    										
+    										<div class="col-sm-2">
+      											<input type="text" class="form-control" required id="maximum_salary" name="maximum_salary" value="<% if (typeof contentObj.maximum_salary !== 'undefined' && contentObj.maximum_salary !== null) { %><%= contentObj.maximum_salary %><% } %>">
+    										</div>
+    										<div class="col-sm-4">
+      											<select class="form-control" name="salary_duration" id="salary_duration" required>
+												</select>
+											</div>
+  										</div>	
+  										<div class="form-group">
+											<label class="col-md-2 control-label">Search for location or postcode</label>
+											<div class="col-sm-12 col-md-8">
+												<select id="selected_uk_town_cities_id" class="form-control">
+												</select>
+												<span class="help-block" style="font-size:12px;">Used to populate location, postcode, latitude and longitude below</span>
+											</div>
+										</div> 
 										<div class="form-group">
+    										<label for="firstname" class="col-sm-2  control-label">Location<sup class="required">*</sup></label>
+    										<div class="col-sm-4">
+      											<input readonly type="text" class="form-control" required id="location" name="location" value="<% if (typeof contentObj.location !== 'undefined' && contentObj.location !== null) { %><%= contentObj.location %><% } %>">
+    										</div>
+    										<label for="firstname" class="col-sm-2  control-label">Post code<sup class="required">*</sup></label>
+    										
+    										<div class="col-sm-4">
+      											<input readonly type="text" class="form-control" required id="postcode" name="postcode" value="<% if (typeof contentObj.postcode !== 'undefined' && contentObj.postcode !== null) { %><%= contentObj.postcode %><% } %>">
+    										</div>
+  										</div>	
+  										<div class="form-group">
+    										<label for="firstname" class="col-sm-2  control-label">Latitude<sup class="required">*</sup></label>
+    										<div class="col-sm-4">
+      											<input readonly type="text" class="form-control" required id="latitude" name="latitude" value="<% if (typeof contentObj.latitude !== 'undefined' && contentObj.latitude !== null) { %><%= contentObj.latitude %><% } %>">
+    										</div>
+    										<label for="firstname" class="col-sm-2  control-label">Longitude<sup class="required">*</sup></label>
+    										
+    										<div class="col-sm-4">
+      											<input readonly type="text" class="form-control" required id="longitude" name="longitude" value="<% if (typeof contentObj.longitude !== 'undefined' && contentObj.longitude !== null) { %><%= contentObj.longitude %><% } %>">
+    										</div>
+  										</div>
+  										<div class="form-group">
     										<label for="firstname" class="col-sm-2 control-label">Tags </label>
     										<div class="col-sm-10">
     											<input type="hidden" class="form-control" id="default_tags" value="<% if (typeof contentObj.tags !== 'undefined' && contentObj.tags !== null) { %><%= contentObj.tags %><% } %>">
     											<textarea type="text" class="form-control" name="tags" id="tags" rows="1"></textarea>
 											</div>
                   						</div>
-  										<div class="form-group">
-    										<label for="firstname" class="col-sm-2  control-label">Job Type <sup class="required">*</sup></label>
-    										<div class="col-sm-10">
-    											<select class="form-control" name="job_type" id="job_type">
-												</select>
-      										</div>
-  										</div>
-  										<div class="form-group">
-    										<label for="firstname" class="col-sm-2  control-label">Salary</label>
-    										<div class="col-sm-2">
-      											<input type="text" class="form-control" id="minimum_salary" name="minimum_salary" value="<% if (typeof contentObj.minimum_salary !== 'undefined' && contentObj.minimum_salary !== null) { %><%= contentObj.minimum_salary %><% } %>">
-    										</div>
-    										<label for="firstname" class="col-sm-1  control-label">To</label>
-    										
-    										<div class="col-sm-2">
-      											<input type="text" class="form-control" id="maximum_salary" name="maximum_salary" value="<% if (typeof contentObj.maximum_salary !== 'undefined' && contentObj.maximum_salary !== null) { %><%= contentObj.maximum_salary %><% } %>">
-    										</div>
-    										<div class="col-sm-4">
-      											<select class="form-control" name="salary_duration" id="salary_duration">
-												</select>
+                  						<div class="form-group">
+    										<label for="" class="col-sm-2 control-label">Job Status</label>
+    										<div class="col-sm-10" style="margin-top:6px;">
+    											<div STYLE="float:left; margin-right:10px; display:inline-block;">
+      		  										<label> <input type="radio" id="PublishCode" name="PublishCode" value="1" <% if (typeof contentObj.PublishCode !== 'undefined' && contentObj.PublishCode !== null && (contentObj.PublishCode == 1 || contentObj.PublishCode=="1")) { %>checked<% } %> > <strong style="font-weight:600">Vacant</strong></label>
+    			  								</div>
+				  								<div sTYLE="float:left; display:inline-block;">
+      		  										<label> <input type="radio" id="PublishCode" name="PublishCode" value="0" <% if (typeof contentObj.PublishCode !== 'undefined' && contentObj.PublishCode !== null && contentObj.PublishCode == 0) { %>checked<% } %> > <strong style="font-weight:600">Filled</strong></label>
+    			  								</div>
 											</div>
-  										</div>	
+										</div>
   										<div class="form-group">
     										<label for="" class="col-sm-2 control-label">Status</label>
     										<div class="col-sm-10" style="margin-top:6px;">
@@ -117,22 +180,10 @@ width : 402px!important;
     			  								</div>
 											</div>
 										</div>
-										<div class="form-group">
-    										<label for="" class="col-sm-2 control-label">Job Status</label>
-    										<div class="col-sm-10" style="margin-top:6px;">
-    											<div STYLE="float:left; margin-right:10px; display:inline-block;">
-      		  										<label> <input type="radio" id="PublishCode" name="PublishCode" value="1" <% if (typeof contentObj.PublishCode !== 'undefined' && contentObj.PublishCode !== null && (contentObj.PublishCode == 1 || contentObj.PublishCode=="1")) { %>checked<% } %> > <strong style="font-weight:600">Vacant</strong></label>
-    			  								</div>
-				  								<div sTYLE="float:left; display:inline-block;">
-      		  										<label> <input type="radio" id="PublishCode" name="PublishCode" value="0" <% if (typeof contentObj.PublishCode !== 'undefined' && contentObj.PublishCode !== null && contentObj.PublishCode == 0) { %>checked<% } %> > <strong style="font-weight:600">Filled</strong></label>
-    			  								</div>
-											</div>
-										</div>
-  										
+										  										
    									</div>
-   									<% if (typeof contentObj._id !== "undefined" && contentObj._id !== null) { %>
    									<div class=" col-sm-12 col-lg-4">
-   										<div class="well" style="overflow:hidden;"><div class="form-horizontal ">
+   										<div class="well" ><div class="form-horizontal ">
    											<div class="form-group no-margn-bottom">
               								<label for="dtp_input1" class="col-md-2 control-label" >Published On  <span class="required">*</span></label>
                   							<div class="col-md-10" >
@@ -140,12 +191,13 @@ width : 402px!important;
                     							
                   								<input class="form-control col-md-5 col-xs-12" type="hidden" id="Published_timestamp" name="Published_timestamp" value="<% if (typeof contentObj.Published_timestamp !== 'undefined' && contentObj.Published_timestamp !== null) {  %><%= contentObj.Published_timestamp %><% } %>" readonly>
                     							<div class='input-group date' id='datetime_picker'>
-                    								<input type='text' class="form-control" id="published_date" value=""/>
+                    								<input type='text' class="form-control" required id="published_date" value=""/>
                     								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                 								</div>	
                   							</div>
             							</div>
   										</div></div>
+  										<% if (typeof contentObj._id !== "undefined" && contentObj._id !== null) { %>
    										<div class="well" style="overflow:hidden;"><div class="form-horizontal ">
    										<h4 style="margin-top:0px;">Image</h4>
    										<div class="form-group" id="displayImage" style="display:none;">
@@ -172,9 +224,9 @@ width : 402px!important;
    											
    											</div>
   										</div></div>
+  										<% } %>
    									</div>
-   									<% } %>
-       							</div>
+   								</div>
       						</div>
       						<div role="tabpanel" class="tab-pane fade" id="licenceno" aria-labelledby="profile-tab">
        							<div class="row">
@@ -337,6 +389,7 @@ width : 402px!important;
  <script src="js/jquery.tag-editor.min.js"></script>
  <script src="js/moment.js"></script>
 <script src="js/bootstrap-datetimepicker.min.js"></script>
+<script src="plugins/combobox/autocomplete-ui.js"></script>
 <script>
 var defaultAssignedSystemVal='', selectedSharedSystemArr = new Array();
 <% if (typeof contentObj.uuid_system !== 'undefined' && contentObj.uuid_system !== null && contentObj.uuid_system !== "") { %>
@@ -350,11 +403,40 @@ var defaultAssignedSystemVal='', selectedSharedSystemArr = new Array();
 		selectedSharedSystemArr = JSON.parse(tempselectedSearchArr);
 	}
 <% } %>
+function fetch_uk_town_cities(){
+	$("#selected_uk_town_cities_id").html("");
+	
+		var jsonRow=backendDirectory+"/api_fetch_list?start=0&limit=20&collection=uk_towns_cities";
+	
+		$.getJSON(jsonRow,function(html){
+			var contentHtml="<option value=''></option>";
+			if(html.aaData.length>0){
+					$.each(html.aaData, function(i,row){
+						var postcodeStr='';
+						if(row.postcode && row.postcode!=""){
+							postcodeStr=' ('+row.postcode+')';
+						}
+						contentHtml+="<option value='"+row._id+"' ";
+						contentHtml+=" >"+row.name+postcodeStr+"</option>";
+					});
+     		}
+			$("#selected_uk_town_cities_id").html(contentHtml);
+			$("#selected_uk_town_cities_id" ).combobox();
+		});
+}
 $(document).ready(function(){
+	fetch_uk_town_cities();
+	
 	fetch_default_list("salary-durations", "<% if (typeof contentObj.salary_duration !== 'undefined' && contentObj.salary_duration !== null) { %><%= contentObj.salary_duration %><% } %>","salary_duration");
 	
 	fetch_default_list("job-types", "<% if (typeof contentObj.job_type !== 'undefined' && contentObj.job_type !== null) { %><%= contentObj.job_type %><% } %>","job_type");
-		
+	
+	<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) {	%>
+		//
+	<% }else{ %>
+		$('input:radio[name="PublishCode"][value="1"]').prop('checked', true);
+		$('input:radio[name="status"][value="1"]').prop('checked', true);
+	<% } %>
 	<% if (typeof contentObj.Type !== 'undefined' && contentObj.Type !== null) { %>
 		var typeStr='<%= contentObj.Type %>';
 		if(typeStr!="job"){
@@ -364,6 +446,232 @@ $(document).ready(function(){
 });
 </script>
 <script src="scripts/document.js"></script>
+<script>
+function fetch_uk_towns_cities_details(){
+		var sVal=$("#selected_uk_town_cities_id").val();
+		var jsonRow=backendDirectory+"/collection_details?id="+sVal+"&collection=uk_towns_cities";
+		$.getJSON(jsonRow,function(html){
+			var contentObj=html.aaData;
+			if(contentObj){
+				if(contentObj.name){
+					$("#location").val(contentObj.name);
+				}
+				if(contentObj.postcode){
+					$("#postcode").val(contentObj.postcode);
+				}
+				if(contentObj.lat){
+					$("#latitude").val(contentObj.lat);
+				}
+				if(contentObj.lng){
+					$("#longitude").val(contentObj.lng);
+				}
+     		}
+		});
+}
 
+var xhr;
+(function( $ ) {
+	$.widget( "custom.combobox", {
+		_create: function() {
+				this.wrapper = $( "<span>" )
+				.addClass( "custom-combobox" )
+				.insertAfter( this.element );
+
+				this.element.hide();
+				this._createAutocomplete();
+				this._createShowAllButton();
+				},
+
+				_createAutocomplete: function() {
+				var ele_select= this.element;
+				var selected = this.element.children( ":selected" ),
+				value = selected.val() ? selected.text() : "";
+
+				this.input = $( "<input>" )
+				.appendTo( this.wrapper )
+				.val( value )
+				.attr( "title", "" )
+				.addClass( "custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left" )
+				.autocomplete({
+				delay: 0,
+				minLength: 0,
+				source: $.proxy( this, "_source" )
+				})
+				.tooltip({
+				tooltipClass: "ui-state-highlight"
+				});
+
+				this._on( this.input, {
+				autocompleteselect: function( event, ui ) {
+				//alert("show all");
+				ui.item.option.selected = true;
+
+				this._trigger( "select", event, {
+				  item: ui.item.option
+				});
+				
+				ele_select.trigger('change');
+					if(ele_select.attr('id')=='selected_uk_town_cities_id'){
+						fetch_uk_towns_cities_details();
+					}
+				},
+
+				autocompletechange: "_removeIfInvalid"
+				});
+				},
+
+				_createShowAllButton: function() {
+				var input = this.input,
+				wasOpen = false;
+
+				$( "<a>" )
+				.attr( "tabIndex", -1 )
+				.attr( "title", "Show All Items" )
+				.tooltip()
+				.appendTo( this.wrapper )
+				.button({
+				icons: {
+				  primary: "ui-icon-triangle-1-s"
+				},
+				text: false
+				})
+				.removeClass( "ui-corner-all" )
+				.addClass( "custom-combobox-toggle ui-corner-right" )
+				.mousedown(function() {
+				wasOpen = input.autocomplete( "widget" ).is( ":visible" );
+				})
+				.click(function() {
+				input.focus();
+
+				// Close if already visible
+				if ( wasOpen ) {
+				  return;
+				}
+
+				// Pass last search string as value to search for, displaying last results
+				input.autocomplete( "search", 'SHOWALL' );
+				});
+				},
+
+				_source: function( request, response ) {
+				//var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+				var ele_select= this.element;
+				if(request.term=='SHOWALL'){
+				response(ele_select.children( "option" ).map(function() {
+				var text = $( this ).text();
+				var value= $( this ).val();
+				//if ( this.value && ( !request.term || matcher.test(text) ) )
+				return {
+				  label: text,
+				  value: text,
+				  option: this
+				};
+				}) );
+
+				}
+				else
+				{
+					var jsonRow = backendDirectory+'/api_fetch_list?start=0&limit=20&collection=uk_towns_cities&s='+request.term;
+				
+				if(xhr) xhr.abort();
+				xhr=$.getJSON(jsonRow,function(result){
+					
+				if(result.error){
+					var html='<option value=""></option>';
+					ele_select.html(html);
+					response(ele_select.children( "option" ).map(function() {
+					var text = $( this ).text();
+					var value= $( this ).val();
+					//if ( this.value && ( !request.term || matcher.test(text) ) )
+					return {
+				  		label: text,
+				  		value: text,
+				  		option: this
+					};
+					}) );
+				}else{
+					var html='<option value=""></option>';
+					if(result.aaData.length>=1){
+						$.each(result.aaData, function(i,row){
+							var postcodeStr='';
+							if(row.postcode && row.postcode!=""){
+								postcodeStr=' ('+row.postcode+')';
+							}
+							html+='<option value="'+row._id+'">'+row.name+postcodeStr+'</option>';
+						});
+					}
+					
+					ele_select.html(html);
+					
+					
+					response(ele_select.children( "option" ).map(function() {
+				var text = $( this ).text();
+				var value= $( this ).val();
+				//if ( this.value && ( !request.term || matcher.test(text) ) )
+				return {
+				  label: text,
+				  value: text,
+				  option: this
+				};
+				}) );
+					
+					
+				}
+				});
+
+				} 
+
+				},
+
+				_removeIfInvalid: function( event, ui ) {
+
+					// Selected an item, nothing to do
+					if ( ui.item ) {
+
+					return;
+					}
+
+					// Search for a match (case-insensitive)
+					var value = this.input.val(),
+					valueLowerCase = value.toLowerCase(),
+					valid = false;
+					var ele_select= this.element;
+					this.element.children( "option" ).each(function() {
+					if ( $( this ).text().toLowerCase() === valueLowerCase ) {
+						this.selected = valid = true;	
+						if(ele_select.attr('id')=='selected_uk_town_cities_id'){
+							fetch_uk_towns_cities_details();
+						}
+						ele_select.trigger('change');
+
+						return false;
+					}
+					});
+
+					// Found a match, nothing to do
+					if ( valid ) {
+					return;
+					}
+
+					// Remove invalid value
+					this.input
+					.val( "" )
+					.attr( "title", value + " didn't match any item" )
+					.tooltip( "open" );
+					this.element.val( "" );
+					this._delay(function() {
+					this.input.tooltip( "close" ).attr( "title", "" );
+					}, 2500 );
+					this.input.data( "ui-autocomplete" ).term = "";
+				},
+
+				_destroy: function() {
+					this.wrapper.remove();
+					this.element.show();
+				}
+			});
+			})( jQuery );
+
+</script>
 </body>
 </html>

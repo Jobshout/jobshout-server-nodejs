@@ -38,7 +38,7 @@
             						<input type="hidden" class="form-control" id="data" name="data" value="">
             						
               						<div class="form-group">
-                  						<label class="control-label col-md-3" for="">Code<span class="required">*</span></label>
+                  						<label class="control-label col-md-2" for="">Code<span class="required">*</span></label>
                   						<div class="col-md-6 col-lg-4">
                    							<input type="text"  required="required" class="form-control col-md-5 col-xs-12" id="code" name="code" value="<% if (typeof contentObj.code !== 'undefined' && contentObj.code !== null) { %><%= contentObj.code %><% } %>">
                   						</div>
@@ -50,7 +50,7 @@
                   						<% } %>
                 					</div>
                 					<div class="form-group">
-                  						<label class="control-label col-md-3" for="">Table<span class="required">*</span></label>
+                  						<label class="control-label col-md-2" for="">Table<span class="required">*</span></label>
                   						<div class="col-md-6 col-lg-4">
                    							<select id="table" name="table" class="form-control col-md-5 col-xs-12" required="required">
                    								<option value="">--Select Table--</option>
@@ -67,7 +67,7 @@
 				  						</div>
                 					</div>
                 					<div class="form-group">
-                  						<label class="control-label col-md-3" for="">Type <span class="required">*</span></label>
+                  						<label class="control-label col-md-2" for="">Type <span class="required">*</span></label>
                   						<div class="col-md-6 col-lg-4">
                    							<select class="form-control col-md-5 col-xs-12" id="template_type" name="template_type" required="required" onChange="__chooseDetailView()">
 												<option value="list_view" <% if (typeof contentObj.table !== 'undefined' && contentObj.table !== null && contentObj.table == "list_view") { %>selected<% } %>	>List View</option>
@@ -80,7 +80,7 @@
 				  						</div>
                 					</div>
                 					<div class="form-group">
-                  						<label class="control-label col-md-3" for="first-name">Add filename for Detail View/Editor <span class="required">*</span></label>
+                  						<label class="control-label col-md-2" for="first-name">Add filename for Detail View/Editor <span class="required">*</span></label>
                   						<div class="col-md-6 col-lg-4">
                    							<input type="text" required="required" value="<% if (typeof contentObj.editor_filename !== 'undefined' && contentObj.editor_filename !== null) { %><%= contentObj.editor_filename %><% } %>" class="form-control col-md-5 col-xs-12" id="editor_filename" name="editor_filename">
                   						</div>
@@ -91,7 +91,7 @@
 				  						</div>
                 					</div>
                 		<div class="form-group displayColumnsClass" style="display:none;">
-                			<label class="control-label col-md-3" for="first-name">Open Detail View by</label>
+                			<label class="control-label col-md-2" for="first-name">Open Detail View by</label>
                   			<div class="col-md-6 col-lg-4">
                    				<select class="form-control col-md-5 col-xs-12" id="editor_field" name="editor_field" >
                    					<option value="">-- Choose Field --</option>
@@ -104,18 +104,18 @@
                 			<input type="hidden" class="form-control col-md-5 col-xs-12" id="search_columns" name="search_columns">
                 			<input type="hidden" class="form-control col-md-5 col-xs-12" id="index_columns" name="index_columns">
                 			<input type="hidden" class="form-control col-md-5 col-xs-12" id="listing_columns" name="listing_columns">
-                 			<label class="control-label col-md-3 tablefieldClass" for="">Display Columns</label>
-                  			<div class="col-md-6 col-lg-4 tablefieldClass" id="tablefieldClass">
+                 			<label class="control-label col-md-2 tablefieldClass" for="">Display Columns</label>
+                  			<div class="col-md-3 tablefieldClass" id="tablefieldClass">
                   				
                     		</div>
                 		
-                 			<label class="control-label col-md-3 searchColumnClass" for="">Search Columns</label>
-                  			<div class="col-md-6 col-lg-4 searchColumnClass" id="searchColumnClass">
+                 			<label class="control-label col-md-2 searchColumnClass" for="">Search Columns</label>
+                  			<div class="col-md-4 searchColumnClass" id="searchColumnClass">
                   				
                     		</div>
                 		</div>
                 		<div class="form-group displayColumnsClass" style="display:none;">
-                  			<label class="control-label col-md-3 " for="first-name">Search Condition</label>
+                  			<label class="control-label col-md-2 " for="first-name">Search Condition</label>
                   			<div class="col-md-6 col-lg-4">
                   				<select class="form-control col-md-5 col-xs-12 createQueryClass" id="search_condition" name="search_condition">
 									<option value="and" <% if (typeof contentObj.search_condition !== 'undefined' && contentObj.search_condition !== null && contentObj.search_condition == "and") { %>selected<% } %>	>AND</option>
@@ -252,8 +252,8 @@ function table_options(){
 					}
         			
 					table_fieldhtmlStr+='<div class="checkbox"><label ><input type="checkbox" '+listcheckedStr+' id="list_fields_'+col+'" value="'+col+'" class="list_fields createQueryClass" > <strong style="font-weight:600">'+col+'</strong></label></div>';
-					searchColumnsStr+='<div class="checkbox col-md-4"><label ><input type="checkbox" '+searchcheckedStr+' value="'+col+'" id="search_fields_'+col+'" class="search_fields createQueryClass" > <strong style="font-weight:600">'+col+'</strong></label></div>';
-					searchColumnsStr+='<select  class="form-control col-md-2 col-xs-12 createQueryClass" id="'+col+'_clause">';
+					searchColumnsStr+='<div class="checkbox col-md-6"><label ><input type="checkbox" '+searchcheckedStr+' value="'+col+'" id="search_fields_'+col+'" class="search_fields createQueryClass" > <strong style="font-weight:600">'+col+'</strong></label></div>';
+					searchColumnsStr+='<div class="col-md-6 col-xs-12" style="margin-bottom:10px;"><select  class="form-control createQueryClass" id="'+col+'_clause">';
 					searchColumnsStr+='<option value="contains"';
 					if(searchClauseStr=="contains"){
 						searchColumnsStr+=' selected ';
@@ -279,7 +279,7 @@ function table_options(){
 						searchColumnsStr+=' selected ';
 					}
 					searchColumnsStr+='>Ends with</option>';
-                	searchColumnsStr+='</select>';
+                	searchColumnsStr+='</select></div>';
 				});
 				
 				$(".displayColumnsClass").show();

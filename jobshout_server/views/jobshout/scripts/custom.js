@@ -127,6 +127,7 @@ function return_timestamp_from_datetimepicker(dateString, getTimeBool, dateFrom)
 	}
 	
 	var date;
+	if(dateString!=""){
 	if(getTimeBool){
 		var dateTimeParts = dateString.split(' '),
 		timeParts = dateTimeParts[1].split(':'),
@@ -154,6 +155,7 @@ function return_timestamp_from_datetimepicker(dateString, getTimeBool, dateFrom)
 	}
 	date= date.getTime();
 	date= parseInt(date)/1000;
+	}
 	return date;
 }
 

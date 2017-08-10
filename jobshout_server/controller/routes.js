@@ -1565,7 +1565,7 @@ app.get(backendDirectoryPath+'/api_fetch_list/', requireLogin, function(req, res
 				if (typeof activeSystemsStr !== 'undefined' && activeSystemsStr !== null && activeSystemsStr!="") {
 					if(definedAdminTablesArr.indexOf(collectionStr)==-1){
 						if(collectionStr=="fs.files"){
-							query+=" 'metadata.uuid_system': { $in: ['"+activeSystemsStr+"'] } ";
+							query+=" 'metadata.uuid_system': { $in: ['"+activeSystemsStr+"'] }, 'contentType' : new RegExp('^image') ";
 						}else{
 							query+=" $or: [ { 'uuid_system' : { $in: ['"+activeSystemsStr+"'] } }, { 'shared_systems': { $in: ['"+activeSystemsStr+"'] } } ] ";
 						}
