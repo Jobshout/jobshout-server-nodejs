@@ -1679,7 +1679,7 @@ app.get(backendDirectoryPath+'/api_fetch_timestamp_based_list/', requireLogin, f
 				var coll= db.collection(collectionStr);
 				
      			query+= "}";
-     			console.log(query);
+     			//console.log(query);
      			eval('var queryObj='+query);
      			
       			coll.find(queryObj).toArray(function(err, items) {
