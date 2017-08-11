@@ -759,7 +759,7 @@ var self = module.exports =
 			var form = new formidable.IncomingForm(), savedFilePathStr='';
 			
 			// store all uploads in the /uploads directory
-  			form.uploadDir = path.join(__dirname, '/../uploads');
+  			form.uploadDir = path.join(__dirname, '/../../../uploads');
 			form.on('file', function(field, file) {
 				savedFilePathStr= path.join(form.uploadDir, Date.now()+'_'+file.name);
 				fs.rename(file.path, savedFilePathStr);

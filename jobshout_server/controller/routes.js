@@ -1643,6 +1643,69 @@ app.get(backendDirectoryPath+'/api_fetch_list/', requireLogin, function(req, res
 	}
 }); 
 
+//fetch collection rows depending upon timestamp passed
+app.get(backendDirectoryPath+'/api_fetch_timestamp_based_list/', requireLogin, function(req, res) {
+	var collectionStr="", s_timestamp=0, e_timestamp=0;
+	var outputObj = new Object();
+	if(req.query.collection){
+		collectionStr=req.query.collection;
+	}
+	if(req.query.start_timestamp){
+		s_timestamp=req.query.start_timestamp;
+	}
+	if(req.query.end_timestamp){
+		e_timestamp=req.query.end_timestamp;
+	}
+	
+	if(req.authenticationBool){
+		var activeSystemsStr=req.authenticatedUser.active_system_uuid.toString();
+			
+			if(collectionStr!="" && s_timestamp!==0 && e_timestamp!==0){
+				var query="{";
+				
+				if (typeof activeSystemsStr !== 'undefined' && activeSystemsStr !== null && activeSystemsStr!="") {
+					if(definedAdminTablesArr.indexOf(collectionStr)==-1){
+						query+=" 'uuid_system' : { $in: ['"+activeSystemsStr+"'] } ";
+					}
+				}
+				
+				if(s_timestamp!==0 && e_timestamp!==0){
+					if(query!="{"){
+     					query+=",";
+     				}
+     				query+=" $and: [ { 'start_timestamp' : { $gte: '"+s_timestamp+"' } }, { 'end_timestamp': { $lte: '"+e_timestamp+"' } } ] ";
+				}
+				
+				var coll= db.collection(collectionStr);
+				
+     			query+= "}";
+     			console.log(query);
+     			eval('var queryObj='+query);
+     			
+      			coll.find(queryObj).toArray(function(err, items) {
+					if (err) {
+						outputObj["iTotalRecordsReturned"]   = 0;
+      					outputObj["error"]   = 'not found';
+						res.send(outputObj);
+      				} else if (items) {
+      					outputObj["iTotalRecordsReturned"]   = items.length;
+      					outputObj["aaData"]   = items;
+						res.send(outputObj);
+     				}
+				});
+			}else{
+				outputObj["iTotalRecordsReturned"]   = 0;
+      			outputObj["error"]   = "Please pass the required parameters!";
+				res.send(outputObj);
+			}
+		
+	}else{
+		outputObj["iTotalRecordsReturned"]   = 0;
+      	outputObj["error"]   = "Authorization error!";
+		res.send(outputObj);
+	}
+}); 
+
 //fetch history listing depending upon collection
 app.get(backendDirectoryPath+'/api_fetch_history/', requireLogin, function(req, res) {
 	var itemsPerPage = 10, pageNum=1, collectionStr="", findFieldValueStr="";

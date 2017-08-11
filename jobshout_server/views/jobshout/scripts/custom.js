@@ -426,8 +426,12 @@ function fetch_default_list(codeStr, sVal, drawDivID){
 					iconsListArr.sort(dynamicSort("item_sort_order"));
 				
 					$.each(iconsListArr, function(j,rowData){
-						contentHtml+="<option value='"+rowData.label+"' ";
-						if(sVal==rowData.label){
+						var tempValStr=rowData.label;
+						if(rowData.value && rowData.value!=""){
+							tempValStr=rowData.value;
+						}
+						contentHtml+="<option value='"+tempValStr+"' ";
+						if(sVal==tempValStr){
 							contentHtml+="selected";
 						}
 						contentHtml+=" >"+rowData.label+"</option>";

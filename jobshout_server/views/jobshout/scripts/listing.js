@@ -251,7 +251,7 @@ function load_more(){
 						if (typeof html.display_columns !== 'undefined' && html.display_columns !== null && html.display_columns!=""){
 							$.each(html.display_columns, function(k,col){
 								if(col!="Action"){
-									if(row.hasOwnProperty(col)==true && (col=="Modified" || col=="modified_timestamp" || col=="modified" || col=="Created" || col=="created_timestamp" || col=="created")){
+									if(row.hasOwnProperty(col)==true && (col=="Modified" || col=="modified_timestamp" || col=="modified" || col=="Created" || col=="created_timestamp" || col=="start_timestamp" || col=="end_timestamp" || col=="created")){
 										contentHtml+="<td>"+timeConverter(row[col])+"</td>";
 									}else if(row.hasOwnProperty(col)==true && (col=="Status" || col=="status" || col=="active")){
 										statusFieldNameStr = col;

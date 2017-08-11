@@ -414,7 +414,10 @@ function return_timestamp_from_timepicker (startDateStr, timeStr)	{
 		<% } %>
 		fetch_collection_list('tasks', 'task_mongo_id', sVal);
 		fetch_collection_list('users', 'reported_by_user_id', reportedBy);
-
+		
+		<% if (typeof contentObj.reported_by_user_id !== 'undefined' && contentObj.reported_by_user_id !== null) {	%>
+			evaluate_slip_values();
+		<% } %>
 		// validate form on keyup and submit
 		$("#contentForm").validate({
 			ignore: "",
