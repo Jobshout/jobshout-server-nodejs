@@ -54,7 +54,7 @@ width : 402px!important;
       		<div class="panel-body no-padding-top bg-white">
       			<% include include/display_returned_msg %>
       			<form class="form-horizontal" action="<%= backendDirectory %>/save/job" method="POST" id="contentForm">
-      				<input type="hidden" class="form-control" id="table_name" name="table_name" value="documents">
+      				<input type="hidden" class="form-control" id="table_name" name="table_name" value="vacancies">
       				<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="Code">
       				<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>">
       				<input type="hidden" class="form-control" id="editorField" name="editorField" value="<% if (typeof editorField !== 'undefined' && editorField !== null) { %><%= editorField %><% }else{ %>_id<% } %>">

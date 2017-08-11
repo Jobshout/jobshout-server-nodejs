@@ -365,7 +365,7 @@ function fetch_projects(){
 	$("#project_mongo_id").html("");
 	
 	var sVal="";
-	<% if (typeof queryStr !== 'undefined' && queryStr !== null && typeof queryStr.customer_id !== 'undefined' && queryStr.customer_id !== null && queryStr.customer_id !=="") { %>
+	<% if (typeof queryStr !== 'undefined' && queryStr !== null && typeof queryStr.project_id !== 'undefined' && queryStr.project_id !== null && queryStr.project_id !=="") { %>
 		sVal="<%= queryStr.customer_id %>";
 	<% }else if(typeof contentObj.project_mongo_id !== 'undefined' && contentObj.project_mongo_id !== null)	{ %>
 		sVal="<%= contentObj.project_mongo_id %>";
