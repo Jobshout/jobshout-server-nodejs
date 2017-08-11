@@ -132,23 +132,23 @@ width : 402px!important;
 										<div class="form-group">
     										<label for="firstname" class="col-sm-2  control-label">Location<sup class="required">*</sup></label>
     										<div class="col-sm-4">
-      											<input readonly type="text" class="form-control" required id="location" name="location" value="<% if (typeof contentObj.location !== 'undefined' && contentObj.location !== null) { %><%= contentObj.location %><% } %>">
+      											<input readonly type="text" class="form-control" id="location" name="location" value="<% if (typeof contentObj.location !== 'undefined' && contentObj.location !== null) { %><%= contentObj.location %><% } %>">
     										</div>
     										<label for="firstname" class="col-sm-2  control-label">Post code<sup class="required">*</sup></label>
     										
     										<div class="col-sm-4">
-      											<input readonly type="text" class="form-control" required id="postcode" name="postcode" value="<% if (typeof contentObj.postcode !== 'undefined' && contentObj.postcode !== null) { %><%= contentObj.postcode %><% } %>">
+      											<input readonly type="text" class="form-control" id="postcode" name="postcode" value="<% if (typeof contentObj.postcode !== 'undefined' && contentObj.postcode !== null) { %><%= contentObj.postcode %><% } %>">
     										</div>
   										</div>	
   										<div class="form-group">
     										<label for="firstname" class="col-sm-2  control-label">Latitude<sup class="required">*</sup></label>
     										<div class="col-sm-4">
-      											<input readonly type="text" class="form-control" required id="latitude" name="latitude" value="<% if (typeof contentObj.latitude !== 'undefined' && contentObj.latitude !== null) { %><%= contentObj.latitude %><% } %>">
+      											<input readonly type="text" class="form-control" id="latitude" name="latitude" value="<% if (typeof contentObj.latitude !== 'undefined' && contentObj.latitude !== null) { %><%= contentObj.latitude %><% } %>">
     										</div>
     										<label for="firstname" class="col-sm-2  control-label">Longitude<sup class="required">*</sup></label>
     										
     										<div class="col-sm-4">
-      											<input readonly type="text" class="form-control" required id="longitude" name="longitude" value="<% if (typeof contentObj.longitude !== 'undefined' && contentObj.longitude !== null) { %><%= contentObj.longitude %><% } %>">
+      											<input readonly type="text" class="form-control" id="longitude" name="longitude" value="<% if (typeof contentObj.longitude !== 'undefined' && contentObj.longitude !== null) { %><%= contentObj.longitude %><% } %>">
     										</div>
   										</div>
   										<div class="form-group">
@@ -436,12 +436,6 @@ $(document).ready(function(){
 	<% }else{ %>
 		$('input:radio[name="PublishCode"][value="1"]').prop('checked', true);
 		$('input:radio[name="status"][value="1"]').prop('checked', true);
-	<% } %>
-	<% if (typeof contentObj.Type !== 'undefined' && contentObj.Type !== null) { %>
-		var typeStr='<%= contentObj.Type %>';
-		if(typeStr!="job"){
-			window.location.href=backendDirectory+'/job';
-		}
 	<% } %>
 });
 </script>
