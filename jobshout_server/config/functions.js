@@ -575,6 +575,8 @@ var self = module.exports =
 		var table_name="";
 		if(filename=="document" || filename=="blog" || filename=="job" || filename=="page"){
 			table_name="documents";
+		}else if(filename=="job"){
+			table_name="vacancies";
 		}else if(filename=="emails" || filename=="email"){
 			table_name="email_queue";
 		}else if(filename=="task" || filename=="calendar"){
