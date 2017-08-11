@@ -573,7 +573,7 @@ var self = module.exports =
 	// (This is hard coded right now, will make this option dynamic from system_templates)
 	fetchTableName : function (filename){
 		var table_name="";
-		if(filename=="document" || filename=="blog" || filename=="job" || filename=="page"){
+		if(filename=="document" || filename=="blog" || filename=="page"){
 			table_name="documents";
 		}else if(filename=="job"){
 			table_name="vacancies";
