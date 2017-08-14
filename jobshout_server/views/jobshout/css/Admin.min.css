@@ -1178,7 +1178,7 @@ opacity:1
 	border-color: #d2d6de
 }
 .form-control:focus {
-	border-color: #3c8dbc;
+	border-color: #b90140;
 	box-shadow: none
 }
 .form-control::-moz-placeholder, .form-control:-ms-input-placeholder, .form-control::-webkit-input-placeholder {
@@ -1296,7 +1296,7 @@ opacity:1
 	margin: 0
 }
 .progress-bar-light-blue, .progress-bar-primary {
-	background-color: #3c8dbc
+	background-color: #b90140
 }
 .progress-striped .progress-bar-light-blue, .progress-striped .progress-bar-primary {
 	background-image: -webkit-linear-gradient(45deg, rgba(255,255,255,0.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.15) 75%, transparent 75%, transparent);
@@ -1478,12 +1478,12 @@ font-size: 72px;
 	color: #444
 }
 .box.box-solid.box-primary {
-	border: 1px solid #3c8dbc
+	border: 1px solid #b90140
 }
 .box.box-solid.box-primary>.box-header {
 	color: #fff;
-	background: #3c8dbc;
-	background-color: #3c8dbc
+	background: #b90140;
+	background-color: #b90140
 }
 .box.box-solid.box-primary>.box-header a, .box.box-solid.box-primary>.box-header .btn {
 	color: #fff
@@ -1779,7 +1779,7 @@ font-size: 72px;
 	border-left-color: #00a65a
 }
 .todo-list .primary {
-	border-left-color: #3c8dbc
+	border-left-color: #b90140
 }
 .todo-list .handle {
 	display: inline-block;
@@ -2260,7 +2260,7 @@ border-top:none;
 	margin-right: 5px
 }
 .nav-pills>li.active>a, .nav-pills>li.active>a:hover, .nav-pills>li.active>a:focus {
-	border-top-color: #3c8dbc
+	border-top-color: #b90140
 }
 .nav-pills>li.active>a {
 	font-weight: 600
@@ -2275,7 +2275,7 @@ border-top:none;
 	background: transparent;
 	color: #444;
 	border-top: 0;
-	border-left-color: #3c8dbc
+	border-left-color: #b90140
 }
 .nav-stacked>li.header {
 	border-bottom: 1px solid #ddd;
@@ -2321,7 +2321,7 @@ border-top:none;
 	border-color: transparent
 }
 .nav-tabs-custom>.nav-tabs>li.active {
-	border-top-color: #3c8dbc
+	border-top-color: #b90140
 }
 .nav-tabs-custom>.nav-tabs>li.active>a, .nav-tabs-custom>.nav-tabs>li.active:hover>a {
 	background-color: #fff;
@@ -2374,7 +2374,7 @@ border-top:none;
 	color: #999
 }
 .nav-tabs-custom.tab-primary>.nav-tabs>li.active {
-	border-top-color: #3c8dbc
+	border-top-color: #b90140
 }
 .nav-tabs-custom.tab-info>.nav-tabs>li.active {
 	border-top-color: #00c0ef
@@ -2650,12 +2650,12 @@ table.text-center, table.text-center td, table.text-center th {
 	border-left-color: #dd4b39
 }
 .direct-chat-primary .right>.direct-chat-text {
-	background: #3c8dbc;
-	border-color: #3c8dbc;
+	background: #b90140;
+	border-color: #b90140;
 	color: #fff
 }
 .direct-chat-primary .right>.direct-chat-text:after, .direct-chat-primary .right>.direct-chat-text:before {
-	border-left-color: #3c8dbc
+	border-left-color: #b90140
 }
 .direct-chat-warning .right>.direct-chat-text {
 	background: #f39c12;
@@ -3802,14 +3802,14 @@ table.text-center, table.text-center td, table.text-center th {
 	height: 34px
 }
 .select2-container--default.select2-container--open {
-	border-color: #3c8dbc
+	border-color: #b90140
 }
 .select2-dropdown {
 	border: 1px solid #d2d6de;
 	border-radius: 0
 }
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
-	background-color: #3c8dbc;
+	background-color: #b90140;
 	color: white
 }
 .select2-results__option {
@@ -3839,7 +3839,7 @@ table.text-center, table.text-center td, table.text-center th {
 }
 .select2-dropdown .select2-search__field:focus, .select2-search--inline .select2-search__field:focus {
 	outline: none;
-	border: 1px solid #3c8dbc
+	border: 1px solid #b90140
 }
 .select2-container--default .select2-results__option[aria-disabled=true] {
 	color: #999
@@ -3855,13 +3855,13 @@ table.text-center, table.text-center td, table.text-center th {
 	border-radius: 0
 }
 .select2-container--default .select2-selection--multiple:focus {
-	border-color: #3c8dbc
+	border-color: #b90140
 }
 .select2-container--default.select2-container--focus .select2-selection--multiple {
 	border-color: #d2d6de
 }
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
-	background-color: #3c8dbc;
+	background-color: #b90140;
 	border-color: #367fa9;
 	padding: 1px 10px;
 	color: #fff
@@ -3937,7 +3937,7 @@ table.text-center, table.text-center td, table.text-center th {
 	background-color: #0073b7 !important
 }
 .bg-light-blue, .label-primary, .modal-primary .modal-body {
-	background-color: #3c8dbc !important
+	background-color: #b90140 !important
 }
 .bg-green, .callout.callout-success, .alert-success, .label-success, .modal-success .modal-body {
 	background-color: #00a65a !important
@@ -4035,7 +4035,7 @@ table.text-center, table.text-center td, table.text-center th {
 	color: #111 !important
 }
 .text-light-blue {
-	color: #3c8dbc !important
+	color: #b90140 !important
 }
 .text-green {
 	color: #00a65a !important
@@ -4130,12 +4130,12 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#7adddd', endCo
 	color: #fff
 }
 .bg-light-blue-gradient {
-	background: #3c8dbc !important;
-	background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #3c8dbc), color-stop(1, #67a8ce)) !important;
-	background: -ms-linear-gradient(bottom, #3c8dbc, #67a8ce) !important;
-	background: -moz-linear-gradient(center bottom, #3c8dbc 0, #67a8ce 100%) !important;
-	background: -o-linear-gradient(#67a8ce, #3c8dbc) !important;
-filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#67a8ce', endColorstr='#3c8dbc', GradientType=0) !important;
+	background: #b90140 !important;
+	background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #b90140), color-stop(1, #67a8ce)) !important;
+	background: -ms-linear-gradient(bottom, #b90140, #67a8ce) !important;
+	background: -moz-linear-gradient(center bottom, #b90140 0, #67a8ce 100%) !important;
+	background: -o-linear-gradient(#67a8ce, #b90140) !important;
+filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#67a8ce', endColorstr='#b90140', GradientType=0) !important;
 	color: #fff
 }
 .bg-blue-gradient {
