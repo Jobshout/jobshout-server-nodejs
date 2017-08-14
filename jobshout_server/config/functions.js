@@ -568,6 +568,17 @@ var self = module.exports =
   		return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 	},
 	
+	//extract postcode from string
+	extract_uk_postcode : function (contentStr){
+		var returnedPostcodeStr='';
+		var reg="/((GIR 0AA)|((([A-PR-UWYZ][0-9][0-9]?)|(([A-PR-UWYZ][A-HK-Y][0-9][0-9]?)|(([A-PR-UWYZ][0-9][A-HJKSTUW])|([A-PR-UWYZ][A-HK-Y][0-9][ABEHMNPRVWXY])))) [0-9][ABD-HJLNP-UW-Z]{2}))/i";
+		var foundResults= contentStr.match(/((GIR 0AA)|((([A-PR-UWYZ][0-9][0-9]?)|(([A-PR-UWYZ][A-HK-Y][0-9][0-9]?)|(([A-PR-UWYZ][0-9][A-HJKSTUW])|([A-PR-UWYZ][A-HK-Y][0-9][ABEHMNPRVWXY])))) [0-9][ABD-HJLNP-UW-Z]{2}))/i);
+		if(foundResults){
+			returnedPostcodeStr= foundResults[1];
+		}
+		return returnedPostcodeStr;
+	},
+	
 	// every time add a entry page for a table please create a entry here, mention the page name as "filename" and its related collection name 
 	// (This is hard coded right now, will make this option dynamic from system_templates)
 	fetchTableName : function (filename){

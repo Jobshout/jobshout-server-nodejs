@@ -197,6 +197,9 @@ function upload_single_file(form){
 										}else{
 											$("#cv_content").val('');
 										}
+										if(response.postcode && response.postcode!=""){
+											$("#postcode").val(response.postcode);
+										}
 										$("#file").prop('disabled', true);
 										dataAsJson('contentForm', form);
 									} else if(response.error) {

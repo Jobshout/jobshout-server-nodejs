@@ -76,6 +76,7 @@ app.post(backendDirectoryPath+'/upload', requireLogin, function(req, res) {
 			}
 			if(resultObject.extracted_data && resultObject.extracted_data!="" && resultObject.fields && resultObject.fields.related_collection && resultObject.fields.related_collection=="job_applications"){
 				myObj["cv_content"]=resultObject.extracted_data;
+				myObj["postcode"]=initFunctions.extract_uk_postcode(resultObject.extracted_data);
 			}
 		});
 		//upload file in database
