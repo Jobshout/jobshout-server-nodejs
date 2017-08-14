@@ -147,7 +147,6 @@ var new_event=new Array();
 
 	function get_datetime(timestamp){
 		var new_date = new Date(timestamp * 1000);
-		console.log(new_date);
 		return new_date;
 	}
 	
@@ -204,6 +203,9 @@ var new_event=new Array();
 							var new_arr=new Array();
 							new_arr['id']=response._id;
 							new_arr['title']=$("#reported_by").val()+": "+$("#task_name").val();
+							new_arr['task']=$("#task_name").val();
+							new_arr['reported_by']=$("#reported_by").val();
+							new_arr['description']=$("#description").val();
 							new_arr['start']=get_datetime($('#start_timestamp').val());
 							new_arr['end']=get_datetime($('#end_timestamp').val());
 							new_arr['url']=backendDirectory+'/timeslip?_id='+response._id;
@@ -255,7 +257,7 @@ var new_event=new Array();
                 },
                 selectable: true,
                 selectHelper: true,
-                editable: true,
+                editable: false,
 				
 				timeFormat: 'h(:mm)t',
                
@@ -292,7 +294,10 @@ var new_event=new Array();
 						$.each(result.aaData, function(i,item){
 							var new_arr=new Array();
 							new_arr['id']=item._id;
-							new_arr['title']=item.task_name+": "+item.description;
+							new_arr['title']=item.reported_by+": "+item.task_name;
+							new_arr['task']=item.task_name;
+							new_arr['reported_by']=item.reported_by;
+							new_arr['description']=item.description;
 							new_arr['start']=get_datetime(item.start_timestamp);
 							new_arr['end']=get_datetime(item.end_timestamp);
 							new_arr['url']=backendDirectory+'/timeslip?_id='+item._id;
@@ -307,6 +312,39 @@ var new_event=new Array();
 						$('#calendar').fullCalendar( 'addEventSource', new_event );
 					}
 				});
+			},
+			eventMouseover: function(event, jsEvent, view) {
+				if(event.title != null) {
+					var startTimeStr=event.start.format(), endTimeStr="";
+                	if(event.end!=null){
+                    	endTimeStr=event.end.format();
+                	}
+                	if(endTimeStr=="")	{
+                		endTimeStr=startTimeStr;
+                	}
+                	
+               		var content =
+					"Task name: " + event.task + "<br />" +
+					"Reported By: " + event.reported_by + "<br />" +
+					"Timeslip Desc: " + event.description + "<br />" +
+					"Start time: " + startTimeStr + "<br />" +
+					"End time: " + endTimeStr + "<br />";
+					
+					var tooltip = '<div class="toolTip" style="position:absolute;background-color:#333;border-radius:4px;color:#fff;padding:7px;z-index:1000;font-size:13px;">' + content + '</div>';
+					$("body").append(tooltip);
+					$(this).mouseover(function (e) {
+						$(this).css('z-index', 10000);
+						$('.toolTip').fadeIn('500');
+						$('.toolTip').fadeTo('10', 1.9);
+					}).mousemove(function (e) {
+						$('.toolTip').css('top', e.pageY + 10);
+						$('.toolTip').css('left', e.pageX + 20);
+					});
+				}
+			},
+			eventMouseout: function(event, jsEvent, view) {
+				$(this).css('z-index', 8000);
+				$('.toolTip').remove();
 			}
 		});
 			
