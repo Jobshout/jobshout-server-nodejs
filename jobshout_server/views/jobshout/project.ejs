@@ -282,7 +282,7 @@ font-size: 20px;
 									<input class="form-control searchFieldClass" style="min-width:225px; height:36px;" required id="searchField" placeholder="Search here..." value="">
 									<button class="btn btn-left-align btn-link no-shadow bg-transparent no-padding-top padding-right-10 right-auto left" type="button" id="searchBtn" title="Search"><i class="glyphicon glyphicon-search"></i></button>
 								</div>
-                				<a title="Add new contact" href="<%= backendDirectory %>/contact?customer_id=<%= contentObj._id %>" target="_blank" class="btn btn-danger">Add new contact</a>
+                				<a title="Add new task" href="<%= backendDirectory %>/task?project_id=<%= contentObj._id %>" target="_blank" class="btn btn-danger">Add new task</a>
                 			</div>
          				</div>
       				</div>
@@ -362,52 +362,15 @@ function draw_content_html (aaData) {
 	return contentHtml;
 }
 
-function fetch_customers(){
-	$("#customer_mongo_id").html("");
-	
-	var sVal="";
-	<% if (typeof queryStr !== 'undefined' && queryStr !== null && typeof queryStr.customer_id !== 'undefined' && queryStr.customer_id !== null && queryStr.customer_id !=="") { %>
-		sVal="<%= queryStr.customer_id %>";
-	<% }else if(typeof contentObj.customer_mongo_id !== 'undefined' && contentObj.customer_mongo_id !== null)	{ %>
-		sVal="<%= contentObj.customer_mongo_id %>";
-	<% } %>
-	if(sVal!=""){
-		var jsonRow=backendDirectory+"/collection_details?id="+sVal+"&collection=customers";
-		$.getJSON(jsonRow,function(html){
-			var contentHtml="<option value=''></option>";
-			var contentObj=html.aaData;
-			if(contentObj){
-				contentHtml+="<option value='"+contentObj._id+"' ";
-				if(sVal==contentObj._id){
-					contentHtml+="selected";
-				}
-				contentHtml+=" >"+contentObj.name+"</option>";
-     		}
-			$("#customer_mongo_id").html(contentHtml);
-			$("#customer_mongo_id" ).combobox();
-		});
-	}else{
-		var jsonRow=backendDirectory+"/api_fetch_list?start=0&limit=20&collection=customers";
-	
-		$.getJSON(jsonRow,function(html){
-			var contentHtml="<option value=''></option>";
-			if(html.aaData.length>0){
-					$.each(html.aaData, function(i,row){
-						contentHtml+="<option value='"+row._id+"' ";
-						if(sVal==row._id){
-							contentHtml+="selected";
-						}
-						contentHtml+=" >"+row.name+"</option>";
-					});
-     		}
-			$("#customer_mongo_id").html(contentHtml);
-			$("#customer_mongo_id" ).combobox();
-		});
-	}	
-}
 	$(function () {
-		fetch_customers();
-		
+		var customer_id="";
+	<% if (typeof queryStr !== 'undefined' && queryStr !== null && typeof queryStr.customer_id !== 'undefined' && queryStr.customer_id !== null && queryStr.customer_id !=="") { %>
+		customer_id="<%= queryStr.customer_id %>";
+	<% }else if(typeof contentObj.customer_mongo_id !== 'undefined' && contentObj.customer_mongo_id !== null)	{ %>
+		customer_id="<%= contentObj.customer_mongo_id %>";
+	<% } %>
+		fetch_collection_autocomplete_list('customers', 'customer_mongo_id', customer_id);
+	
 		fetch_default_list("currency-list", "<% if (typeof contentObj.currency !== 'undefined' && contentObj.currency !== null) { %><%= contentObj.currency %><% } %>","currency");
 		
 		// validate form on keyup and submit

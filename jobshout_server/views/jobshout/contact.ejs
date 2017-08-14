@@ -165,51 +165,15 @@
 <script src="js/jquery.validate.js"></script>
 
 <script language="javascript">
-function fetch_customers(){
-	$("#customer_mongo_id").html("");
-	
-	var sVal="";
-	<% if (typeof queryStr !== 'undefined' && queryStr !== null && typeof queryStr.customer_id !== 'undefined' && queryStr.customer_id !== null && queryStr.customer_id !=="") { %>
-		sVal="<%= queryStr.customer_id %>";
-	<% }else if(typeof contentObj.customer_mongo_id !== 'undefined' && contentObj.customer_mongo_id !== null)	{ %>
-		sVal="<%= contentObj.customer_mongo_id %>";
-	<% } %>
-	if(sVal!=""){
-		var jsonRow=backendDirectory+"/collection_details?id="+sVal+"&collection=customers";
-		$.getJSON(jsonRow,function(html){
-			var contentHtml="<option value=''></option>";
-			var contentObj=html.aaData;
-			if(contentObj){
-				contentHtml+="<option value='"+contentObj._id+"' ";
-				if(sVal==contentObj._id){
-					contentHtml+="selected";
-				}
-				contentHtml+=" >"+contentObj.name+"</option>";
-     		}
-			$("#customer_mongo_id").html(contentHtml);
-			$("#customer_mongo_id" ).combobox();
-		});
-	}else{
-		var jsonRow=backendDirectory+"/api_fetch_list?start=0&limit=20&collection=customers";
-	
-		$.getJSON(jsonRow,function(html){
-			var contentHtml="<option value=''></option>";
-			if(html.aaData.length>0){
-					$.each(html.aaData, function(i,row){
-						contentHtml+="<option value='"+row._id+"' ";
-						if(sVal==row._id){
-							contentHtml+="selected";
-						}
-						contentHtml+=" >"+row.name+"</option>";
-					});
-     		}
-			$("#customer_mongo_id").html(contentHtml);
-			$("#customer_mongo_id" ).combobox();
-		});
-	}	
-}
 	$(function () {
-		fetch_customers();
+		var selected_customer_id="";
+		<% if (typeof queryStr !== 'undefined' && queryStr !== null && typeof queryStr.customer_id !== 'undefined' && queryStr.customer_id !== null && queryStr.customer_id !=="") { %>
+			selected_customer_id="<%= queryStr.customer_id %>";
+		<% }else if(typeof contentObj.customer_mongo_id !== 'undefined' && contentObj.customer_mongo_id !== null)	{ %>
+			selected_customer_id="<%= contentObj.customer_mongo_id %>";
+		<% } %>
+		
+		fetch_collection_autocomplete_list('customers', 'customer_mongo_id', selected_customer_id);
 
 		// validate form on keyup and submit
 		$("#EntryForm").validate({

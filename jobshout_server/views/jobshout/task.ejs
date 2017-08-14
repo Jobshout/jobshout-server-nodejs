@@ -301,132 +301,33 @@ function draw_content_html (aaData) {
 	return contentHtml;
 }
 
-function fetch_employees(sVal, fieldNameID, drawAllBool){
-	if (typeof sVal === "undefined") { 
-		sVal = '';
-	}
-	if (typeof fieldNameID === "undefined") { 
-		fieldNameID = '';
-	}
-	if (typeof drawAllBool === "undefined") { 
-		drawAllBool = false;
-	}
-	
-	if(sVal!=="" && fieldNameID!==""){
-		var jsonRow=backendDirectory+"/collection_details?id="+sVal+"&collection=users";
-		$.getJSON(jsonRow,function(html){
-			var contentHtml="<option value=''></option>";
-			var contentObj=html.aaData;
-			if(contentObj){
-				contentHtml+="<option value='"+contentObj._id+"' ";
-				if(sVal==contentObj._id){
-					contentHtml+="selected";
-				}
-				var nameStr='';
-						if(contentObj.firstname){
-							nameStr+=contentObj.firstname;
-						}
-						if(contentObj.lastname){
-							nameStr+=" "+contentObj.lastname;
-						}
-				contentHtml+=" >"+nameStr+"</option>";
-     		}
-			$("#"+fieldNameID).html(contentHtml);
-			$("#"+fieldNameID).combobox();
-		});
-	}else{
-		var jsonRow=backendDirectory+"/api_fetch_list?start=0&limit=20&collection=users&findFieldName=user_type&findFieldValue=employer";
-	
-		$.getJSON(jsonRow,function(html){
-			var contentHtml="<option value=''></option>";
-			if(html.aaData.length>0){
-					$.each(html.aaData, function(i,row){
-						contentHtml+="<option value='"+row._id+"' ";
-						if(sVal==row._id){
-							contentHtml+="selected";
-						}
-						var nameStr='';
-						if(row.firstname){
-							nameStr+=row.firstname;
-						}
-						if(row.lastname){
-							nameStr+=" "+row.lastname;
-						}
-						contentHtml+=" >"+nameStr+"</option>";
-					});
-     		}
-     		if(drawAllBool)	{
-				$("#reported_by_user_id").html(contentHtml);
-				$("#reported_by_user_id").combobox();
-				
-				$("#assigned_to_user_id").html(contentHtml);
-				$("#assigned_to_user_id").combobox();
-			}else if(fieldNameID!==""){
-				$("#"+fieldNameID).html(contentHtml);
-				$("#"+fieldNameID).combobox();
-			}
-		});
-	}	
-}
-function fetch_projects(){
-	$("#project_mongo_id").html("");
-	
-	var sVal="";
-	<% if (typeof queryStr !== 'undefined' && queryStr !== null && typeof queryStr.project_id !== 'undefined' && queryStr.project_id !== null && queryStr.project_id !=="") { %>
-		sVal="<%= queryStr.customer_id %>";
-	<% }else if(typeof contentObj.project_mongo_id !== 'undefined' && contentObj.project_mongo_id !== null)	{ %>
-		sVal="<%= contentObj.project_mongo_id %>";
-	<% } %>
-	if(sVal!=""){
-		var jsonRow=backendDirectory+"/collection_details?id="+sVal+"&collection=projects";
-		$.getJSON(jsonRow,function(html){
-			var contentHtml="<option value=''></option>";
-			var contentObj=html.aaData;
-			if(contentObj){
-				contentHtml+="<option value='"+contentObj._id+"' ";
-				if(sVal==contentObj._id){
-					contentHtml+="selected";
-				}
-				contentHtml+=" >"+contentObj.name+"</option>";
-     		}
-			$("#project_mongo_id").html(contentHtml);
-			$("#project_mongo_id" ).combobox();
-		});
-	}else{
-		var jsonRow=backendDirectory+"/api_fetch_list?start=0&limit=20&collection=projects";
-	
-		$.getJSON(jsonRow,function(html){
-			var contentHtml="<option value=''></option>";
-			if(html.aaData.length>0){
-					$.each(html.aaData, function(i,row){
-						contentHtml+="<option value='"+row._id+"' ";
-						if(sVal==row._id){
-							contentHtml+="selected";
-						}
-						contentHtml+=" >"+row.name+"</option>";
-					});
-     		}
-			$("#project_mongo_id").html(contentHtml);
-			$("#project_mongo_id" ).combobox();
-		});
-	}	
-}
-
-$(function () {
+$(function () {	
+	var assign_to='', reported_by='', project_id='';
 	<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) {	%>
 		<% if (typeof contentObj.assigned_to_user_id !== 'undefined' && contentObj.assigned_to_user_id !== null && contentObj.assigned_to_user_id!=="") { %>
-			fetch_employees ('<%= contentObj.assigned_to_user_id %>', 'assigned_to_user_id', false);
+			assign_to= '<%= contentObj.assigned_to_user_id %>';
 		<% } %>
 		<% if (typeof contentObj.reported_by_user_id !== 'undefined' && contentObj.reported_by_user_id !== null && contentObj.reported_by_user_id!=="") { %>
-			fetch_employees ('<%= contentObj.reported_by_user_id %>', 'reported_by_user_id', false);
+			reported_by='<%= contentObj.reported_by_user_id %>';
 		<% } %>
     <%	}else{	%>
-    	fetch_employees ('', '', true);
+    	<% if (typeof authenticatedUser._id !== 'undefined' && authenticatedUser._id !== null && authenticatedUser._id!=="") { %>
+			reported_by='<%= authenticatedUser._id %>';
+		<% } %>
     <% } %>
 		
+	fetch_collection_autocomplete_list('users', 'assigned_to_user_id', assign_to, 'status', '1');
+	fetch_collection_autocomplete_list('users', 'reported_by_user_id', reported_by, 'status', '1');
+	
 	fetch_default_list("tasks-status", "<% if (typeof contentObj.status !== 'undefined' && contentObj.status !== null) { %><%= contentObj.status %><% } %>","status");
-		
-	fetch_projects();
+	
+	<% if (typeof queryStr !== 'undefined' && queryStr !== null && typeof queryStr.project_id !== 'undefined' && queryStr.project_id !== null && queryStr.project_id !=="") { %>
+		project_id="<%= queryStr.project_id %>";
+	<% }else if(typeof contentObj.project_mongo_id !== 'undefined' && contentObj.project_mongo_id !== null)	{ %>
+		project_id="<%= contentObj.project_mongo_id %>";
+	<% } %>
+	fetch_collection_autocomplete_list('projects', 'project_mongo_id', project_id);
+	
 	// validate form on keyup and submit
 		$("#contentForm").validate({
 			ignore: "",
@@ -605,7 +506,7 @@ $(function () {
 		if(ele_select.attr('id')=='project_mongo_id'){
 			var jsonRow = backendDirectory+"/api_fetch_list?start=0&limit=20&collection=projects&s="+request.term;
 		}else if(ele_select.attr('id')=='assigned_to_user_id' || ele_select.attr('id')=='reported_by_user_id'){
-			var jsonRow = backendDirectory+"/api_fetch_list?start=0&limit=20&collection=collection=users&findFieldName=user_type&findFieldValue=employer&s="+request.term;
+			var jsonRow = backendDirectory+"/api_fetch_list?start=0&limit=20&collection=users&findFieldName=status&findFieldValue=1&s="+request.term;
 		}
 		//alert(jsonRowURLStr);
 		if(xhr) xhr.abort();

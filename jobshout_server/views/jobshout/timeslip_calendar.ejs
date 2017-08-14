@@ -151,10 +151,13 @@ var new_event=new Array();
 		var new_date = new Date(timestamp * 1000);
 		return new_date;
 	}
-	
+	function evaluate_slip_values (start_timestamp, end_timestamp){							
+		var timeslipsDiff= end_timestamp-start_timestamp;
+		var timeslipsMinutes = Math.floor(timeslipsDiff / 60);
+		return (timeslipsMinutes/60).toFixed(2);			
+	}
 	var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 	var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-	
 	
         $(document).ready(function() {
         	// validate form on keyup and submit
@@ -194,12 +197,13 @@ var new_event=new Array();
 				var timestampNum=return_timestamp_from_timepicker($('#current_date').val(), $('#end_time').val());
 				$('#end_timestamp').val(timestampNum);
 				var uuidSystemStr=	"<% if (typeof authenticatedUser.active_system_uuid !== 'undefined' && authenticatedUser.active_system_uuid !== null && authenticatedUser.active_system_uuid !== "") {	 %><%= authenticatedUser.active_system_uuid %><% } %>";
-			
+				var slip_hours = evaluate_slip_values($('#start_timestamp').val(), $('#end_timestamp').val());
+   				
    				$.ajax({
 					type: "POST",
 					dataType: "json",
 					url: backendDirectory+"/api_crud_post",
-					data: {"collection" : "timeslips", "action" : "create", "fieldName" : "_id", "fieldValue" : guid(), "uuid_system" : uuidSystemStr, "task_mongo_id" : $("#task_mongo_id").val(), "task_name" : $("#task_name").val(), "reported_by" : $("#reported_by").val(), "reported_by_user_id" : $("#reported_by_user_id").val(), "description" : $("#description").val(), "start_timestamp" : $("#start_timestamp").val(), "end_timestamp" : $("#end_timestamp").val()},
+					data: {"collection" : "timeslips", "action" : "create", "fieldName" : "_id", "fieldValue" : guid(), "uuid_system" : uuidSystemStr, "task_mongo_id" : $("#task_mongo_id").val(), "task_name" : $("#task_name").val(), "reported_by" : $("#reported_by").val(), "reported_by_user_id" : $("#reported_by_user_id").val(), "description" : $("#description").val(), "start_timestamp" : $("#start_timestamp").val(), "end_timestamp" : $("#end_timestamp").val(), "slip_hours" : slip_hours},
 					success: function(response){
 						if(response.success){
 							var new_arr=new Array();
@@ -245,9 +249,13 @@ var new_event=new Array();
 				$('#end_timestamp').val(timestampNum);
        		});
         
-			fetch_collection_list('tasks', 'task_mongo_id');
-			fetch_collection_list('users', 'reported_by_user_id');
-
+			fetch_collection_autocomplete_list('tasks', 'task_mongo_id');
+			var reported_by='';
+			<% if (typeof authenticatedUser._id !== 'undefined' && authenticatedUser._id !== null && authenticatedUser._id!=="") { %>
+				reported_by='<%= authenticatedUser._id %>';
+			<% } %>
+			fetch_collection_autocomplete_list('users', 'reported_by_user_id', reported_by, 'status', '1');
+	
             var flag=0;
 			
             
@@ -484,7 +492,7 @@ function return_timestamp_from_timepicker (startDateStr, timeStr)	{
 		if(ele_select.attr('id')=='task_mongo_id'){
 			var jsonRow = backendDirectory+"/api_fetch_list?start=0&limit=20&collection=tasks&s="+request.term;
 		}else if(ele_select.attr('id')=='reported_by_user_id'){
-			var jsonRow = backendDirectory+"/api_fetch_list?start=0&limit=20&collection=collection=users&findFieldName=user_type&findFieldValue=employer&s="+request.term;
+			var jsonRow = backendDirectory+"/api_fetch_list?start=0&limit=20&collection=users&findFieldName=status&findFieldValue=1&s="+request.term;
 		}
 		//alert(jsonRowURLStr);
 		if(xhr) xhr.abort();
@@ -578,38 +586,6 @@ function return_timestamp_from_timepicker (startDateStr, timeStr)	{
       }
     });
   })( jQuery ); 
-  
-  function fetch_collection_list(collectionStr, fieldID){
-	$("#"+fieldID).html("");
-		var jsonRow=backendDirectory+"/api_fetch_list?start=0&limit=20&collection="+collectionStr;
-		if(collectionStr=='users'){
-			jsonRow+='&findFieldName=user_type&findFieldValue=employer';
-		}
-		$.getJSON(jsonRow,function(html){
-			var contentHtml="<option value=''></option>";
-			if(html.aaData.length>0){
-					$.each(html.aaData, function(i,row){
-						contentHtml+="<option value='"+row._id+"' ";
-						var nameStr='';
-						if(collectionStr=='users'){
-							if(row.firstname){
-								nameStr+=row.firstname;
-							}
-							if(row.lastname){
-								nameStr+=" "+row.lastname;
-							}
-						} else{
-							nameStr=row.name;
-						}
-						contentHtml+=" >"+nameStr+"</option>";
-					});
-     		}
-			$("#"+fieldID).html(contentHtml);
-			$("#"+fieldID).combobox();
-		});
-}
-
-
 </script>
 </body>
 </html>

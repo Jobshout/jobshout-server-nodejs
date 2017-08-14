@@ -658,34 +658,6 @@ function load_systems(e){
 	});
 }
 
-function load_clubs(){
-	var defaultAssignedVal=$("#club_mongo_id").val();
-	var jsonRow=backendDirectory+"/api_fetch_list?limit=all&collection=clubs";
-	
-	$.getJSON(jsonRow,function(response){
-		if(response.aaData){
-		var defaultContentHTML="<option value=''></option>";
-		if(response.aaData.length>0){
-			var selectedSearchArr = new Array();
-			<% if (typeof contentObj.club_mongo_id !== 'undefined' && contentObj.club_mongo_id !== null && contentObj.club_mongo_id !== "") { %>
-				defaultAssignedVal="<%= contentObj.club_mongo_id %>";
-			<% } %>
-		
-			$.each(response.aaData, function(i,row){
-				defaultContentHTML+="<option value='"+row._id+"'";
-				if(defaultAssignedVal!="" && defaultAssignedVal==row._id){
-					defaultContentHTML+="selected";
-				}
-				defaultContentHTML+=">"+row.name+"</option>";
-			});
-     	}
-     		$("#club_mongo_id").html(defaultContentHTML);
-     		$('#club_mongo_id').combobox();
-     	}
-	});
-}
-
-
 function load_countries(){
 		var countrySelectedStr= "<% if (typeof contentObj.country !== 'undefined' && contentObj.country !== null) {	%><%= contentObj.country %><%	}	%>";
 		if(countrySelectedStr==""){
@@ -814,7 +786,11 @@ $(document).ready(function() {
 	load_countries();
 	load_payments();
 	load_availability();
-	load_clubs();
+	var defaultAssignedVal='';
+	<% if (typeof contentObj.club_mongo_id !== 'undefined' && contentObj.club_mongo_id !== null && contentObj.club_mongo_id !== "") { %>
+		defaultAssignedVal="<%= contentObj.club_mongo_id %>";
+	<% } %>
+	fetch_collection_autocomplete_list('clubs', 'club_mongo_id', defaultAssignedVal);
 	
 	var dobVal= $("#dob").val();
 	if(dobVal!="" && !isNaN(dobVal)){

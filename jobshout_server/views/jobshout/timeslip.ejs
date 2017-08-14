@@ -198,67 +198,6 @@
 <script src="js/moment.js"></script>
 <script src="js/bootstrap-datetimepicker.min.js"></script>
 <script language="javascript">
-function fetch_collection_list(collectionStr, fieldID, sVal){
-	$("#"+fieldID).html("");
-	if(sVal!=""){
-		var jsonRow=backendDirectory+"/collection_details?id="+sVal+"&collection="+collectionStr;
-		$.getJSON(jsonRow,function(html){
-			var contentHtml="<option value=''></option>";
-			var contentObj=html.aaData;
-			if(contentObj){
-				contentHtml+="<option value='"+contentObj._id+"' ";
-				if(sVal==contentObj._id){
-					contentHtml+="selected";
-				}
-					var nameStr='';
-					if(collectionStr=='users'){
-						if(contentObj.firstname){
-							nameStr+=contentObj.firstname;
-						}
-						if(contentObj.lastname){
-							nameStr+=" "+contentObj.lastname;
-						}
-					} else{
-						nameStr=contentObj.name;
-					}
-				contentHtml+=" >"+nameStr+"</option>";
-     		}
-			$("#"+fieldID).html(contentHtml);
-			$("#"+fieldID).combobox();
-		});
-	}else{
-		var jsonRow=backendDirectory+"/api_fetch_list?start=0&limit=20&collection="+collectionStr;
-		if(collectionStr=='users'){
-			jsonRow+='&findFieldName=user_type&findFieldValue=employer';
-		}
-		$.getJSON(jsonRow,function(html){
-			var contentHtml="<option value=''></option>";
-			if(html.aaData.length>0){
-					$.each(html.aaData, function(i,row){
-						contentHtml+="<option value='"+row._id+"' ";
-						if(sVal==row._id){
-							contentHtml+="selected";
-						}
-						var nameStr='';
-						if(collectionStr=='users'){
-							if(row.firstname){
-								nameStr+=row.firstname;
-							}
-							if(row.lastname){
-								nameStr+=" "+row.lastname;
-							}
-						} else{
-							nameStr=row.name;
-						}
-						contentHtml+=" >"+nameStr+"</option>";
-					});
-     		}
-			$("#"+fieldID).html(contentHtml);
-			$("#"+fieldID).combobox();
-		});
-	}	
-}
-
 function evaluate_slip_values (){
 	var intervalTimeHrs='', minutes=0;
 	if($('#end_interval_timestamp').val()!="" && $('#start_interval_timestamp').val()!=""){
@@ -418,9 +357,11 @@ function return_timestamp_from_timepicker (startDateStr, timeStr)	{
 		
 		<% if (typeof contentObj.reported_by_user_id !== 'undefined' && contentObj.reported_by_user_id !== null) { %>
 			reportedBy="<%= contentObj.reported_by_user_id %>";
+		<% } else if(typeof authenticatedUser._id !== 'undefined' && authenticatedUser._id !== null && authenticatedUser._id!=="") {%>
+			reportedBy="<%= authenticatedUser._id %>";
 		<% } %>
-		fetch_collection_list('tasks', 'task_mongo_id', sVal);
-		fetch_collection_list('users', 'reported_by_user_id', reportedBy);
+		fetch_collection_autocomplete_list('tasks', 'task_mongo_id', sVal);
+		fetch_collection_autocomplete_list('users', 'reported_by_user_id', reportedBy, 'status', '1');
 		
 		<% if (typeof contentObj.reported_by_user_id !== 'undefined' && contentObj.reported_by_user_id !== null) {	%>
 			evaluate_slip_values();
@@ -567,7 +508,7 @@ function return_timestamp_from_timepicker (startDateStr, timeStr)	{
 		if(ele_select.attr('id')=='task_mongo_id'){
 			var jsonRow = backendDirectory+"/api_fetch_list?start=0&limit=20&collection=tasks&s="+request.term;
 		}else if(ele_select.attr('id')=='reported_by_user_id'){
-			var jsonRow = backendDirectory+"/api_fetch_list?start=0&limit=20&collection=collection=users&findFieldName=user_type&findFieldValue=employer&s="+request.term;
+			var jsonRow = backendDirectory+"/api_fetch_list?start=0&limit=20&collection=users&findFieldName=status&findFieldValue=1&s="+request.term;
 		}
 		//alert(jsonRowURLStr);
 		if(xhr) xhr.abort();

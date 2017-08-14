@@ -118,6 +118,76 @@ function getTimestampFromDate(dateString, dateFrom){
 	return date;
 }
 
+function fetch_collection_autocomplete_list(collectionStr, fieldID, sVal, searchFieldName, searchFieldValue){
+	$("#"+fieldID).html("");
+	if (typeof searchFieldName === "undefined") { 
+		searchFieldName = '';
+	}
+	if (typeof searchFieldValue === "undefined") { 
+		searchFieldValue = '';
+	}
+	if (typeof sVal === "undefined") { 
+		sVal = '';
+	}
+	if(sVal!=""){
+		var jsonRow=backendDirectory+"/collection_details?id="+sVal+"&collection="+collectionStr;
+		$.getJSON(jsonRow,function(html){
+			var contentHtml="<option value=''></option>";
+			var contentObj=html.aaData;
+			if(contentObj){
+				contentHtml+="<option value='"+contentObj._id+"' ";
+				if(sVal==contentObj._id){
+					contentHtml+="selected";
+				}
+					var nameStr='';
+					if(collectionStr=='users'){
+						if(contentObj.firstname){
+							nameStr+=contentObj.firstname;
+						}
+						if(contentObj.lastname){
+							nameStr+=" "+contentObj.lastname;
+						}
+					} else{
+						nameStr=contentObj.name;
+					}
+				contentHtml+=" >"+nameStr+"</option>";
+     		}
+			$("#"+fieldID).html(contentHtml);
+			$("#"+fieldID).combobox();
+		});
+	}else{
+		var jsonRow=backendDirectory+"/api_fetch_list?start=0&limit=20&collection="+collectionStr;
+		if(searchFieldName!='' && searchFieldValue!=''){
+			jsonRow+='&findFieldName='+searchFieldName+'&findFieldValue='+searchFieldValue;
+		}
+		$.getJSON(jsonRow,function(html){
+			var contentHtml="<option value=''></option>";
+			if(html.aaData.length>0){
+					$.each(html.aaData, function(i,row){
+						contentHtml+="<option value='"+row._id+"' ";
+						if(sVal==row._id){
+							contentHtml+="selected";
+						}
+						var nameStr='';
+						if(collectionStr=='users'){
+							if(row.firstname){
+								nameStr+=row.firstname;
+							}
+							if(row.lastname){
+								nameStr+=" "+row.lastname;
+							}
+						} else{
+							nameStr=row.name;
+						}
+						contentHtml+=" >"+nameStr+"</option>";
+					});
+     		}
+			$("#"+fieldID).html(contentHtml);
+			$("#"+fieldID).combobox();
+		});
+	}	
+}
+
 function return_timestamp_from_datetimepicker(dateString, getTimeBool, dateFrom){
 	if (typeof dateFrom === "undefined") { 
 		dateFrom = '';
