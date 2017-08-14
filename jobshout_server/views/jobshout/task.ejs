@@ -1,6 +1,6 @@
 <% include include/main-header %>
 <link rel="stylesheet" href="plugins/combobox/autocomplete-ui.css"/>
-<link href="css/bootstrap.datepicker.css" type="text/css" rel="stylesheet">
+<link href="css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet">
 <link rel="stylesheet" href="css/basictable.css">
 <style>
 .custom-combobox {
@@ -136,7 +136,10 @@
     									<label for="" class="col-sm-3 control-label">Start  <sup class="required">*</sup></label>
     									<div class="col-sm-6">
     										<input type="hidden" class="form-control" id="start_timestamp" name="start_timestamp" value="<% if (typeof contentObj.start_timestamp !== 'undefined' && contentObj.start_timestamp !== null) { %><%= contentObj.start_timestamp %><% } %>">
-    										<input type="text" class="datepicker form-control" id="start_date" data-date-format="mm/dd/yyyy"  readonly value="">
+    										<div class='input-group date' id='start_datetime_picker'>
+                    							<input type='text' class="form-control" id="start_date" value=""/>
+                    							<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                							</div>	
     									</div>
   									</div>
 															
@@ -144,7 +147,10 @@
  										<label for="" class="col-sm-3 control-label">Expected Close</label>
  										<div class="col-sm-6">
 											<input type="hidden" class="form-control" id="end_timestamp" name="end_timestamp" value="<% if (typeof contentObj.end_timestamp !== 'undefined' && contentObj.end_timestamp !== null) { %><%= contentObj.end_timestamp %><% } %>">
-    										<input type="text" class="datepicker form-control" id="end_date" data-date-format="mm/dd/yyyy"  readonly value="">
+    										<div class='input-group date' id='end_datetime_picker'>
+                    							<input type='text' class="form-control" id="end_date" value=""/>
+                    							<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                							</div>	
 										</div>
 									</div>
                             		<div class="form-group" >
@@ -271,9 +277,10 @@
 		<!-- Footer Ends Here-->
 </div>
 <!-- Page-Level Plugin Scripts-->
-<script src="plugins/combobox/autocomplete-ui.js"></script>
 <script src="js/jquery.validate.js"></script>
-<script src="js/bootstrap.datepicker.js"></script>
+<script src="js/moment.js"></script>
+<script src="js/bootstrap-datetimepicker.min.js"></script>
+<script src="plugins/combobox/autocomplete-ui.js"></script>
 <script src="js/basictable.js"></script>
 <script type="text/javascript">
 var table_row_id="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>";
@@ -461,40 +468,37 @@ $(function () {
  				dataAsJson('contentForm', form);
  			}
 		});	
-	/* datepicker plugin */
-		<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %>
-            $("#start_date").datepicker().on('changeDate', function (ev) {
-            	$(this).datepicker('hide');
-            	restrict_start_end_date('start_date', 'end_date', 'setStartDate');
-           	 });
-           	 
-           	 //show dates selected from timestamp 
-         	 populate_bootstrap_datepicker('start_timestamp', 'start_date');
-         	 populate_bootstrap_datepicker('end_timestamp', 'end_date');
-         	 //apply date range
-         	 restrict_start_end_date('start_date', 'end_date', 'setStartDate');  
-         	 restrict_start_end_date('end_date', 'start_date', 'setEndDate');           
-		<%	}	else	{	%>
-            $("#start_date").datepicker().datepicker("setDate", new Date()).on('changeDate', function (ev) {
-				$(this).datepicker('hide');
-				restrict_start_end_date('start_date', 'end_date', 'setStartDate');
+			/* datepicker plugin */
+			if($("#start_timestamp").val()!=""){
+				var tempDisplayDate=return_datetimepicker_from_timestamp($("#start_timestamp").val());
+				$("#start_date").val(tempDisplayDate)
+			}
+            $('#start_datetime_picker').datetimepicker({
+				format: 'L',
+				defaultDate:new Date()
+			}).on("dp.show", function (e) {
+				if($('#end_date').val()!=="")	{
+					$('#start_datetime_picker').data("DateTimePicker").maxDate($('#end_date').val());
+				}
+        	}).on("dp.change", function (e) {
+        		$('#end_datetime_picker').data("DateTimePicker").minDate(e.date);
         	});
-        	restrict_start_end_date('start_date', 'end_date', 'setStartDate');
-        <%	}	%>
 			
-		$("#end_date").datepicker().on('changeDate', function (ev) {
-           	$(this).datepicker('hide');
-           	restrict_start_end_date('end_date', 'start_date', 'setEndDate');
-        });
+			if($("#end_timestamp").val()!=""){
+				var tempDisplayDate=return_datetimepicker_from_timestamp($("#end_timestamp").val());
+				$("#end_date").val(tempDisplayDate)
+			}
+            $('#end_datetime_picker').datetimepicker({
+				format: 'L'
+			}).on("dp.show", function (e) {
+				if($('#start_date').val()!==""){
+					$('#end_datetime_picker').data("DateTimePicker").minDate($('#start_date').val());
+				}
+        	}).on("dp.change", function (e) {
+        		$('#start_datetime_picker').data("DateTimePicker").maxDate(e.date);
+            });
 });
 
-function restrict_start_end_date(getdateID, setDateID, actionStr){
-	if($('#'+getdateID).val()!="" && $('#'+getdateID).val()!="NaN"){
-		var arrEndDate= $('#'+getdateID).val().split('/');
-		var dateText = new Date(arrEndDate[0]+'/'+arrEndDate[1]+'/'+arrEndDate[2]);
-		$('#'+setDateID).datepicker(actionStr, dateText);
-	}
-}
 //autocomplete
 	var xhr;
   (function( $ ) {

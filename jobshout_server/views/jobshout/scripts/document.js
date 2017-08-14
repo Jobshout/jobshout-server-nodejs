@@ -247,7 +247,9 @@ $(document).ready(function(){
 		var tempDisplayDate=return_datetimepicker_from_timestamp($("#Published_timestamp").val());
 		$("#published_date").val(tempDisplayDate)
 	}
-	$('#datetime_picker').datetimepicker();
+	$('#datetime_picker').datetimepicker({
+		defaultDate:new Date()
+	});
 		
 	// validate form on keyup and submit
 		$("#contentForm").validate({

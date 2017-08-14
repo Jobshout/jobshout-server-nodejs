@@ -56,7 +56,7 @@ var storage = GridFsStorage({
 	},
 	/** With gridfs we can store aditional meta-data along with the file */
 	metadata: function(req, file, cb) {
-		cb(null, { uuid_system: req.authenticatedUser.active_system_uuid.toString(), uuid: req.body.uuid, originalname: file.originalname, related_collection: req.body.related_collection, collection_id: req.body.collection_id, type: req.body.type });
+		cb(null, { uuid_system: req.authenticatedUser.active_system_uuid.toString(), uuid: req.body.uuid, originalname: file.originalname, related_collection: req.body.related_collection, collection_id: req.body.collection_id, type: req.body.type, tags: req.body.tags });
 	}
 });
 
@@ -177,27 +177,6 @@ app.get(backendDirectoryPath+'/file/:filename', requireLogin, function(req, res)
         });
     }
 });
-/**app.get(backendDirectoryPath+'/file/', requireLogin, function(req, res){
-	if(req.authenticationBool){
-	
-		gfs.files.find({filename: req.params.filename}).toArray(function(err, files){
-			if(!files || files.length === 0){
-				return res.status(404).json({
-					responseCode: 1,
-					responseMessage: "error"
-				});
-			}
-
-            var readstream = gfs.createReadStream({
-				filename: files[0].filename
-			});
-
-            res.set('Content-Type', files[0].contentType)
-
-            return readstream.pipe(res);
-		});
-	}
-});**/
      
 //post action for save notes
 app.post(backendDirectoryPath+'/savenotes', requireLogin, (req, res) => {
@@ -2431,20 +2410,27 @@ app.get(backendDirectoryPath+'/:id', requireLogin, function(req, res) {
 	if(req.authenticationBool){
 		var pageRequested = req.params.id;
 		var requestedPageStr="/"+pageRequested;
-				
-		var queryString= req.url, removeUrl=backendDirectoryPath+'/'+req.params.id+'?';
-		queryString= queryString.substr(removeUrl.length);
-		if(queryString.indexOf("&")>-1){
-			queryString= queryString.substr(0,queryString.indexOf("&"));
+		
+		if(req.query._id && req.query._id!=""){
+			editFieldName="_id";
+			editFieldVal=req.query._id;
+		} else if(req.query.uuid && req.query.uuid!=""){
+			editFieldName="uuid";
+			editFieldVal=req.query.uuid;
+		} else{
+			var queryString= req.url, removeUrl=backendDirectoryPath+'/'+req.params.id+'?';
+			queryString= queryString.substr(removeUrl.length);
+			if(queryString.indexOf("&")>-1){
+				queryString= queryString.substr(0,queryString.indexOf("&"));
+			}
+	
+			var editFieldName="", editFieldVal="";
+	
+			if(queryString.indexOf("=")>-1){
+				editFieldName=queryString.substr(0,queryString.indexOf("="));
+				editFieldVal=queryString.substr(queryString.indexOf("=")+1);
+			}
 		}
-	
-		var editFieldName="", editFieldVal="";
-	
-		if(queryString.indexOf("=")>-1){
-			editFieldName=queryString.substr(0,queryString.indexOf("="));
-			editFieldVal=queryString.substr(queryString.indexOf("=")+1);
-		}
-	
 		var contentObj= "";
 		var table_name =initFunctions.fetchTableName(pageRequested);
 	

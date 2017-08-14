@@ -289,7 +289,7 @@ function evaluate_slip_values (){
 }
 function resetIntervalTime(){
 	$('#slip_hours').val('');
-	$(interval_time).val('');
+	$('#interval_time').val('');
 	$('#end_interval_time').val('');
 	$('#end_interval_timestamp').val('');
 	$('#start_interval_time').val('');
@@ -334,9 +334,6 @@ function return_timestamp_from_timepicker (startDateStr, timeStr)	{
    			}
   		});
   		
-  		$('#start_datetime_picker').datetimepicker();
-  		$('#end_datetime_picker').datetimepicker();
-  		
   		<% if (typeof contentObj.end_timestamp !== 'undefined' && contentObj.end_timestamp !== null) {  %>
   			var endDateStr=return_datetimepicker_from_timestamp("<%= contentObj.end_timestamp %>");
   			$('#end_date').val(endDateStr);
@@ -345,20 +342,32 @@ function return_timestamp_from_timepicker (startDateStr, timeStr)	{
   			var dateStr=return_datetimepicker_from_timestamp("<%= contentObj.start_timestamp %>");
 			$('#start_date').val(dateStr);
   		<% } %>
-		
-		$("#start_datetime_picker").on("dp.change", function (e) {
+  		
+		$('#start_datetime_picker').datetimepicker({
+			defaultDate:new Date()
+		}).on("dp.show", function (e) {
+			if($('#end_date').val()!=""){
+				$('#start_datetime_picker').data("DateTimePicker").maxDate($('#end_date').val());
+			}
+        }).on("dp.change", function (e) {
 			$('#end_datetime_picker').data("DateTimePicker").minDate(e.date);
 			$('#interval_start_timepicker').data("DateTimePicker").minDate(e.date);
 			var timestampNum=return_timestamp_from_datetimepicker($('#start_date').val());
 			$('#start_timestamp').val(timestampNum);
+			resetIntervalTime();	 
 			evaluate_slip_values();			
         });
         
-        $("#end_datetime_picker").on("dp.change", function (e) {
+        $('#end_datetime_picker').datetimepicker().on("dp.show", function (e) {
+        	if($('#start_date').val()!=""){
+				$('#end_datetime_picker').data("DateTimePicker").minDate($('#start_date').val());
+			}
+	   	}).on("dp.change", function (e) {
         	$('#start_datetime_picker').data("DateTimePicker").maxDate(e.date);
             $('#interval_end_timepicker').data("DateTimePicker").maxDate(e.date);
             var timestampNum=return_timestamp_from_datetimepicker($('#end_date').val());
 			$('#end_timestamp').val(timestampNum);
+			resetIntervalTime();
 			evaluate_slip_values();
         });
         <% if (typeof contentObj.start_interval_timestamp !== 'undefined' && contentObj.start_interval_timestamp !== null) {  %>
@@ -372,24 +381,22 @@ function return_timestamp_from_timepicker (startDateStr, timeStr)	{
 		
 		$('#interval_start_timepicker').datetimepicker({
         	format: 'LT'
-        });
-        $('#interval_end_timepicker').datetimepicker({
-        	format: 'LT'
-        });
-        
-        $("#interval_start_timepicker").on("dp.change", function (e) {
+        }).on("dp.change", function (e) {
         	$('#interval_end_timepicker').data("DateTimePicker").minDate(e.date);
             var timestampNum=return_timestamp_from_timepicker($('#start_date').val(), $('#start_interval_time').val());
         	$('#start_interval_timestamp').val(timestampNum);
         	evaluate_slip_values();
         });
-        $("#interval_end_timepicker").on("dp.change", function (e) {
+        
+        $('#interval_end_timepicker').datetimepicker({
+        	format: 'LT'
+        }).on("dp.change", function (e) {
         	 $('#interval_start_timepicker').data("DateTimePicker").maxDate(e.date);
             var timestampNum=return_timestamp_from_timepicker($('#start_date').val(), $('#end_interval_time').val());
 			$('#end_interval_timestamp').val(timestampNum);
 			evaluate_slip_values();
         });
-        
+            
         <% if (typeof contentObj.lunchinterval !== 'undefined' && contentObj.lunchinterval !== null && (contentObj.lunchinterval == true || contentObj.lunchinterval == 'true')) {  %>
   			if($('#end_date').val()!="" && $('#start_date').val()!=""){
    				$('.breakTimeUIClass').show();

@@ -555,7 +555,6 @@ var self = module.exports =
 					allCollections.push(coll[i].name);
 				}
 			}
-			
 			return cb(allCollections);
 		});
 	},
