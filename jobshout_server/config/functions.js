@@ -309,7 +309,7 @@ var self = module.exports =
 				checkForExistenceObj= '{'+uniqueFieldNameStr +': \''+uniqueFieldValueStr+'\', "uuid_system" : \''+postContent['uuid_system']+'\'}';
 			}
 		}
-		//if(uniqueFieldNameStr!="" && uniqueFieldValueStr!=""){
+		
 		if(checkForExistenceObj!="" && checkForExistenceObj!=null){
 			if(postContent!="" && postContent!=null){
 				postContent.modified=self.currentTimestamp();
@@ -410,7 +410,26 @@ var self = module.exports =
 			cb(outputObj);
 		}
 	},
-	
+	save_activity_log : function (db, labelStr, linkStr, loggedInUserID, cb) {
+		var table_name_str='activity_log', outputObj = new Object();
+		db.collection(table_name_str).findOne({last_clicked_link : linkStr, user_mongo_id: loggedInUserID }, function(err, existingDocument) {
+			if(existingDocument){
+				//update modified timestamp
+				db.collection(table_name_str).update({_id : existingDocument._id}, {'$set' : {label: labelStr, modified : self.currentTimestamp()}}, (updateErr, updateResult) => {
+    				if (updateErr) outputObj["error"]="Error occurred while updating ["+updateErr+"], please try after some time!";
+    				outputObj["success"]= "Updated successfully!";
+    				cb(outputObj);
+  				});
+			} else {
+				//create entry
+				db.collection(table_name_str).save({ last_clicked_link : linkStr, user_mongo_id: loggedInUserID, label: labelStr, created : self.currentTimestamp(), modified : self.currentTimestamp() }, (saveError, saveResult) => {
+      				if (saveError) outputObj["error"]  = "Error occurred while saving ["+saveError+"], please try after some time!";
+    				outputObj["success"]  = "Saved successfully!";
+    				cb(outputObj);
+  				});
+			}
+		});
+	},
 	saveEntry : function(db, table_nameStr, checkForExistence, postContent, parameterStr, findmongoID, unique_fieldStr, unique_fieldVal, modifiedByUser, cb){
 		for(var key in postContent) {
 			var contentStr=postContent[key];
@@ -531,7 +550,10 @@ var self = module.exports =
 		var timeStampStr=Math.round(new Date().getTime()/1000)
 		return timeStampStr;
 	},
-	
+	milesToRadian : function(miles){
+    	var earthRadiusInMiles = 3959;
+    	return miles / earthRadiusInMiles;
+	},
 	returnActivetokens : function (db, cb){
 		db.collection('tokens').find({"Status": { $in: [ 1, "1" ] } }, {"name" : 1, "code" : 1}).toArray(function(err, tokens_result) {
 			if(err) return cb(null)

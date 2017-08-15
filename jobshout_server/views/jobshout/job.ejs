@@ -453,11 +453,11 @@ function fetch_uk_towns_cities_details(){
 				if(contentObj.postcode){
 					$("#postcode").val(contentObj.postcode);
 				}
-				if(contentObj.lat){
-					$("#latitude").val(contentObj.lat);
+				if(contentObj.loc && contentObj.loc.coordinates && contentObj.loc.coordinates[1]){
+					$("#latitude").val(contentObj.loc.coordinates[1]);
 				}
-				if(contentObj.lng){
-					$("#longitude").val(contentObj.lng);
+				if(contentObj.loc && contentObj.loc.coordinates && contentObj.loc.coordinates[0]){
+					$("#longitude").val(contentObj.loc.coordinates[0]);
 				}
      		}
 		});

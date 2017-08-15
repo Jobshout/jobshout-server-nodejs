@@ -371,9 +371,6 @@ function load_navigation_data(){
 							var subTableHtmlStr="";	
 							$.each(module_items, function(i,row){
 								var linkStr=row.link;
-								/**if(linkStr.charAt(0)!="/"){
-									linkStr="/"+linkStr;
-								}**/
 								if(openedFileNameStr==row.link){
 									activeMenuFlag=true;
 									subTableHtmlStr+='<li class="active">';
@@ -400,6 +397,17 @@ function load_navigation_data(){
 			});
 			$("#dashboard-menu").append(table_html);
 		}
+	});
+}
+
+function fetch_activity_log(){
+	var jsonRow=backendDirectory+"/api_fetch_list?limit=5&collection=activity_log";
+	$.getJSON(jsonRow,function(html){
+		if(html.aaData && html.aaData.length>0){
+			$.each(html.aaData, function(i,row){
+				allDefaultTagsArr.push(row.name);
+			});
+     	}
 	});
 }
 
@@ -444,10 +452,12 @@ function load_notifications(){
 function fetch_saved_tags(val){
 	var jsonRow=backendDirectory+"/api_fetch_list?limit=all&collection=tags";
 	$.getJSON(jsonRow,function(html){
-		if(html.aaData.length>0){
+		if(html.aaData && html.aaData.length>0){
+			var contentHtml='';
 			$.each(html.aaData, function(i,row){
-				allDefaultTagsArr.push(row.name);
+				contentHtml+='<p><a HREF="'+row.link+'"><i CLASS="fa fa-dot-circle-o"></i> '+row.label+'</a></p>';
 			});
+			$('.lastClickedLinkCss').html(contentHtml);
      	}
 	});
 }
@@ -564,4 +574,5 @@ $(function () {
     load_navigation_data();
     fetch_users_sites();
     load_notifications();
+   // fetch_activity_log();
 });

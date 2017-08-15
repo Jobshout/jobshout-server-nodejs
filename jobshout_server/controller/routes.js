@@ -1502,6 +1502,147 @@ app.get(backendDirectoryPath+'/load_navigator/', requireLogin, function(req, res
 });
 
 //GENERIC: fetch listing depending upon collection or template passed
+app.get(backendDirectoryPath+'/api_fetch_applications/', requireLogin, function(req, res) {
+	var itemsPerPage = 10, pageNum=1, collectionStr="job_applications", outputObj = new Object();
+	
+	if(req.query.collection){
+		collectionStr=req.query.collection;
+	}
+	if(req.query.start){
+		pageNum=parseInt(req.query.start);
+	}
+	if(req.query.limit){
+		itemsPerPage=parseInt(req.query.limit);
+	}
+	if(pageNum==0){
+		pageNum=1;
+	}
+	
+	if(req.authenticationBool){
+		var activeSystemsStr=req.authenticatedUser.active_system_uuid.toString();
+		if(collectionStr!=""){
+			var total_records=0;
+			var coll= db.collection(collectionStr);
+				
+			var query="";
+			if (typeof activeSystemsStr !== 'undefined' && activeSystemsStr !== null && activeSystemsStr!="") {
+				query+=" $or: [ { 'uuid_system' : { $in: ['"+activeSystemsStr+"'] } }, { 'shared_systems': { $in: ['"+activeSystemsStr+"'] } } ] ";
+			}
+			//search by criteria passed
+			if(req.query.s){
+				//create text index
+     			coll.createIndex({ "$**": "text" },{ name: "TextIndex" });
+     			if(query!=""){
+     				query+=",";
+     			}
+     			query+=" '$text': { '$search': '"+req.query.s+"' } ";
+     		}
+     		if(req.query.location && req.query.location!==""){
+				if(req.query.radius && req.query.radius!==""){
+     				db.collection('uk_towns_cities').findOne({_id: new mongodb.ObjectID(req.query.location)}, function(landmarkErr, landmark) {
+						if(landmark && landmark.postcode && landmark.postcode!=""){
+							var radiusSearchQueryStr = {
+    							"loc" : {
+        							$geoWithin : {	$centerSphere : [landmark.loc.coordinates, initFunctions.milesToRadian(req.query.radius) ]	}
+    							}
+							};
+							db.collection('uk_towns_cities').find(radiusSearchQueryStr, {postcode :1 }).toArray(function(landmark_err, landmark_items) {
+								if(landmark_items && landmark_items.length>0){
+									var postCodeStr= new Array();
+									for(var j=0; j<landmark_items.length; j++)	{
+										if(postCodeStr!=""){
+											postCodeStr+=",";
+										}
+      									postCodeStr+="'"+landmark_items[j].postcode+"'";
+      								}
+      								if(query!=""){
+     									query+=",";
+     								}
+     								query+=" 'postcode': { $in: ["+postCodeStr+"]} ";
+     								eval('var queryObj='+"{"+query+"}");
+     								coll.find(queryObj).count(function (e, count) {
+      									total_records= count;
+      								});
+									coll.find(queryObj).sort({modified: -1}).skip(pageNum-1).limit(itemsPerPage).toArray(function(err, items) {
+										if (err) {
+											outputObj["total"]   = 0;
+											outputObj["iTotalRecordsReturned"]   = 0;
+      										outputObj["error"]   = 'not found';
+      									} else if (items) {
+      										outputObj["total"]   = total_records;
+      										outputObj["iTotalRecordsReturned"]   = items.length;
+      										outputObj["aaData"]   = items;
+										}
+										res.send(outputObj);
+									});
+								}else{
+									outputObj["total"]   = 0;
+									outputObj["iTotalRecordsReturned"]   = 0;
+      								outputObj["error"]   = 'not found';
+								}								
+							});
+						}
+					});
+     			}   else {
+					db.collection('uk_towns_cities').findOne({_id: new mongodb.ObjectID(req.query.location)}, function(landmarkErr, landmark) {
+						if(landmark && landmark.postcode && landmark.postcode!=""){
+							if(query!=""){
+     							query+=",";
+     						}
+     						query+=" 'postcode': '"+landmark.postcode+"' ";
+						}
+						eval('var queryObj='+"{"+query+"}");
+						coll.find(queryObj).count(function (e, count) {
+      						total_records= count;
+      					});
+						coll.find(queryObj).sort({modified: -1}).skip(pageNum-1).limit(itemsPerPage).toArray(function(err, items) {
+							if (err) {
+								outputObj["total"]   = 0;
+								outputObj["iTotalRecordsReturned"]   = 0;
+      							outputObj["error"]   = 'not found';
+      						} else if (items) {
+      							outputObj["total"]   = total_records;
+      							outputObj["iTotalRecordsReturned"]   = items.length;
+      							outputObj["aaData"]   = items;
+							}
+							res.send(outputObj);
+						});
+					});
+     			}
+			} else {
+     			eval('var queryObj='+"{"+query+"}");
+     			coll.find(queryObj).count(function (e, count) {
+      				total_records= count;
+      			});
+				coll.find(queryObj).sort({modified: -1}).skip(pageNum-1).limit(itemsPerPage).toArray(function(err, items) {
+					if (err) {
+						outputObj["total"]   = 0;
+						outputObj["iTotalRecordsReturned"]   = 0;
+      					outputObj["error"]   = 'not found';
+						res.send(outputObj);
+      				} else if (items) {
+      					outputObj["total"]   = total_records;
+      					outputObj["iTotalRecordsReturned"]   = items.length;
+      					outputObj["aaData"]   = items;
+						res.send(outputObj);
+     				}
+				});
+			}
+		}else{
+			outputObj["total"]   = 0;
+			outputObj["iTotalRecordsReturned"]   = 0;
+      		outputObj["error"]   = "No such page exists!";
+			res.send(outputObj);
+		}
+	}else{
+		outputObj["total"]   = 0;
+		outputObj["iTotalRecordsReturned"]   = 0;
+      	outputObj["error"]   = "Authorization error!";
+		res.send(outputObj);
+	}
+}); 
+
+//GENERIC: fetch listing depending upon collection or template passed
 app.get(backendDirectoryPath+'/api_fetch_list/', requireLogin, function(req, res) {
 	var itemsPerPage = 10, pageNum=1, templateStr="", collectionStr="", returnAllResults="", findFieldNameStr="", findFieldValueStr="";
 	var outputObj = new Object();
@@ -2360,35 +2501,40 @@ app.get(backendDirectoryPath+'/list/:id', requireLogin, function(req, res) {
 		}
 		req.sendModuleLinks = true;
 		returnUserAssignedModules (loggedInUser._id, req, function(allowedNavigationData) {
-			if(allowedNavigationData && allowedNavigationData.admin_user && allowedNavigationData.admin_user==true)	{
-				res.render(accessFilePath+'standard_listing', {
-       	 			currentTemplate : pageRequested,
-        			searched_keyword : keywordStr,
-        			authenticatedUser : req.authenticatedUser
-    			});
-			}else{
-				var assignedModuleBool= false, requestedPageStr= "/list/"+pageRequested;
-					
-				if(allowedNavigationData && allowedNavigationData.modules && allowedNavigationData.modules.length>0)	{
-					for (var i = 0; i < allowedNavigationData.modules.length; i++) {
-  						if(allowedNavigationData.modules[i]==requestedPageStr){
-  							assignedModuleBool= true;
-  							break;
-  						}
+			var assignedModuleBool= false, requestedPageStr= "/list/"+pageRequested, module_label_str="";		
+				
+			if(allowedNavigationData && allowedNavigationData.modules && allowedNavigationData.modules.length>0)	{
+				for (var i = 0; i < allowedNavigationData.modules.length; i++) {
+					if(allowedNavigationData.modules[i].link==requestedPageStr){
+						assignedModuleBool= true;
+						module_label_str = allowedNavigationData.modules[i].label;
+						break;
 					}
 				}
-				if(assignedModuleBool)	{
+			}
+			if(allowedNavigationData && allowedNavigationData.admin_user && allowedNavigationData.admin_user==true)	{
+				initFunctions.save_activity_log(db, module_label_str, req.url, req.authenticatedUser._id, function(result) {	
 					res.render(accessFilePath+'standard_listing', {
        	 				currentTemplate : pageRequested,
         				searched_keyword : keywordStr,
         				authenticatedUser : req.authenticatedUser
     				});
-    			}else{
-    				res.redirect(backendDirectoryPath+'/403');
-    			}
+   				});
+   			}else{
+				if(assignedModuleBool)	{
+					initFunctions.save_activity_log(db, module_label_str, req.url, req.authenticatedUser._id, function(result) {	
+						res.render(accessFilePath+'standard_listing', {
+   	 						currentTemplate : pageRequested,
+       						searched_keyword : keywordStr,
+       						authenticatedUser : req.authenticatedUser
+   						});
+   					});
+   				}else{
+   					res.redirect(backendDirectoryPath+'/403');
+   				}
 			}
 		});
-    }else{
+	}else{
 		res.redirect(backendDirectoryPath+'/sign-in');
 	}
 })
@@ -2439,41 +2585,44 @@ app.get(backendDirectoryPath+'/:id', requireLogin, function(req, res) {
 	
 		req.sendModuleLinks = true;
 		returnUserAssignedModules (req.authenticatedUser._id, req, function(allowedNavigationData) {
-			var assignedModuleBool= false;
-			if(allowedNavigationData && allowedNavigationData.admin_user && allowedNavigationData.admin_user==true)	{
-				assignedModuleBool= true;
-			}else{
-				if(allowedNavigationData && allowedNavigationData.modules && allowedNavigationData.modules.length>0)	{
-					for (var i = 0; i < allowedNavigationData.modules.length; i++) {
-						if(allowedNavigationData.modules[i]==requestedPageStr){
-  							assignedModuleBool= true;
-  							break;
-  						}
+			var assignedModuleBool= false, module_label_str="";		
+			if(allowedNavigationData && allowedNavigationData.modules && allowedNavigationData.modules.length>0)	{
+				for (var i = 0; i < allowedNavigationData.modules.length; i++) {
+					if(allowedNavigationData.modules[i].link==requestedPageStr){
+						assignedModuleBool= true;
+						module_label_str = allowedNavigationData.modules[i].label;
+						break;
 					}
 				}
 			}
-		
+			if(allowedNavigationData && allowedNavigationData.admin_user && allowedNavigationData.admin_user==true)	{
+				assignedModuleBool= true;
+			}		
 			if(assignedModuleBool){
 				if(table_name==""){
-					res.render(pageRequested, {
-      					queryStr : req.query,
-       					contentObj : contentObj,
-       					authenticatedUser : req.authenticatedUser
+					initFunctions.save_activity_log(db, module_label_str, req.url, req.authenticatedUser._id, function(result) {	
+						res.render(pageRequested, {
+      						queryStr : req.query,
+       						contentObj : contentObj,
+       						authenticatedUser : req.authenticatedUser
+    					});
     				});
 				}else{
 					if (typeof editFieldVal !== 'undefined' && editFieldVal !== null) {
 						if(editFieldName=="_id"){
 							initFunctions.returnFindOneByMongoID(db, table_name, editFieldVal, function(resultObject) {
 					 			if (resultObject.aaData) {
-      								contentObj=resultObject.aaData;
+      								contentObj=resultObject.aaData;      								
+      								module_label_str=table_name+' detail form';
       							} 
-      				
-      							res.render(pageRequested, {
-      	 							editorField : editFieldName,
-      	 							editorValue : editFieldVal,
-       								queryStr : req.query,
-       								contentObj : contentObj,
-       								authenticatedUser : req.authenticatedUser
+      							initFunctions.save_activity_log(db, module_label_str, req.url, req.authenticatedUser._id, function(result) {	
+      								res.render(pageRequested, {
+      	 								editorField : editFieldName,
+      	 								editorValue : editFieldVal,
+       									queryStr : req.query,
+       									contentObj : contentObj,
+       									authenticatedUser : req.authenticatedUser
+    								});
     							});
     						}); 
 						}else{
@@ -2481,22 +2630,26 @@ app.get(backendDirectoryPath+'/:id', requireLogin, function(req, res) {
 							initFunctions.crudOpertions(db, table_name, 'findOne', null, editFieldName, editFieldVal, queryStr, function(result) {
 								if (result.aaData) {
       								contentObj=result.aaData;
+      								module_label_str=table_name+' detail form';
       							} 
-      			
-      							res.render(pageRequested, {
-      	 							editorField : editFieldName,
-      	 							editorValue : editFieldVal,
-       								queryStr : req.query,
-       								contentObj : contentObj,
-       								authenticatedUser : req.authenticatedUser
+      							initFunctions.save_activity_log(db, module_label_str, req.url, req.authenticatedUser._id, function(result) {	
+      								res.render(pageRequested, {
+      	 								editorField : editFieldName,
+      	 								editorValue : editFieldVal,
+       									queryStr : req.query,
+       									contentObj : contentObj,
+       									authenticatedUser : req.authenticatedUser
+    								});
     							});
     						});
     					} 
 					}else{
-      					res.render(pageRequested, {
-		      				queryStr : req.query,
-       						contentObj : contentObj,
-       						authenticatedUser : req.authenticatedUser
+						initFunctions.save_activity_log(db, module_label_str, req.url, req.authenticatedUser._id, function(result) {	
+	      					res.render(pageRequested, {
+			      				queryStr : req.query,
+       							contentObj : contentObj,
+       							authenticatedUser : req.authenticatedUser
+    						});
     					});
     				}
     			}
@@ -2963,6 +3116,16 @@ function returnUserAssignedModules (auth_user_id, req, cb) {
       					var outputLinksOnlyArr= new Array();
       					if(isUserAdmin){
       						outputObj["aaData"]   = items;
+      						if(req.sendModuleLinks && req.sendModuleLinks==true){
+      							for (var j=0; j < items.length; j++) {
+      								if(items[j] && items[j].module_items && items[j].module_items.length>0){
+      									var module_items_arr=items[j].module_items;
+      									for (var i=0; i < module_items_arr.length; i++) {
+      										outputLinksOnlyArr.push({'link':module_items_arr[i].link, 'label':module_items_arr[i].label});
+      									}
+      								}
+								}
+							}
       					}else{
       						var outputContentJson=new Array();
       						for (var j=0; j < items.length; j++) {
@@ -2977,7 +3140,7 @@ function returnUserAssignedModules (auth_user_id, req, cb) {
  												var existingModuleItemsArr=moduleContentArr[key][i];
  												if(modulesArr.indexOf(existingModuleItemsArr.uuid)!==-1){
  													moduleItemsArr[addInArrayNum] = existingModuleItemsArr;
- 													outputLinksOnlyArr.push(existingModuleItemsArr.link);
+ 													outputLinksOnlyArr.push({'link':existingModuleItemsArr.link, 'label':existingModuleItemsArr.label});
  													addInArrayNum++;
  												}
  											}

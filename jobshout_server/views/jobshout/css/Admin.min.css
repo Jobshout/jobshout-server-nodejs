@@ -4956,3 +4956,10 @@ color:#fff!important;
 	padding-top:10px;
 }
 
+.lastClickedLinkCss{
+  padding:0px;
+  margin:0px;
+}
+.lastClickedLinkCss p{
+	background:#fff; padding: 1px 3px 0px 17px; line-height:40px; margin-left:-3px; margin-bottom:0px; border-bottom: 1px solid #ddd;
+}
