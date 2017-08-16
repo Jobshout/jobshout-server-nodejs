@@ -410,9 +410,9 @@ var self = module.exports =
 			cb(outputObj);
 		}
 	},
-	save_activity_log : function (db, labelStr, linkStr, loggedInUserID, cb) {
+	save_activity_log : function (db, labelStr, linkStr, loggedInUserID, system_id, cb) {
 		var table_name_str='activity_log', outputObj = new Object();
-		db.collection(table_name_str).findOne({last_clicked_link : linkStr, user_mongo_id: loggedInUserID }, function(err, existingDocument) {
+		db.collection(table_name_str).findOne({last_clicked_link : linkStr, user_mongo_id: loggedInUserID.toString(), uuid_system : system_id }, function(err, existingDocument) {
 			if(existingDocument){
 				//update modified timestamp
 				db.collection(table_name_str).update({_id : existingDocument._id}, {'$set' : {label: labelStr, modified : self.currentTimestamp()}}, (updateErr, updateResult) => {
@@ -422,7 +422,7 @@ var self = module.exports =
   				});
 			} else {
 				//create entry
-				db.collection(table_name_str).save({ last_clicked_link : linkStr, user_mongo_id: loggedInUserID, label: labelStr, created : self.currentTimestamp(), modified : self.currentTimestamp() }, (saveError, saveResult) => {
+				db.collection(table_name_str).save({ last_clicked_link : linkStr, user_mongo_id: loggedInUserID.toString(), label: labelStr, created : self.currentTimestamp(), modified : self.currentTimestamp(), uuid_system : system_id }, (saveError, saveResult) => {
       				if (saveError) outputObj["error"]  = "Error occurred while saving ["+saveError+"], please try after some time!";
     				outputObj["success"]  = "Saved successfully!";
     				cb(outputObj);

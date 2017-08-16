@@ -400,13 +400,26 @@ function load_navigation_data(){
 	});
 }
 
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 function fetch_activity_log(){
-	var jsonRow=backendDirectory+"/api_fetch_list?limit=5&collection=activity_log";
+	var jsonRow=backendDirectory+"/api_fetch_list?limit=8&collection=activity_log";
 	$.getJSON(jsonRow,function(html){
 		if(html.aaData && html.aaData.length>0){
+			var contentHtml='';
 			$.each(html.aaData, function(i,row){
-				allDefaultTagsArr.push(row.name);
+				var labelStr=row.label;
+				if(labelStr.length>25){
+					labelStr = labelStr.substr(0, 25);+'...';
+				}
+				contentHtml+='<p><a HREF="'+row.last_clicked_link+'"><i CLASS="fa fa-dot-circle-o"></i> '+capitalizeFirstLetter(labelStr)+'</a></p>';
 			});
+			if(contentHtml!=""){
+				$('.lastClickedLinkCss').html(contentHtml);
+				$("#lastClickedListID").show();
+			}
      	}
 	});
 }
@@ -453,11 +466,9 @@ function fetch_saved_tags(val){
 	var jsonRow=backendDirectory+"/api_fetch_list?limit=all&collection=tags";
 	$.getJSON(jsonRow,function(html){
 		if(html.aaData && html.aaData.length>0){
-			var contentHtml='';
 			$.each(html.aaData, function(i,row){
-				contentHtml+='<p><a HREF="'+row.link+'"><i CLASS="fa fa-dot-circle-o"></i> '+row.label+'</a></p>';
+				allDefaultTagsArr.push(row.name);
 			});
-			$('.lastClickedLinkCss').html(contentHtml);
      	}
 	});
 }
@@ -574,5 +585,5 @@ $(function () {
     load_navigation_data();
     fetch_users_sites();
     load_notifications();
-   // fetch_activity_log();
+	fetch_activity_log();
 });

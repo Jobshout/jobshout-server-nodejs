@@ -463,9 +463,11 @@ app.get(backendDirectoryPath+'/launchpad', requireLogin, function(req, res) {
  			filesArr[i]=file;
  			i++;
  		});
- 		res.render(accessFilePath+'launchpad', {
- 			directory_files : filesArr,
-      		authenticatedUser : req.authenticatedUser
+ 		initFunctions.save_activity_log(db, 'Launchpad', req.url, req.authenticatedUser._id, req.authenticatedUser.active_system_uuid.toString(), function(result) {	
+			res.render(accessFilePath+'launchpad', {
+ 				directory_files : filesArr,
+      			authenticatedUser : req.authenticatedUser
+   			});
    		});
     }else{
 		res.redirect(backendDirectoryPath+'/sign-in');
@@ -1692,6 +1694,12 @@ app.get(backendDirectoryPath+'/api_fetch_list/', requireLogin, function(req, res
 						}
 					}
 				}
+				if(collectionStr=="activity_log"){
+					if(query!="{"){
+     					query+=",";
+     				}
+     				query+=" 'user_mongo_id': '"+req.authenticatedUser._id+"' ";
+				}
 				//search by criteria passed
 				if(findFieldValueStr!="" && findFieldNameStr!=""){
 					if(query!="{"){
@@ -1995,10 +2003,13 @@ app.get(backendDirectoryPath+'/players', requireLogin, function(req, res) {
 		if(queryString.keyword){
 			keywordStr=queryString.keyword;
 		}
-		res.render(accessFilePath+'players', {
-       		currentTemplate : '',
-        	searched_keyword : keywordStr,
-        	authenticatedUser : req.authenticatedUser
+		
+ 		initFunctions.save_activity_log(db, 'Players', req.url, req.authenticatedUser._id, req.authenticatedUser.active_system_uuid.toString(), function(result) {
+			res.render(accessFilePath+'players', {
+       			currentTemplate : '',
+        		searched_keyword : keywordStr,
+        		authenticatedUser : req.authenticatedUser
+    		});
     	});
     }else{
 		res.redirect(backendDirectoryPath+'/sign-in');
@@ -2014,10 +2025,12 @@ app.get(backendDirectoryPath+'/image_gallery', requireLogin, function(req, res) 
 		if(queryString.keyword){
 			keywordStr=queryString.keyword;
 		}
-		res.render(accessFilePath+'image_gallery', {
-       		currentTemplate : '',
-        	searched_keyword : keywordStr,
-        	authenticatedUser : req.authenticatedUser
+		initFunctions.save_activity_log(db, 'Image Gallery', req.url, req.authenticatedUser._id, req.authenticatedUser.active_system_uuid.toString(), function(result) {
+			res.render(accessFilePath+'image_gallery', {
+       			currentTemplate : '',
+        		searched_keyword : keywordStr,
+        		authenticatedUser : req.authenticatedUser
+    		});
     	});
     }else{
 		res.redirect(backendDirectoryPath+'/sign-in');
@@ -2513,7 +2526,7 @@ app.get(backendDirectoryPath+'/list/:id', requireLogin, function(req, res) {
 				}
 			}
 			if(allowedNavigationData && allowedNavigationData.admin_user && allowedNavigationData.admin_user==true)	{
-				initFunctions.save_activity_log(db, module_label_str, req.url, req.authenticatedUser._id, function(result) {	
+				initFunctions.save_activity_log(db, module_label_str, req.url, req.authenticatedUser._id, req.authenticatedUser.active_system_uuid.toString(), function(result) {	
 					res.render(accessFilePath+'standard_listing', {
        	 				currentTemplate : pageRequested,
         				searched_keyword : keywordStr,
@@ -2522,7 +2535,7 @@ app.get(backendDirectoryPath+'/list/:id', requireLogin, function(req, res) {
    				});
    			}else{
 				if(assignedModuleBool)	{
-					initFunctions.save_activity_log(db, module_label_str, req.url, req.authenticatedUser._id, function(result) {	
+					initFunctions.save_activity_log(db, module_label_str, req.url, req.authenticatedUser._id, req.authenticatedUser.active_system_uuid.toString(), function(result) {	
 						res.render(accessFilePath+'standard_listing', {
    	 						currentTemplate : pageRequested,
        						searched_keyword : keywordStr,
@@ -2585,7 +2598,7 @@ app.get(backendDirectoryPath+'/:id', requireLogin, function(req, res) {
 	
 		req.sendModuleLinks = true;
 		returnUserAssignedModules (req.authenticatedUser._id, req, function(allowedNavigationData) {
-			var assignedModuleBool= false, module_label_str="";		
+			var assignedModuleBool= false, module_label_str=req.params.id;		
 			if(allowedNavigationData && allowedNavigationData.modules && allowedNavigationData.modules.length>0)	{
 				for (var i = 0; i < allowedNavigationData.modules.length; i++) {
 					if(allowedNavigationData.modules[i].link==requestedPageStr){
@@ -2600,7 +2613,7 @@ app.get(backendDirectoryPath+'/:id', requireLogin, function(req, res) {
 			}		
 			if(assignedModuleBool){
 				if(table_name==""){
-					initFunctions.save_activity_log(db, module_label_str, req.url, req.authenticatedUser._id, function(result) {	
+					initFunctions.save_activity_log(db, module_label_str, req.url, req.authenticatedUser._id, req.authenticatedUser.active_system_uuid.toString(), function(result) {	
 						res.render(pageRequested, {
       						queryStr : req.query,
        						contentObj : contentObj,
@@ -2612,10 +2625,19 @@ app.get(backendDirectoryPath+'/:id', requireLogin, function(req, res) {
 						if(editFieldName=="_id"){
 							initFunctions.returnFindOneByMongoID(db, table_name, editFieldVal, function(resultObject) {
 					 			if (resultObject.aaData) {
-      								contentObj=resultObject.aaData;      								
-      								module_label_str=table_name+' detail form';
-      							} 
-      							initFunctions.save_activity_log(db, module_label_str, req.url, req.authenticatedUser._id, function(result) {	
+      								contentObj=resultObject.aaData;      						
+      								module_label_str=table_name+' details';
+      								for(var key in contentObj) {
+										if(key=="name"){	
+											module_label_str = contentObj[key];
+											break;
+										}else if(key=="label"){	
+											module_label_str = contentObj[key];
+											break;
+										}
+									}
+      							}
+      							initFunctions.save_activity_log(db, module_label_str, req.url, req.authenticatedUser._id, req.authenticatedUser.active_system_uuid.toString(), function(result) {	
       								res.render(pageRequested, {
       	 								editorField : editFieldName,
       	 								editorValue : editFieldVal,
@@ -2629,10 +2651,18 @@ app.get(backendDirectoryPath+'/:id', requireLogin, function(req, res) {
 							var queryStr="{'"+editFieldName+"': '"+editFieldVal+"'}";
 							initFunctions.crudOpertions(db, table_name, 'findOne', null, editFieldName, editFieldVal, queryStr, function(result) {
 								if (result.aaData) {
-      								contentObj=result.aaData;
-      								module_label_str=table_name+' detail form';
+      								contentObj=resultObject.aaData;      						
+      								module_label_str=table_name+' details';
+      								for(var key in contentObj) {
+										if(key=="name"){	
+											module_label_str = contentObj[key];
+										}else if(key=="label"){	
+											module_label_str = contentObj[key];
+											break;
+										}
+									}	
       							} 
-      							initFunctions.save_activity_log(db, module_label_str, req.url, req.authenticatedUser._id, function(result) {	
+      							initFunctions.save_activity_log(db, module_label_str, req.url, req.authenticatedUser._id, req.authenticatedUser.active_system_uuid.toString(), function(result) {	
       								res.render(pageRequested, {
       	 								editorField : editFieldName,
       	 								editorValue : editFieldVal,
@@ -2644,7 +2674,7 @@ app.get(backendDirectoryPath+'/:id', requireLogin, function(req, res) {
     						});
     					} 
 					}else{
-						initFunctions.save_activity_log(db, module_label_str, req.url, req.authenticatedUser._id, function(result) {	
+						initFunctions.save_activity_log(db, module_label_str, req.url, req.authenticatedUser._id, req.authenticatedUser.active_system_uuid.toString(), function(result) {	
 	      					res.render(pageRequested, {
 			      				queryStr : req.query,
        							contentObj : contentObj,
