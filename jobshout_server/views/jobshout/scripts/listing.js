@@ -218,8 +218,13 @@ function load_more(){
 				}
 				if (typeof html.table !== 'undefined' && html.table !== null && html.table!="" && start==0){
 					collectionNameStr=html.table;
+					if (typeof html.page_title !== 'undefined' && html.page_title !== null && html.page_title!=""){
+					$("#pageMainHeading").html(html.page_title);
+					$("#breadcrumbTitle").html(html.page_title);
+					}else{
 					$("#pageMainHeading").html(generateHeading(html.table)+" <small>LIST VIEW</small>");
 					$("#breadcrumbTitle").html(generateHeading(html.table));
+					}
 				}
 				if (typeof html.enable_search !== 'undefined' && html.enable_search !== null && (html.enable_search==true ||  html.enable_search=="true") && start==0){
 					$(".form-inline").show();

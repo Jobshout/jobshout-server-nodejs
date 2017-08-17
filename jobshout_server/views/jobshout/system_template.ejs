@@ -73,19 +73,24 @@
 												<option value="list_view" <% if (typeof contentObj.table !== 'undefined' && contentObj.table !== null && contentObj.table == "list_view") { %>selected<% } %>	>List View</option>
 											</select>
                   						</div>
-                  						<div class="col-md-6 col-lg-3">
-                   							<div class="checkbox" STYLE="float:left; margin-right:10px;">
-      		  									<label> <input type="checkbox" id="status" name="status" value="1" <% if (typeof contentObj.status !== 'undefined' && contentObj.status !== null && contentObj.status == 1) { %>checked<% } %> > <strong style="font-weight:600">Active</strong></label>
-    			  							</div>
-				  						</div>
+                  						<label class="control-label col-md-1" for="">Page Title</label>
+                  						
+                  						<div class="col-md-4 col-lg-3">
+                   							<input type="text"  class="form-control col-md-5 col-xs-12" id="page_title" name="page_title" value="<% if (typeof contentObj.page_title !== 'undefined' && contentObj.page_title !== null) { %><%= contentObj.page_title %><% } %>">
+                  						</div>
                 					</div>
                 					<div class="form-group">
                   						<label class="control-label col-md-2" for="first-name">Add filename for Detail View/Editor <span class="required">*</span></label>
-                  						<div class="col-md-6 col-lg-4">
+                  						<div class="col-md-4">
                    							<input type="text" required="required" value="<% if (typeof contentObj.editor_filename !== 'undefined' && contentObj.editor_filename !== null) { %><%= contentObj.editor_filename %><% } %>" class="form-control col-md-5 col-xs-12" id="editor_filename" name="editor_filename">
                   						</div>
-                  						<div class="col-md-6 col-lg-4">
-    										<div class="checkbox" STYLE="float:left; margin-right:10px;">
+                  						<div class="col-md-2">
+                   							<div class="checkbox" STYLE="">
+      		  									<label> <input type="checkbox" id="status" name="status" value="1" <% if (typeof contentObj.status !== 'undefined' && contentObj.status !== null && contentObj.status == 1) { %>checked<% } %> > <strong style="font-weight:600">Active</strong></label>
+    			  							</div>
+				  						</div>
+                  						<div class="col-md-4">
+    										<div class="checkbox" STYLE="">
       		  									<label> <input type="checkbox" id="enable_editor" name="enable_editor" value="1" <% if (typeof contentObj.enable_editor !== 'undefined' && contentObj.enable_editor !== null && contentObj.enable_editor == 1) { %>checked<% } %> > <strong style="font-weight:600">Enable Editor</strong></label>
     			  							</div>
 				  						</div>

@@ -67,6 +67,9 @@ var self = module.exports =
 				if (typeof templateResponse.enable_editor !== 'undefined' && templateResponse.enable_editor !== null && typeof templateResponse.editor_filename !== 'undefined' && templateResponse.editor_filename !== null && templateResponse.enable_editor==1  && templateResponse.editor_filename!="") {
 						outputObj["editor"]   = templateResponse.editor_filename;
 				}
+				if (typeof templateResponse.page_title !== 'undefined' && templateResponse.page_title !== null && typeof templateResponse.page_title !== 'undefined' && templateResponse.page_title!="") {
+						outputObj["page_title"]   = templateResponse.page_title;
+				}
 				if(templateResponse.listing_columns){
 					var listArr= templateResponse.listing_columns.split(',');
 					if (typeof templateResponse.enable_editor !== 'undefined' && templateResponse.enable_editor !== null && typeof templateResponse.editor_field !== 'undefined' && templateResponse.editor_field !== null && templateResponse.enable_editor==1  && templateResponse.editor_field!="") {
