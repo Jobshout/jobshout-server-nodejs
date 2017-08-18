@@ -431,7 +431,7 @@ function SetupFullCalendar(){
     
     if(displayScope){
      // Draw Week Selection dropdown on Calendar   
-    $('<select id="no_of_weeks" name="no_of_weeks" class="form-control fc-scope" style="width: 21%;height:30px;font-size:12px;"><option value="">--Select--</option><option value="1" selected>1 week</option><option value="2">2 weeks</option><option value="3">3 weeks</option><option value="4">4 weeks</option><option value="5">5 weeks</option></select>').prependTo('#calendar .fc-left')
+    $('<select id="no_of_weeks" name="no_of_weeks" class="form-control fc-scope" style="width: 21%; padding-top: 6px; padding-left: 7px; height:30px;font-size:12px;"><option value="">--Select--</option><option value="1" selected>1 week</option><option value="2">2 weeks</option><option value="3">3 weeks</option><option value="4">4 weeks</option><option value="5">5 weeks</option></select>').prependTo('#calendar .fc-left')
     .on('change', function() {
     		refreshCalendarDependingUponWeeks($(this).val());
     });

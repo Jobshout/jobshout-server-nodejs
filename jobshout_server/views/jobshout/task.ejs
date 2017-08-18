@@ -134,7 +134,7 @@
 							        
                 					<div class="form-group">
     									<label for="" class="col-sm-3 control-label">Start  <sup class="required">*</sup></label>
-    									<div class="col-sm-6">
+    									<div class="col-sm-9">
     										<input type="hidden" class="form-control" id="start_timestamp" name="start_timestamp" value="<% if (typeof contentObj.start_timestamp !== 'undefined' && contentObj.start_timestamp !== null) { %><%= contentObj.start_timestamp %><% } %>">
     										<div class='input-group date' id='start_datetime_picker'>
                     							<input type='text' class="form-control" id="start_date" value=""/>
@@ -145,7 +145,7 @@
 															
   									<div class="form-group">
  										<label for="" class="col-sm-3 control-label">Expected Close</label>
- 										<div class="col-sm-6">
+ 										<div class="col-sm-9">
 											<input type="hidden" class="form-control" id="end_timestamp" name="end_timestamp" value="<% if (typeof contentObj.end_timestamp !== 'undefined' && contentObj.end_timestamp !== null) { %><%= contentObj.end_timestamp %><% } %>">
     										<div class='input-group date' id='end_datetime_picker'>
                     							<input type='text' class="form-control" id="end_date" value=""/>
@@ -155,7 +155,7 @@
 									</div>
                             		<div class="form-group" >
 										<label class="col-sm-3 control-label">Estimated Hour </label>
-										<div class="col-md-6 col-lg-7">
+										<div class="col-md-9 col-lg-7">
 											<input name="task_estimated_hours" class="form-control num" type="text" value="<% if (typeof contentObj.task_estimated_hours !== 'undefined' && contentObj.task_estimated_hours !== null) { %><%= contentObj.task_estimated_hours %><% } %>" id="task_estimated_hours">
 										</div>
 									</div>      
