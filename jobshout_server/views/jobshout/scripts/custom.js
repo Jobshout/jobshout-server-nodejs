@@ -140,7 +140,7 @@ function fetch_collection_autocomplete_list(collectionStr, fieldID, sVal, search
 					contentHtml+="selected";
 				}
 					var nameStr='';
-					if(collectionStr=='users'){
+					if(collectionStr=='users' || collectionStr=='employees'){
 						if(contentObj.firstname){
 							nameStr+=contentObj.firstname;
 						}
@@ -169,7 +169,7 @@ function fetch_collection_autocomplete_list(collectionStr, fieldID, sVal, search
 							contentHtml+="selected";
 						}
 						var nameStr='';
-						if(collectionStr=='users'){
+						if(collectionStr=='users' || collectionStr=='employees'){
 							if(row.firstname){
 								nameStr+=row.firstname;
 							}
