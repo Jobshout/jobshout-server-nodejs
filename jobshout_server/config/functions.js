@@ -518,7 +518,14 @@ var self = module.exports =
       					cb(link);
 					}else if(result.success){
 						link+="_id="+result._id+"&success_msg="+result.success;
-						cb(link);
+						if(table_nameStr=="tasks" && postContent.assigned_to_user_id && postContent.assigned_to_user_id!=""){
+							self.send_notification(db, result._id, postContent.assigned_to_user_id, '', 'Task has been reported', 0, table_nameStr, result._id, function(notificationResult) {
+    							console.log(notificationResult)
+    							cb(link);
+							});
+	    				}	else	{
+    						cb(link);
+    					}
       				}
 				});
 			}	

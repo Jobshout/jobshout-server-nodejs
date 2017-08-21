@@ -610,7 +610,12 @@ app.get(backendDirectoryPath+'/change_notifications', requireLogin, function(req
     						}
     					});
     				}else{
-    					res.redirect(backendDirectoryPath+'/notifications?token='+tableData._id);
+    					if(tableData.collection_linked && tableData.collection_linked!="" && tableData.collection_link_id && tableData.collection_link_id!=""){
+    						var tempLinkStr=tableData.collection_linked.slice(0,-1);
+    						res.redirect(backendDirectoryPath+"/"+tempLinkStr+"?_id="+tableData.collection_link_id);
+    					}else{
+    						res.redirect(backendDirectoryPath+'/notifications?token='+tableData._id);
+    					}
     				}
 				}else{
 				db.collection(collectionStr).update({_id : new mongodb.ObjectID(mongoIDField)}, { $set: {"read_status" : 1 } }, (err, response) => {
@@ -625,7 +630,12 @@ app.get(backendDirectoryPath+'/change_notifications', requireLogin, function(req
     						}
     					});
     				}else{
-    					res.redirect(backendDirectoryPath+'/notifications?token='+tableData._id);
+    					if(tableData.collection_linked && tableData.collection_linked!="" && tableData.collection_link_id && tableData.collection_link_id!=""){
+    						var tempLinkStr=tableData.collection_linked.slice(0,-1);
+    						res.redirect(backendDirectoryPath+"/"+tempLinkStr+"?_id="+tableData.collection_link_id);
+    					}else{
+    						res.redirect(backendDirectoryPath+'/notifications?token='+tableData._id);
+    					}
     				}
     			});
     			}
