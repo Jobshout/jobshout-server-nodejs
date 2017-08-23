@@ -61,38 +61,6 @@
                   						</div>
                 					</div>
 									
-                					
-                					<div class="well" style="overflow:hidden;display:none;">
-   										<h4 style="margin-top:0px;">System Logo's</h4>
-   										<div class="col-md-6 col-sm-6 col-xs-12">
-   										<div class="form-group">
-    										<div class="col-sm-12" align="center">
-    											<img src="<% if (typeof authenticatedUser.preferences !== 'undefined' && typeof authenticatedUser.preferences.main_logo_uuid !== 'undefined' && authenticatedUser.preferences.main_logo_uuid !== null) { %><%= backendDirectory %>/file/<%= authenticatedUser.preferences.main_logo_uuid %>?<%= Math.random(); %><% }else{ %>images/no_image.png<% } %>" class="img-responsive" style="border:1px solid #ddd;" onerror="this.src=img/no-avatar.jpg"/>
-    										</div>
-  										</div>
-  										<div class="form-group">
-    										<label for="" class="col-md-3 control-label">Main Logo</label>
-    										<div class="col-md-6">
-    											<input type="file" id="file" class="form-control col-md-5 col-xs-12" value="">
-    										</div>
-    										<div class="col-md-3"><button type="reset" class="btn btn-danger btn-sm">Upload</button></div>
-  										</div>
-  										</div>
-  										<div class="col-md-6 col-sm-6 col-xs-12">
-  										<div class="form-group">
-    										<div class="col-sm-12" align="center">
-    											<img src="<% if (typeof authenticatedUser.preferences !== 'undefined' && typeof authenticatedUser.preferences.main_logo_uuid !== 'undefined' && authenticatedUser.preferences.main_logo_uuid !== null) { %><%= backendDirectory %>/file/<%= authenticatedUser.preferences.main_logo_uuid %>?<%= Math.random(); %><% }else{ %>images/no_image.png<% } %>" class="img-responsive" style="border:1px solid #ddd;" onerror="this.src=img/no-avatar.jpg"/>
-    										</div>
-  										</div>
-  										<div class="form-group">
-    										<label for="" class="col-md-3 control-label">Thumbnail Logo</label>
-    										<div class="col-md-6">
-    											<input type="file" id="file" class="form-control col-md-5 col-xs-12" value="">
-    										</div>
-    										<div class="col-md-3"><button type="reset" class="btn btn-danger btn-sm">Upload</button></div>
-  										</div>
-  										</div>
-  										</div>
                 					</div></div>
 
                 					<div class="row">
