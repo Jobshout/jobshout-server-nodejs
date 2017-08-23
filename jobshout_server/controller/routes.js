@@ -2524,7 +2524,7 @@ app.get(backendDirectoryPath+'/list/:id', requireLogin, function(req, res) {
 		}
 		req.sendModuleLinks = true;
 		returnUserAssignedModules (loggedInUser._id, req, function(allowedNavigationData) {
-			var assignedModuleBool= false, requestedPageStr= "/list/"+pageRequested, module_label_str="";		
+			var assignedModuleBool= false, requestedPageStr= "/list/"+pageRequested, module_label_str=pageRequested.toUpperCase();		
 				
 			if(allowedNavigationData && allowedNavigationData.modules && allowedNavigationData.modules.length>0)	{
 				for (var i = 0; i < allowedNavigationData.modules.length; i++) {
@@ -2638,13 +2638,13 @@ app.get(backendDirectoryPath+'/:id', requireLogin, function(req, res) {
       								contentObj=resultObject.aaData;      						
       								module_label_str=table_name+' details';
       								for(var key in contentObj) {
-										if(key=="name"){	
-											module_label_str = contentObj[key];
-											break;
-										}else if(key=="label"){	
+										if(key=="name" || key=="label" || key=="Document" || key=="username"){	
 											module_label_str = contentObj[key];
 											break;
 										}
+									}
+									if(table_name=="users"){
+										module_label_str +=": user detail's"; 
 									}
       							}
       							initFunctions.save_activity_log(db, module_label_str, req.url, req.authenticatedUser._id, req.authenticatedUser.active_system_uuid.toString(), function(result) {	
@@ -2664,13 +2664,14 @@ app.get(backendDirectoryPath+'/:id', requireLogin, function(req, res) {
       								contentObj=resultObject.aaData;      						
       								module_label_str=table_name+' details';
       								for(var key in contentObj) {
-										if(key=="name"){	
-											module_label_str = contentObj[key];
-										}else if(key=="label"){	
+										if(key=="name" || key=="label" || key=="Document" || key=="username"){	
 											module_label_str = contentObj[key];
 											break;
 										}
 									}	
+									if(table_name=="users"){
+										module_label_str +=": user detail's"; 
+									}
       							} 
       							initFunctions.save_activity_log(db, module_label_str, req.url, req.authenticatedUser._id, req.authenticatedUser.active_system_uuid.toString(), function(result) {	
       								res.render(pageRequested, {
@@ -3307,7 +3308,12 @@ var authenticatedUser =function (auth_session_id, cb) {
 						if(session_result.fixture_page_selected_team && (session_result.fixture_page_selected_team!=null || session_result.fixture_page_selected_team!="null" || session_result.fixture_page_selected_team!="")){
 							returnUserDetsils['fixture_page_selected_team']=session_result.fixture_page_selected_team;
 						}
-						return cb(returnUserDetsils);
+						initFunctions.crudOpertions(db, 'system_preferences', 'findOne', null, "type", "default", "", function(result) {
+							if (result.aaData) {
+								returnUserDetsils['preferences']=result.aaData;
+							}
+							return cb(returnUserDetsils);
+						});
 					}
 				});
 				}else{

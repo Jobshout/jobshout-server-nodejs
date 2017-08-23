@@ -29,6 +29,20 @@
     margin: 7px 5px 0 0;
     padding: 9px;
 }
+.btn-bs-file{
+    position:relative;
+}
+.btn-bs-file input[type="file"]{
+    position: absolute;
+    top: -9999999;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    width:0;
+    height:0;
+    outline: none;
+	
+    cursor: inherit;
+}
 </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -75,36 +89,48 @@
             						<input type="hidden" class="form-control" id="table_name" name="table_name" value="users">
       								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="email">
       								<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %><%= contentObj._id %><% } %>">
-            						
-            						
+            						<input type="hidden" class="form-control" id="uploaded_file_uuid" name="uploaded_file_uuid" value="<% if (typeof contentObj.uploaded_file_uuid !== 'undefined' && contentObj.uploaded_file_uuid !== null) { %><%= contentObj.uploaded_file_uuid %><% } %>">
+            						<input type="hidden" class="form-control" id="uploaded_file_name" name="uploaded_file_name" value="<% if (typeof contentObj.uploaded_file_name !== 'undefined' && contentObj.uploaded_file_name !== null) { %><%= contentObj.uploaded_file_name %><% } %>">
+            		
                 					<div class="row">
-            						<div class="col-xs-6"><div class="box box-primary">
+            						<div class="col-xs-12 col-md-6"><div class="box box-primary">
             						<h4>Basic Details</h4>
-            						<div class="box-body"><div class="row"><div class=" col-sm-12 col-lg-11">
-            						                 					
+            						<div class="box-body"><div class="row"><div class=" col-sm-12 col-lg-12">
+            						<div class="col-xs-12 col-md-8">                 					
                 					<div class="form-group">
                   						<label class="control-label col-md-3" for="first-name">Username<span class="required">*</span></label>
-                  						<div class="col-md-3 col-lg-7">
+                  						<div class="col-md-9 col-lg-9">
                     						<input type="text" readonly required="required" id="username" name="username" class="form-control col-md-5 col-xs-12" value="<% if (typeof contentObj.username !== 'undefined' && contentObj.username !== null) { %><%= contentObj.username %><% } %>">
                   						</div>
                 					</div>
                 					
                 					<div class="form-group">
                   						<label class="control-label col-md-3" for="first-name">First Name<span class="required">*</span></label>
-                  						<div class="col-md-3 col-lg-7">
+                  						<div class="col-md-9 col-lg-9">
                     						<input type="text" required="required" id="firstname" name="firstname" class="form-control col-md-5 col-xs-12" value="<% if (typeof contentObj.firstname !== 'undefined' && contentObj.firstname !== null) { %><%= contentObj.firstname %><% } %>">
                   						</div>
                 					</div>
                 					
                 					<div class="form-group">
                   						<label class="control-label col-md-3" for="">Last Name<span class="required">*</span></label>
-                  						<div class="col-md-3 col-lg-7">
+                  						<div class="col-md-9 col-lg-9">
                    							<input type="text"  required="required" class="form-control col-md-5 col-xs-12" id="lastname" name="lastname" value="<% if (typeof contentObj.lastname !== 'undefined' && contentObj.lastname !== null) { %><%= contentObj.lastname %><% } %>">
                   						</div>
                 					</div>
+                					</div><div class="col-xs-12 col-md-4" align="center">
+                						<div class="form-group">
+    										<div class="col-sm-12">
+    											<img src="<% if (typeof contentObj.uploaded_file_uuid !== 'undefined' && contentObj.uploaded_file_uuid !== null) { %><%= backendDirectory %>/file/<%= contentObj.uploaded_file_uuid %>?<%= Math.random(); %><% }else{ %>img/no-avatar.jpg<% } %>" class="img-responsive img-circle" id="user_profile_pic" style="border:1px solid #ddd;" width="50%" onerror="this.src=img/no-avatar.jpg"/>
+    										</div>
+  										</div>
+                						<div class="form-group">
+                							<input type="file" id="file" value="">
+    									</div>
+                					</div>
+                					<div class="col-xs-12 col-md-12">
                 					<div class="form-group">
-                  						<label class="control-label col-md-3" for="">DOB</label>
-                  						<div class="col-md-3 col-lg-4">
+                  						<label class="control-label col-md-2" for="">DOB</label>
+                  						<div class="col-md-5 col-lg-5">
                    							<input type="hidden" id="dob" name="dob" readonly value="<% if (typeof contentObj.dob !== 'undefined' && contentObj.dob !== null) { %><%= contentObj.dob %><% } %>">
                    							<div class='input-group date' id='datetime_picker'>
                     							<input type='text' class="form-control" id="date_of_birth" value=""/>
@@ -112,12 +138,12 @@
                 							</div>	
                   						</div>
                   						<label class="control-label col-md-2 ageClass" style="display:none;">Age</label>
-                  						<div class="col-md-3 col-lg-2 ageClass"  style="display:none;">
+                  						<div class="col-md-2 col-lg-2 ageClass"  style="display:none;">
                    							<input type="text" class="form-control col-md-5 col-xs-12" readonly id="age" value="">
                   						</div>
                 					</div>
                 					<div class="form-group">
-    									<label for="" class="col-sm-3 control-label">Gender</label>
+    									<label for="" class="col-sm-2 control-label">Gender</label>
     									<div class="col-sm-9">
     										<div class="radio" STYLE="float:left; margin-right:10px;">
       		  									<label> <input type="radio" id="gender" name="gender" value="f" <% if (typeof contentObj.gender !== 'undefined' && contentObj.gender !== null && contentObj.gender == "f") { %>checked<% } %> > <strong style="font-weight:600">Female</strong></label>
@@ -128,15 +154,15 @@
 										</div>
 									</div>
                 					<div class="form-group">
-                  						<label class="control-label col-md-3" for="">Email Address<span class="required">*</span></label>
-                  						<div class="col-md-6 col-lg-7">
+                  						<label class="control-label col-md-2" for="">Email <span class="required">*</span></label>
+                  						<div class="col-md-9 col-lg-9">
                    							<input type="email"  required="required" class="form-control col-md-5 col-xs-12" id="email" name="email" value="<% if (typeof contentObj.email !== 'undefined' && contentObj.email !== null) { %><%= contentObj.email %><% } %>">
                   						</div>
                 					</div>
                 					<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %>
                 						<div class="form-group">
-                  							<label class="control-label col-md-3" for="">Password<span class="required">*</span></label>
-                  							<div class="col-md-6 col-lg-4">
+                  							<label class="control-label col-md-2" for="">Password<span class="required">*</span></label>
+                  							<div class="col-md-6">
                    								<input type="password"  required="required" class="form-control col-md-5 col-xs-12" id="password" name="password" value="" disabled>
                   							</div>
                   							<div class="checkbox" STYLE="float:left; margin-right:10px;">
@@ -146,17 +172,17 @@
                 							
                 					<% }else{	%>
                 					<div class="form-group">
-                  						<label class="control-label col-md-3" for="">Password<span class="required">*</span></label>
-                  						<div class="col-md-6 col-lg-7">
+                  						<label class="control-label col-md-2" for="">Password<span class="required">*</span></label>
+                  						<div class="col-md-9 col-lg-9">
                    							<input type="password"  required="required" class="form-control col-md-5 col-xs-12" id="password" name="password" value="">
                   						</div>
                 					</div>
                 					<% } %>											
-                					               					
+                					</div>        					
                             		</div></div>
                             		</div></div></div>
 							        
-                					<div class="col-xs-6"><div class="box box-primary">
+                					<div class="col-xs-12 col-md-6"><div class="box box-primary">
             						<h4>Contact Details</h4>
             						<div class="box-body"><div class="row"><div class=" col-sm-12 col-lg-11">
             						
@@ -207,7 +233,7 @@
                 					</div>
                 					<div class="row">
             						
-                					<div class="col-xs-6"><div class="box box-primary">
+                					<div class="col-xs-12 col-md-6"><div class="box box-primary">
 							        <h4>Access Control</h4>
             						<div class="box-body"><div class="row"><div class=" col-sm-12 col-lg-11">
             						<div class="form-group">
@@ -279,7 +305,7 @@
 									
 									</div></div>
                 					</div></div></div>
-                					<div class="col-xs-6"><div class="box box-primary">
+                					<div class="col-xs-12 col-md-6"><div class="box box-primary">
             						<h4>Types & Qualities</h4>
             						<div class="box-body"><div class="row"><div class=" col-sm-12 col-lg-11">
             						 <div class="form-group">
@@ -398,7 +424,17 @@
     		</section>
     		<!--//body content--> 
   		</div>
-  		
+<!-- modal box start -->
+<div class="modal fade" id="processingPrompt" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog">
+        <div class="modal-content">
+        	<div class="modal-body" style="text-align:center" >
+                <h4>Uploading image, please wait and don't refresh the page while processing!</h4>.<br /> <img id="imgAjaxLoading" src="img/loading.gif" width="109" height="25" style="border-width: 0px;">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- modal box end -->		
 
 <!-- Footer Starts Here-->
 	<% include include/footer %>
@@ -423,7 +459,13 @@ var configDropDown = {
 	'.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
 	'.chosen-select-width'     : {width:"95%"}
 }
-
+function load_uploaded_image(){
+	var defaultImageStr= 'img/no-avatar.jpg';
+	if($("#uploaded_file_uuid").val()!="")	{
+		defaultImageStr = backendDirectory+"/file/"+$("#uploaded_file_uuid").val()+'?'+$.now();
+	}
+	$("#user_profile_pic").attr("src", defaultImageStr);
+}
 function get_unique_username (){
 	if($("#username").val()==""){
 		var jsonRow=backendDirectory+"/api_unique_username?firstname="+$("#firstname").val()+'&lastname='+$("#lastname").val();
@@ -779,6 +821,78 @@ function load_countries(){
 			}
 		});
 	}
+
+function upload_single_file(form){
+$(".uploadFile").remove();
+if( $('#file').length )	{
+	if($('#file').val().length>0)	{
+		$('#processingPrompt').modal('show');
+		var guidStr=$("#uploaded_file_uuid").val();
+		if(guidStr==""){
+			guidStr= guid();
+		}
+		var data = new FormData();
+		data.append('related_collection', $("#table_name").val());
+		data.append('uuid', guidStr);
+		data.append('collection_id', $("#id").val());
+		data.append('type', $("#table_name").val());
+		
+		var filesize=Number($('#file')[0].files[0].size)/(1024*1024);
+		
+		if(filesize>5){
+			$('#contentForm').before('<div class="alert alert-error alert-dismissable uploadFile"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>The file size larger than 5MB is not allowed</div>');
+			$('#file').focus();
+		}else{
+			var files= $('#file')[0].files;
+			var fileNameStr =files[0].name;
+				$.each(files, function(key, value){
+					data.append('file', value);
+				});
+			
+				$.ajax({
+					url: backendDirectory+'/find_remove_file',
+					type: 'POST',
+					data: {'uuid' : guidStr},
+					dataType: 'json',
+					success: function(response){
+						if(response.success){
+							$.ajax({
+								url: backendDirectory+'/upload',
+								type: 'POST',
+								data: data,
+								dataType: 'json',
+								contentType: false,
+								enctype: 'multipart/form-data',
+								cache: false,
+								processData: false, // Don't process the files
+								success: function(response){	
+									$('#processingPrompt').modal('hide');
+									if(response.success && response._id && response._id!=""){
+										$("#uploaded_file_uuid").val(guidStr);
+										$("#uploaded_file_name").val(fileNameStr);
+										
+										$("#file").prop('disabled', true);	//disable the file field
+										dataAsJson('contentForm', form);
+									} else if(response.error) {
+										$('#contentForm').before('<div class="alert alert-error alert-dismissable uploadFile"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>'+response.error+'</div>');
+									}else {
+										$('#contentForm').before('<div class="alert alert-error alert-dismissable uploadFile"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>Sorry, error in uploading file!</div>');
+									}
+								}
+							});
+						}else {
+							$('#contentForm').before('<div class="alert alert-error alert-dismissable uploadFile"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>Sorry, error in uploading file!</div>');
+						}
+					}
+				});
+		}
+	}	else {
+		dataAsJson('contentForm', form);
+	}
+}	else {
+	dataAsJson('contentForm', form);
+}
+}
 	
 $(document).ready(function() {
 	load_systems(true);
@@ -863,21 +977,14 @@ $(document).ready(function() {
 					$('#select_systems').remove();
 				}
 				
-				/**var	userQualitiesArr=$('#selected_qualities').val().split(",");
-				var userQualitiesObj=new Array();
-				for(var i=0; i<=userQualitiesArr.length; i++){
-					if(userQualitiesArr[i]!=null){
-						userQualitiesObj.push(userQualitiesArr[i]);
-					}
-				}
-				$('#player_qualities').val(JSON.stringify(userQualitiesObj));**/
 				var selectedQuastr=$('#selected_qualities').val();
 				$('#player_qualities').val(selectedQuastr);
 				
 				var selectedPlayerTypeStr=$("#player_type_uuid option:selected").text();
 				$("#player_type").val(selectedPlayerTypeStr);
 				
-				dataAsJson('contentForm', form);
+				//dataAsJson('contentForm', form);
+				upload_single_file(form);
  			}
 		});	
 	$("#change_password").click(function() {
