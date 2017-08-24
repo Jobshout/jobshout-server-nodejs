@@ -117,6 +117,9 @@ function generateBlogJson(){
   		createObject['website']=$(this).find('#blog_website_'+uuid).val();
   		var statusNum=$(this).find('#blog_status__'+uuid).val();
   		
+  		if($(this).find('#blog_status__'+uuid).is(":checked")){
+  			statusNum=1;
+  		}
   		if(statusNum=="" || statusNum==null || statusNum === 'undefined'){
   			statusNum=0;
   		}
@@ -290,12 +293,10 @@ $(document).ready(function(){
 					$('#shared_systems').val(selectedSystemsStr);
 					$('#select_systems').remove();
 				}
-				
-				if($("#type").val()=="blog"){
+				if($("#type").val()=="blog" || $("#Type").val()=="blog"){
 					generateBlogJson();
-				} else	{
-					generateObjectsJson();
 				}
+				generateObjectsJson();
 				var bodyContent=tinyMCE.get('Body').getContent();
 				$("#Body").val(bodyContent);
 				

@@ -341,10 +341,7 @@ border:1px solid #8a0024;
     										<label for="" class="col-sm-2 control-label">Status</label>
     										<div class="col-sm-9" style="margin-top:6px;">
     											<div  STYLE="float:left; margin-right:10px;display:inline-block;">
-      		  										<label> <input type="radio" id="blog_status__<%=  objectArr[i].uuid %>" value="1" <% if (objectArr[i].status == 1 || objectArr[i].status == "1") { %>checked<% } %> > <strong style="font-weight:600">Active</strong></label>
-    			  								</div>
-				  								<div STYLE="float:left;display:inline-block;">
-      		  										<label> <input type="radio" id="blog_status__<%=  objectArr[i].uuid %>" value="0" <% if (objectArr[i].status == 0 || objectArr[i].status == "0") { %>checked<% } %>> <strong style="font-weight:600">Inactive</strong></label>
+      		  										<label> <input type="checkbox" id="blog_status__<%=  objectArr[i].uuid %>" value="1" <% if (objectArr[i].status == 1 || objectArr[i].status == "1") { %>checked<% } %> > <strong style="font-weight:600">Active</strong></label>
     			  								</div>
 											</div>
 										</div>
@@ -408,6 +405,7 @@ border:1px solid #8a0024;
 <script SRC="plugins/tinymce/tinymce.min.js"></script>
 <script src="js/chosen.jquery.js" type="text/javascript"></script>
 
+ <script src="plugins/combobox/autocomplete-ui.js"></script>
  <script src="js/jquery.caret.min.js"></script>
  <script src="js/jquery.tag-editor.min.js"></script>
  <script src="js/moment.js"></script>
