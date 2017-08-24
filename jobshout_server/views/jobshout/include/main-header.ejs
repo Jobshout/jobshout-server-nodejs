@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title><% if (typeof authenticatedUser.preferences !== 'undefined' && typeof authenticatedUser.preferences.page_title !== 'undefined' && authenticatedUser.preferences.page_title !== null) { %><%= authenticatedUser.preferences.page_title %><% } else { %>Jobshout Control Panel<% } %></title>
+  <title><% if (typeof authenticatedUser !== 'undefined' && typeof authenticatedUser.preferences !== 'undefined' && typeof authenticatedUser.preferences.page_title !== 'undefined' && authenticatedUser.preferences.page_title !== null) { %><%= authenticatedUser.preferences.page_title %><% } else { %>Jobshout Control Panel<% } %></title>
  
-<% if (typeof authenticatedUser.preferences !== 'undefined' && typeof authenticatedUser.preferences.meta_keywords !== 'undefined' && authenticatedUser.preferences.meta_keywords !== null && authenticatedUser.preferences.meta_keywords !== "") { %>
+<% if (typeof authenticatedUser !== 'undefined' && typeof authenticatedUser.preferences !== 'undefined' && typeof authenticatedUser.preferences.meta_keywords !== 'undefined' && authenticatedUser.preferences.meta_keywords !== null && authenticatedUser.preferences.meta_keywords !== "") { %>
 <meta name="keywords" content="<%= authenticatedUser.preferences.meta_keywords %>"></meta>
 <% } %>
-<% if (typeof authenticatedUser.preferences !== 'undefined' && typeof authenticatedUser.preferences.meta_description !== 'undefined' && authenticatedUser.preferences.meta_description !== null && authenticatedUser.preferences.meta_description !== "") { %>
+<% if (typeof authenticatedUser !== 'undefined' && typeof authenticatedUser.preferences !== 'undefined' && typeof authenticatedUser.preferences.meta_description !== 'undefined' && authenticatedUser.preferences.meta_description !== null && authenticatedUser.preferences.meta_description !== "") { %>
 <meta name="description" content="<%= authenticatedUser.preferences.meta_description %>"></meta>
 <% } %>
   <!-- Tell the browser to be responsive to screen width -->
