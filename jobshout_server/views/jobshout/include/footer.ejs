@@ -28,7 +28,4 @@
 <!--<script src="js/checkbox.js"></script>-->
 <script>
 var backendDirectory="<%= backendDirectory %>";
-<% if (typeof authenticatedUser.uploaded_file_uuid !== 'undefined' && authenticatedUser.uploaded_file_uuid !== null && authenticatedUser.uploaded_file_uuid !=="") {	%>
-     var profile_id="<%= authenticatedUser.uploaded_file_uuid %>"
-<% } %>
 </script>

@@ -581,17 +581,8 @@ $(function () {
     		load_navigation_data();
   		}
 	});
-	load_profile_picture();
     load_navigation_data();
     fetch_users_sites();
     load_notifications();
 	fetch_activity_log();
 });
-
-function load_profile_picture(){
-	var defaultImageStr= 'img/no-avatar.jpg';
-	if (typeof profile_id !== "undefined") { 
-		defaultImageStr = backendDirectory+"/file/"+profile_id+'?'+$.now();
-	}
-	$(".profile_image_class").attr("src", defaultImageStr);
-}
