@@ -426,6 +426,7 @@ $('#fileUploadMsg').before('<div class="alert alert-error alert-dismissable uplo
 }
 
 function delete_uploaded_file (guidStr) {
+	$(".uploadFile").remove();
 	$.ajax({
 		url: backendDirectory+'/find_remove_file',
 		type: 'POST',
