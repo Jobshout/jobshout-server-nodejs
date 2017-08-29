@@ -120,7 +120,7 @@
                 					</div><div class="col-xs-12 col-md-4" align="center">
                 						<div class="form-group">
     										<div class="col-sm-12">
-    											<img src="<% if (typeof contentObj.uploaded_file_uuid !== 'undefined' && contentObj.uploaded_file_uuid !== null) { %><%= backendDirectory %>/file/<%= contentObj.uploaded_file_uuid %>?<%= Math.random(); %><% }else{ %>img/no-avatar.jpg<% } %>" class="img-responsive img-circle" id="user_profile_pic" style="border:1px solid #ddd;" width="50%" onerror="this.src=img/no-avatar.jpg"/>
+    											<img src="<% if (typeof contentObj.uploaded_file_uuid !== 'undefined' && contentObj.uploaded_file_uuid !== null) { %><%= backendDirectory %>/file/<%= contentObj.uploaded_file_uuid %>?<%= Math.random(); %><% }else{ %>img/no-avatar.jpg<% } %>" class="img-responsive img-circle" id="user_profile_pic" style="border:1px solid #ddd;" width="50%" onerror="this.src='img/no-avatar.jpg'"/>
     										</div>
   										</div>
                 						<div class="form-group">
@@ -549,16 +549,6 @@ function load_availability(){
                 contentHtmlStr+='<div class="col-sm-2"><a href="javascript:void(0)" class="btn btn-primary btn-color margin-right-5 btn-sm" onClick="addNewComment(\''+tableContentArr[i]._id+'\'); return false;">Add comment</a></div>';
                 contentHtmlStr+='</div>';
                 contentHtmlStr+='</div>';
-               /** contentHtmlStr+='<div class="col-lg-2">';
-                contentHtmlStr+='<div class="form-group">';
-                contentHtmlStr+='<div class="small-box bg-aqua"><div class="icon">';
-            
-                if(tableContentArr[i].available=="no"){
-                	contentHtmlStr+='<i class="fa fa-remove"></i>';
-                } else{ 
-                	contentHtmlStr+='<i class="fa fa-check-square-o"></i>';
-                }
-                contentHtmlStr+='</div> </div></div></div>';**/
                 contentHtmlStr+='</div>';
 			}	
 			$("#loadAvailabilityDiv").append(contentHtmlStr);
