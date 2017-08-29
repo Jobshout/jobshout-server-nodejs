@@ -60,6 +60,7 @@
             					<li class="active"><a href="#first" data-toggle="tab">Details</a></li>
             					<% if (typeof contentObj._id !== "undefined" && contentObj._id !== null) { %>
            						<li><a href="#second" data-toggle="tab">Related Timeslips</a></li>
+           						<li><a href="#third" data-toggle="tab">Notes</a></li>
            						<% } %>
 							</ul>
             				<div class="tab-content ">
@@ -162,7 +163,7 @@
                 					</div></div></div>
                 					<div class="col-xs-12">
                 					<div class="form-group">
-                   						<div class="col-md-9 col-lg-12" align="right">
+                   						<div class="col-md-9 col-lg-12" align="CENTER">
                								<div class="submit-btn-setting"> <button type="submit" class="btn btn-primary btn-color margin-right-5 btn-sm">Submit</button>
                								<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) {	%>
                									<a href="<%= backendDirectory %>/list/tasks" class="btn btn-danger btn-sm">Cancel</a>
@@ -175,70 +176,6 @@
                 					</div>
                 					</div>
               					</form>
-              						<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %>
-              							<div class="row" STYLE="margin-top:10px;">
-              								<div class="col-md-6 col-xs-12"><div class="box box-primary">
-		    									<h4>Notes</h4>
-            									<div class="box-body">
-													<div class="row">
-              											<div class="col-sm-12" style="margin-top:20px;">
-              												<a title="Add new note" onClick="$('#addNote').modal('show');" href="javascript:void(0)" class="btn btn-danger">Add new note</a>
-              											</div>
-              											<div class="content table-responsive table-full-width">
-		 													<div class="table-responsive" style="border:none;" >
-                        										<table class="table table-striped  table-bordered table-hover custom-tbl-st bt" id="table-breakpoint" style="background-color: rgb(255, 255, 255); border-radius: 4px;" >
-																	<thead>
-																		<tr>
-		      																<th>Added by</th>
-		      																<th>Last Modified</th>	      
-			 																<th>Note</th>
-			 																<th class="hidden-xs">Action</th>			  
-		  																</tr>
-																	</thead>
-		  															<tbody id="notesTable">
-		  											
-		  															</tbody>
-		  														</table>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div></div>
-											<div class="col-md-6 col-xs-12"><div class="box box-primary">
-		    									<h4>Attached Files</h4>
-            									<div class="box-body">
-													<div class="row">
-														<div class="col-sm-12" style="margin-top:20px;">
-														<div class="form-group" id="fileUploadMsg">
-    														<label for="" class="col-md-2 control-label">Select File</label>
-    														<div class="col-md-8">
-    															<input type="file" id="file" class="form-control col-md-5 col-xs-12" value="">
-    														</div>
-    														<div class="col-md-2">
-    															<button type="button" class="btn btn-primary btn-color margin-right-5 btn-sm" onClick="upload_single_file();">Upload</button>
-    														</div>
-  														</div>	</div>
-              											<div class="content table-responsive table-full-width">
-		 													<div class="table-responsive" style="border:none;" >
-                        										<table class="table table-striped  table-bordered table-hover custom-tbl-st bt" id="table-attachemnt" style="background-color: rgb(255, 255, 255); border-radius: 4px;" >
-																	<thead>
-																		<tr>
-		      																<th>File Name</th>      
-			 																<th>Delete</th>
-			 																<th class="hidden-xs">Download</th>			  
-		  																</tr>
-																	</thead>
-		  															<tbody id="attachmentTable">
-		  											
-		  															</tbody>
-		  														</table>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div></div>
-										</div>
-									<% } %>
               					</div>
               					<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) { %>
               					<div class="chart tab-pane" id="second" >
@@ -301,6 +238,28 @@
 									</div>
               					
               					</div>
+              					<div class="chart tab-pane" id="third" >
+              						<div class="col-sm-12" style="margin-top:20px;">
+              							<a title="Add new note" onClick="$('#addNote').modal('show');" href="javascript:void(0)" class="btn btn-danger">Add new note</a>
+              						</div>
+              						<div class="content table-responsive table-full-width">
+		 								<div class="table-responsive" style="border:none;" >
+                        					<table class="table table-striped  table-bordered table-hover custom-tbl-st bt" id="table-breakpoint" style="background-color: rgb(255, 255, 255); border-radius: 4px;" >
+												<thead>
+													<tr>
+		      											<th>Added by</th>
+		      											<th>Last Modified</th>	      
+			 											<th>Note</th>
+			 											<th class="hidden-xs">Action</th>			  
+		  											</tr>
+												</thead>
+		  										<tbody id="notesTable">
+		  											
+		  										</tbody>
+		  									</table>
+										</div>
+									</div>
+              					</div>
               					<%	}	%>
               				</div>
               			</div>
@@ -317,18 +276,6 @@
 			<% include include/footer %>
 		<!-- Footer Ends Here-->
 </div>
-<!-- modal box start -->
-<div class="modal fade" id="processingPrompt" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-	<div class="modal-dialog">
-        <div class="modal-content">
-        	<div class="modal-body" style="text-align:center" >
-                <h4>Uploading image, please wait and don't refresh the page while processing!</h4>.<br /> <img id="imgAjaxLoading" src="img/loading.gif" width="109" height="25" style="border-width: 0px;">
-            </div>
-        </div>
-    </div>
-</div>
-<!-- modal box end -->	
-
 <!-- Page-Level Plugin Scripts-->
 <script src="js/jquery.validate.js"></script>
 <script src="js/moment.js"></script>
@@ -354,122 +301,7 @@ function draw_content_html (aaData) {
 	return contentHtml;
 }
 
-function upload_single_file(){
-var id="file";
-$(".uploadFile").remove();
-if( $('#'+id).length )	{
-	if($('#'+id).val().length>0)	{
-		$('#processingPrompt').modal('show');
-		var guidStr= guid();
-
-		var data = new FormData();
-		data.append('related_collection', $("#table_name").val());
-		data.append('uuid', guidStr);
-		data.append('collection_id', $("#id").val());
-		data.append('type', $("#table_name").val());
-		
-		var filesize=Number($('#'+id)[0].files[0].size)/(1024*1024);
-		
-		if(filesize>5){
-			$('#fileUploadMsg').before('<div class="alert alert-error alert-dismissable uploadFile"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>The file size larger than 5MB is not allowed</div>');
-			$('#'+id).focus();
-		}else{
-			var files= $('#'+id)[0].files;
-			var fileNameStr =files[0].name;
-				$.each(files, function(key, value){
-					data.append('file', value);
-				});
-			
-				$.ajax({
-					url: backendDirectory+'/find_remove_file',
-					type: 'POST',
-					data: {'uuid' : guidStr},
-					dataType: 'json',
-					success: function(response){
-						if(response.success){
-							$.ajax({
-								url: backendDirectory+'/upload',
-								type: 'POST',
-								data: data,
-								dataType: 'json',
-								contentType: false,
-								enctype: 'multipart/form-data',
-								cache: false,
-								processData: false, // Don't process the files
-								success: function(response){	
-									$('#processingPrompt').modal('hide');
-									if(response.success && response._id && response._id!=""){
-										$("#file").val('');
-										$('#table-attachemnt').basictable('destroy');
-										fetch_uploaded_files();
-										
-										$('#fileUploadMsg').before('<div class="alert alert-success alert-dismissable uploadFile"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>Uploaded the file successfully!</div>');
-									} else if(response.error) {
-										$('#fileUploadMsg').before('<div class="alert alert-error alert-dismissable uploadFile"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>'+response.error+'</div>');
-									}else {
-										$('#fileUploadMsg').before('<div class="alert alert-error alert-dismissable uploadFile"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>Sorry, error in uploading file!</div>');
-									}
-								}
-							});
-						}else {
-							$('#fileUploadMsg').before('<div class="alert alert-error alert-dismissable uploadFile"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>Sorry, error in uploading file!</div>');
-						}
-					}
-				});
-		}
-	}	else {
-		$('#fileUploadMsg').before('<div class="alert alert-error alert-dismissable uploadFile"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>Please select file for upload!</div>');
-	}
-}	else {
-$('#fileUploadMsg').before('<div class="alert alert-error alert-dismissable uploadFile"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>Please select file for upload!</div>');
-}
-}
-
-function delete_uploaded_file (guidStr) {
-	$.ajax({
-		url: backendDirectory+'/find_remove_file',
-		type: 'POST',
-		data: {'uuid' : guidStr},
-		dataType: 'json',
-		success: function(response){
-			if(response.success){
-				$("#attached_tr_"+guidStr).remove();
-				$('#fileUploadMsg').before('<div class="alert alert-success alert-dismissable uploadFile"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>Successfully deleted the file!</div>');
-			}else {
-				$('#fileUploadMsg').before('<div class="alert alert-error alert-dismissable uploadFile"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>Sorry, error in deleting file!</div>');
-			}
-		}
-	});
-}
-
-function fetch_uploaded_files (){
-	if($("#id").val()!=""){
-		var jsonRow=backendDirectory+"/api_fetch_uploads?start=0&limit=50&collection=tasks&id="+$("#id").val();
-		$.getJSON(jsonRow,function(result){
-			if(result.iTotalRecordsReturned>0){
-				$.each(result.aaData, function(i,row){
-				
-				});
-				var contentHtml="";
-				$.each(result.aaData, function(i,row){
-					var fileName= row.filename;
-					if(row.metadata && row.metadata.originalname && row.metadata.originalname!=""){
-						fileName = row.metadata.originalname;
-					}
-					contentHtml+='<tr id="attached_tr_'+row.metadata.uuid+'"><td>'+fileName+'</td><td><a href="javascript:void(0);" onClick="delete_uploaded_file(\''+row.metadata.uuid+'\')" title="Remove file"><i class="fa fa-remove"></i></a></td><td><a title="Download file" href="'+backendDirectory+'/download/'+row.metadata.uuid+'" target="_blank"><i class="fa fa-download"></i></a></td></tr>';
-				});
-				$("#attachmentTable").html(contentHtml);
-				
-				$('#table-attachemnt').basictable({
-        				breakpoint: 751
-     				});
-			}
-		});
-	}
-}
 $(function () {	
-	fetch_uploaded_files();
-	
 	var assign_to='', reported_by='', project_id='';
 	<% if (typeof contentObj._id !== 'undefined' && contentObj._id !== null) {	%>
 		<% if (typeof contentObj.assigned_to_user_id !== 'undefined' && contentObj.assigned_to_user_id !== null && contentObj.assigned_to_user_id!=="") { %>

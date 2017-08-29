@@ -1654,6 +1654,60 @@ app.get(backendDirectoryPath+'/api_fetch_applications/', requireLogin, function(
 	}
 }); 
 
+//fetch uploaded files for a particular collection and its id
+app.get(backendDirectoryPath+'/api_fetch_uploads/', requireLogin, function(req, res) {
+	var itemsPerPage = 10, pageNum=1, collectionStr="", collectionID="", outputObj = new Object();
+	
+	if(req.query.collection){
+		collectionStr=req.query.collection;
+	}
+	if(req.query.id){
+		collectionID=req.query.id;
+	}
+	if(req.query.start){
+		pageNum=parseInt(req.query.start);
+	}
+	if(req.query.limit){
+		itemsPerPage=parseInt(req.query.limit);
+	}
+	
+	if(pageNum==0){
+		pageNum=1;
+	}
+	
+	if(req.authenticationBool){
+		var activeSystemsStr=req.authenticatedUser.active_system_uuid.toString();
+			
+			if(collectionStr!="" && collectionID!=""){
+				var query="{ 'metadata.uuid_system': { $in: ['"+activeSystemsStr+"'] }, 'metadata.related_collection' : '"+collectionStr+"',  'metadata.collection_id' : '"+collectionID+"' }";
+				
+				var total_records=0;
+				var coll= db.collection('fs.files');
+				eval('var queryObj='+query);
+     			coll.find(queryObj).count(function (e, count) {
+      				total_records= count;
+      			});
+				coll.find(queryObj).sort({modified: -1}).skip(pageNum-1).limit(itemsPerPage).toArray(function(err, items) {
+					if (err) {
+						outputObj["error"]   = 'not found';
+						res.send(outputObj);
+      				} else if (items) {
+      					outputObj["total"]   = total_records;
+      					outputObj["iTotalRecordsReturned"]   = items.length;
+      					outputObj["aaData"]   = items;
+						res.send(outputObj);
+     				}
+				});
+			}else{
+      			outputObj["error"]   = "Please pass the required parameters";
+				res.send(outputObj);
+			}
+	}else{
+      	outputObj["error"]   = "Authorization error!";
+		res.send(outputObj);
+	}
+}); 
+
 //GENERIC: fetch listing depending upon collection or template passed
 app.get(backendDirectoryPath+'/api_fetch_list/', requireLogin, function(req, res) {
 	var itemsPerPage = 10, pageNum=1, templateStr="", collectionStr="", returnAllResults="", findFieldNameStr="", findFieldValueStr="";
@@ -3107,7 +3161,6 @@ app.post(backendDirectoryPath+'/save/:id', requireLogin, (req, res) => {
 		res.redirect('/sign-in');
 	}
 })
-
 
 function returnUserAssignedModules (auth_user_id, req, cb) {
 	var outputObj= new Object();
