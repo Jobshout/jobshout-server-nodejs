@@ -162,7 +162,7 @@ $(document).ready(function(){
 				if(userSystemsStr!="" && userSystemsStr!=null && userSystemsStr!="undefined"){
 					var	userSystemsArr=userSystemsStr.toString().split(",");
 					var selectedSystemsStr= JSON.stringify(userSystemsArr);
-					alert(selectedSystemsStr)
+					
 					$('#categories').val(selectedSystemsStr);
 					$('#select_categories').remove();
 				}
