@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title><% if (typeof authenticatedUser !== 'undefined' && typeof authenticatedUser.preferences !== 'undefined' && typeof authenticatedUser.preferences.page_title !== 'undefined' && authenticatedUser.preferences.page_title !== null) { %><%= authenticatedUser.preferences.page_title %><% } else { %>Jobshout Control Panel<% } %></title>
+  <title><% if (typeof system_preferences !== 'undefined' && typeof system_preferences.page_title !== 'undefined' && system_preferences.page_title !== null) { %><%= system_preferences.page_title %><% } else { %>Jobshout Control Panel<% } %></title>
  
-<% if (typeof authenticatedUser !== 'undefined' && typeof authenticatedUser.preferences !== 'undefined' && typeof authenticatedUser.preferences.meta_keywords !== 'undefined' && authenticatedUser.preferences.meta_keywords !== null && authenticatedUser.preferences.meta_keywords !== "") { %>
-<meta name="keywords" content="<%= authenticatedUser.preferences.meta_keywords %>"></meta>
+<% if (typeof system_preferences !== 'undefined' && typeof system_preferences.meta_keywords !== 'undefined' && system_preferences.meta_keywords !== null && system_preferences.meta_keywords !== "") { %>
+<meta name="keywords" content="<%= system_preferences.meta_keywords %>"></meta>
 <% } %>
-<% if (typeof authenticatedUser !== 'undefined' && typeof authenticatedUser.preferences !== 'undefined' && typeof authenticatedUser.preferences.meta_description !== 'undefined' && authenticatedUser.preferences.meta_description !== null && authenticatedUser.preferences.meta_description !== "") { %>
-<meta name="description" content="<%= authenticatedUser.preferences.meta_description %>"></meta>
+<% if (typeof system_preferences !== 'undefined' && typeof system_preferences.meta_description !== 'undefined' && system_preferences.meta_description !== null && system_preferences.meta_description !== "") { %>
+<meta name="description" content="<%= system_preferences.meta_description %>"></meta>
 <% } %>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">

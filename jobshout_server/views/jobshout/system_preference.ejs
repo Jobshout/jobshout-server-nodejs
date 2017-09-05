@@ -27,49 +27,49 @@
             						
             						<input type="hidden" class="form-control" id="table_name" name="table_name" value="system_preferences">
       								<input type="hidden" class="form-control" id="unique_field" name="unique_field" value="_id">
-      								<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof authenticatedUser.preferences !== 'undefined' && typeof authenticatedUser.preferences._id !== 'undefined' && authenticatedUser.preferences._id !== null) { %><%= authenticatedUser.preferences._id %><% } %>">
+      								<input type="hidden" class="form-control" id="id" name="id" value="<% if (typeof system_preferences !== 'undefined' && typeof system_preferences._id !== 'undefined' && system_preferences._id !== null) { %><%= system_preferences._id %><% } %>">
       								<input type="hidden" class="form-control" id="editorField" name="editorField" value="<% if (typeof editorField !== 'undefined' && editorField !== null) { %><%= editorField %><% }else{ %>_id<% } %>">
       								<input type="hidden" class="form-control" id="editorValue" name="editorValue" value="<% if (typeof editorValue !== 'undefined' && editorValue !== null) { %><%= editorValue %><% } %>">
             						<input type="hidden" class="form-control" id="data" name="data" value="">
             						<input type="hidden" class="form-control" name="type" value="default">
-            						<input type="hidden" class="form-control" id="main_logo_uuid" name="main_logo_uuid" value="<% if (typeof authenticatedUser.preferences !== 'undefined' && typeof authenticatedUser.preferences.main_logo_uuid !== 'undefined' && authenticatedUser.preferences.main_logo_uuid !== null) { %><%= authenticatedUser.preferences.main_logo_uuid %><% } %>">
-            						<input type="hidden" class="form-control" id="thumbnail_logo_uuid" name="thumbnail_logo_uuid" value="<% if (typeof authenticatedUser.preferences !== 'undefined' && typeof authenticatedUser.preferences.thumbnail_logo_uuid !== 'undefined' && authenticatedUser.preferences.thumbnail_logo_uuid !== null) { %><%= authenticatedUser.preferences.thumbnail_logo_uuid %><% } %>">
+            						<input type="hidden" class="form-control" id="main_logo_uuid" name="main_logo_uuid" value="<% if (typeof system_preferences !== 'undefined' && typeof system_preferences.main_logo_uuid !== 'undefined' && system_preferences.main_logo_uuid !== null) { %><%= system_preferences.main_logo_uuid %><% } %>">
+            						<input type="hidden" class="form-control" id="thumbnail_logo_uuid" name="thumbnail_logo_uuid" value="<% if (typeof system_preferences !== 'undefined' && typeof system_preferences.thumbnail_logo_uuid !== 'undefined' && system_preferences.thumbnail_logo_uuid !== null) { %><%= system_preferences.thumbnail_logo_uuid %><% } %>">
             						
             						
             						<div class="row"><div class="col-md-12 col-sm-6 col-xs-12">
             						<div class="form-group">
                   						<label class="control-label col-md-2" for="first-name">Default Name<span class="required">*</span></label>
                   						<div class="col-md-6">
-                    						<input type="text" required="required" id="name" name="name" class="form-control col-md-5 col-xs-12" value="<% if (typeof authenticatedUser.preferences !== 'undefined' && typeof authenticatedUser.preferences.name !== 'undefined' && authenticatedUser.preferences.name !== null) { %><%= authenticatedUser.preferences.name %><% } %>" onblur="copy_content();" onkeyup="copy_content();">
+                    						<input type="text" required="required" id="name" name="name" class="form-control col-md-5 col-xs-12" value="<% if (typeof system_preferences !== 'undefined' && typeof system_preferences.name !== 'undefined' && system_preferences.name !== null) { %><%= system_preferences.name %><% } %>" onblur="copy_content();" onkeyup="copy_content();">
                   						</div>
                 					</div>
                 								<div class="form-group">
                   									<label class="control-label col-md-2" for="website_url">Page Title<span class="required">*</span></label>
                   									<div class="col-md-6">
-                    									<input type="text" required="required" id="page_title" name="page_title" class="form-control col-md-5 col-xs-12" value="<% if (typeof authenticatedUser.preferences !== 'undefined' && typeof authenticatedUser.preferences.page_title !== 'undefined' && authenticatedUser.preferences.page_title !== null) { %><%= authenticatedUser.preferences.page_title %><% } %>">
+                    									<input type="text" required="required" id="page_title" name="page_title" class="form-control col-md-5 col-xs-12" value="<% if (typeof system_preferences !== 'undefined' && typeof system_preferences.page_title !== 'undefined' && system_preferences.page_title !== null) { %><%= system_preferences.page_title %><% } %>">
                   									</div>
                 								</div>
               						
                 					<div class="form-group">
                   						<label class="control-label col-md-2" for="">Meta Description</label>
                   						<div class="col-md-6">
-                   							<textarea class="form-control" id="meta_description" name="meta_description"><% if (typeof authenticatedUser.preferences !== 'undefined' && typeof authenticatedUser.preferences.meta_description !== 'undefined' && authenticatedUser.preferences.meta_description !== null) { %><%= authenticatedUser.preferences.meta_description %><% } %></textarea>
+                   							<textarea class="form-control" id="meta_description" name="meta_description"><% if (typeof system_preferences !== 'undefined' && typeof system_preferences.meta_description !== 'undefined' && system_preferences.meta_description !== null) { %><%= system_preferences.meta_description %><% } %></textarea>
                   						</div>
                 					</div>
                 					<div class="form-group">
                   						<label class="control-label col-md-2" for="">Meta Keywords</label>
                   						<div class="col-md-6">
-                   							<textarea class="form-control" id="meta_keywords" name="meta_keywords"><% if (typeof authenticatedUser.preferences !== 'undefined' && typeof authenticatedUser.preferences.meta_keywords !== 'undefined' && authenticatedUser.preferences.meta_keywords !== null) { %><%= authenticatedUser.preferences.meta_keywords %><% } %></textarea>
+                   							<textarea class="form-control" id="meta_keywords" name="meta_keywords"><% if (typeof system_preferences !== 'undefined' && typeof system_preferences.meta_keywords !== 'undefined' && system_preferences.meta_keywords !== null) { %><%= system_preferences.meta_keywords %><% } %></textarea>
                   						</div>
                 					</div>
 									
-                					<% if (typeof authenticatedUser.preferences !== 'undefined' && typeof authenticatedUser.preferences._id !== 'undefined' && authenticatedUser.preferences._id !== null) { %>
+                					<% if (typeof system_preferences !== 'undefined' && typeof system_preferences._id !== 'undefined' && system_preferences._id !== null) { %>
                 					<div class="well" style="overflow:hidden;">
    										<h4 style="margin-top:0px;">System Logo's</h4>
    										<div class="col-md-6 col-sm-6 col-xs-12">
    										<div class="form-group">
     										<div class="col-sm-12" align="center">
-    											<img src="<% if (typeof authenticatedUser.preferences !== 'undefined' && typeof authenticatedUser.preferences.main_logo_uuid !== 'undefined' && authenticatedUser.preferences.main_logo_uuid !== null && authenticatedUser.preferences.main_logo_uuid !== "") { %><%= backendDirectory %>/file/<%= authenticatedUser.preferences.main_logo_uuid %>?<%= Math.random(); %><% }else{ %>images/no_image.png<% } %>" class="img-responsive" style="border:1px solid #ddd;" onerror="this.src=img/no-avatar.jpg"/>
+    											<img src="<% if (typeof system_preferences !== 'undefined' && typeof system_preferences.main_logo_uuid !== 'undefined' && system_preferences.main_logo_uuid !== null && system_preferences.main_logo_uuid !== "") { %><%= backendDirectory %>/file/<%= system_preferences.main_logo_uuid %>?<%= Math.random(); %><% }else{ %>images/no_image.png<% } %>" class="img-responsive" style="border:1px solid #ddd;" onerror="this.src=img/no-avatar.jpg"/>
     										</div>
   										</div>
   										<div class="form-group">
@@ -83,7 +83,7 @@
   										<div class="col-md-6 col-sm-6 col-xs-12">
   										<div class="form-group">
     										<div class="col-sm-12" align="center">
-    											<img src="<% if (typeof authenticatedUser.preferences !== 'undefined' && typeof authenticatedUser.preferences.thumbnail_logo_uuid !== 'undefined' && authenticatedUser.preferences.thumbnail_logo_uuid !== null && authenticatedUser.preferences.thumbnail_logo_uuid !== "") { %><%= backendDirectory %>/file/<%= authenticatedUser.preferences.thumbnail_logo_uuid %>?<%= Math.random(); %><% }else{ %>images/no_image.png<% } %>" class="img-responsive" style="border:1px solid #ddd;" onerror="this.src=img/no-avatar.jpg"/>
+    											<img src="<% if (typeof system_preferences !== 'undefined' && typeof system_preferences.thumbnail_logo_uuid !== 'undefined' && system_preferences.thumbnail_logo_uuid !== null && system_preferences.thumbnail_logo_uuid !== "") { %><%= backendDirectory %>/file/<%= system_preferences.thumbnail_logo_uuid %>?<%= Math.random(); %><% }else{ %>images/no_image.png<% } %>" class="img-responsive" style="border:1px solid #ddd;" onerror="this.src=img/no-avatar.jpg"/>
     										</div>
   										</div>
   										<div class="form-group">

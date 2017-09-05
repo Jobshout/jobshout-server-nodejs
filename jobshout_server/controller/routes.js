@@ -34,16 +34,18 @@ var accessFilePath=init.backendDirectoryName+"/";
 var backendDirectoryPath=init.backendDirectoryPath;
 
 //sign in page
-app.get(backendDirectoryPath+'/sign-in', function(req, res) {
+app.get(backendDirectoryPath+'/sign-in', system_preferences, function(req, res) {
 	res.render(accessFilePath+'sign-in', {
-      	 queryStr : req.query
+      	 queryStr : req.query,
+      	 system_preferences :  req.system_preferences
     });   
 })
 
 //reset password
-app.get(backendDirectoryPath+'/reset_password', function(req, res) {
+app.get(backendDirectoryPath+'/reset_password', system_preferences, function(req, res) {
 	res.render(accessFilePath+'reset_password', {
-      	 queryStr : req.query
+      	 queryStr : req.query,
+      	 system_preferences :  req.system_preferences
     });   
 })
 
@@ -154,8 +156,7 @@ app.post(backendDirectoryPath+'/find_remove_file', requireLogin, function(req, r
 });
 
 //fetch uploaded file content
-app.get(backendDirectoryPath+'/file/:filename', requireLogin, function(req, res){
-    if(req.authenticationBool){
+app.get(backendDirectoryPath+'/file/:filename', function(req, res){
         /** First check if file exists */
         gfs.files.find({'metadata.uuid': req.params.filename}).toArray(function(err, files){
             if(!files || files.length === 0){
@@ -176,7 +177,6 @@ app.get(backendDirectoryPath+'/file/:filename', requireLogin, function(req, res)
             /** return response */
             return readstream.pipe(res);
         });
-    }
 });
      
 //post action for save notes
@@ -416,17 +416,19 @@ app.post(backendDirectoryPath+'/reset_password', (req, res) => {
 })
 
 //forgot password
-app.get(backendDirectoryPath+'/forgot_password', function(req, res) {
+app.get(backendDirectoryPath+'/forgot_password', system_preferences, function(req, res) {
 	res.render(accessFilePath+'forgot_password', {
-      	 queryStr : req.query
+      	 queryStr : req.query,
+      	 system_preferences :  req.system_preferences
     });   
 })
 
 //rootcms pages
-app.get(backendDirectoryPath+'/', requireLogin, function(req, res) {
+app.get(backendDirectoryPath+'/', requireLogin, system_preferences, function(req, res) {
 	if(req.authenticationBool){
 		res.render(accessFilePath+'index', {
-      		 authenticatedUser : req.authenticatedUser
+      		 authenticatedUser : req.authenticatedUser,
+      		 system_preferences :  req.system_preferences
    		});
     }else{
 		res.redirect(backendDirectoryPath+'/sign-in');
@@ -434,10 +436,11 @@ app.get(backendDirectoryPath+'/', requireLogin, function(req, res) {
 }); 
 
 //index
-app.get(backendDirectoryPath+'/index', requireLogin, function(req, res) {
+app.get(backendDirectoryPath+'/index', requireLogin, system_preferences, function(req, res) {
 	if(req.authenticationBool){
 		res.render(accessFilePath+'index', {
-      		 authenticatedUser : req.authenticatedUser
+      		 authenticatedUser : req.authenticatedUser,
+      		 system_preferences :  req.system_preferences
    		});
     }else{
 		res.redirect(backendDirectoryPath+'/sign-in');
@@ -445,10 +448,11 @@ app.get(backendDirectoryPath+'/index', requireLogin, function(req, res) {
 }); 
 
 //403 : forbidden page
-app.get(backendDirectoryPath+'/403', requireLogin, function(req, res) {
+app.get(backendDirectoryPath+'/403', requireLogin, system_preferences, function(req, res) {
 	if(req.authenticationBool){
  		res.render(accessFilePath+'403', {
-      		 authenticatedUser : req.authenticatedUser
+      		 authenticatedUser : req.authenticatedUser,
+      		 system_preferences :  req.system_preferences
    		});
     }else{
 		res.redirect(backendDirectoryPath+'/sign-in');
@@ -456,7 +460,7 @@ app.get(backendDirectoryPath+'/403', requireLogin, function(req, res) {
 }); 
 
 //launchpad
-app.get(backendDirectoryPath+'/launchpad', requireLogin, function(req, res) {
+app.get(backendDirectoryPath+'/launchpad', requireLogin, system_preferences, function(req, res) {
 	if(req.authenticationBool){
 		var filesArr= new Array(), i=0;
 		fs.readdirSync('views/jobshout').forEach(file => {
@@ -466,7 +470,8 @@ app.get(backendDirectoryPath+'/launchpad', requireLogin, function(req, res) {
  		initFunctions.save_activity_log(db, 'Launchpad', req.url, req.authenticatedUser._id, req.authenticatedUser.active_system_uuid.toString(), function(result) {	
 			res.render(accessFilePath+'launchpad', {
  				directory_files : filesArr,
-      			authenticatedUser : req.authenticatedUser
+      			authenticatedUser : req.authenticatedUser,
+      			system_preferences :  req.system_preferences
    			});
    		});
     }else{
@@ -2059,7 +2064,7 @@ app.get(backendDirectoryPath+'/collection_details/', requireLogin, function(req,
 }); 
 
 //players list View
-app.get(backendDirectoryPath+'/players', requireLogin, function(req, res) {
+app.get(backendDirectoryPath+'/players', requireLogin, system_preferences, function(req, res) {
 	if(req.authenticationBool){
 		var queryString= req.query;
 		var keywordStr="";
@@ -2072,7 +2077,8 @@ app.get(backendDirectoryPath+'/players', requireLogin, function(req, res) {
 			res.render(accessFilePath+'players', {
        			currentTemplate : '',
         		searched_keyword : keywordStr,
-        		authenticatedUser : req.authenticatedUser
+        		authenticatedUser : req.authenticatedUser,
+        		system_preferences :  req.system_preferences
     		});
     	});
     }else{
@@ -2081,7 +2087,7 @@ app.get(backendDirectoryPath+'/players', requireLogin, function(req, res) {
 });
 
 //images gallery
-app.get(backendDirectoryPath+'/image_gallery', requireLogin, function(req, res) {
+app.get(backendDirectoryPath+'/image_gallery', requireLogin, system_preferences, function(req, res) {
 	if(req.authenticationBool){
 		var queryString= req.query;
 		var keywordStr="";
@@ -2093,7 +2099,8 @@ app.get(backendDirectoryPath+'/image_gallery', requireLogin, function(req, res) 
 			res.render(accessFilePath+'image_gallery', {
        			currentTemplate : '',
         		searched_keyword : keywordStr,
-        		authenticatedUser : req.authenticatedUser
+        		authenticatedUser : req.authenticatedUser,
+        		system_preferences :  req.system_preferences
     		});
     	});
     }else{
@@ -2383,7 +2390,7 @@ app.get(backendDirectoryPath+'/api_fetch_players/', requireLogin, function(req, 
 	}
 }); 
 
-// update players status
+// api update players status
 app.get(backendDirectoryPath+'/update_user_status', requireLogin, (req, res) => {
 	var outputObj = new Object();
 	if(req.authenticationBool){
@@ -2414,7 +2421,7 @@ app.get(backendDirectoryPath+'/update_user_status', requireLogin, (req, res) => 
 	}
 });
 
-// fetch fixture events
+// api fetch fixture events
 app.get(backendDirectoryPath+'/api_fetch_fixtures/', requireLogin, function(req, res) {
 	var outputObj = new Object();
 	
@@ -2570,7 +2577,7 @@ app.get(backendDirectoryPath+'/api_fetch_fixtures/', requireLogin, function(req,
 }); 
 
 // listing pages ui
-app.get(backendDirectoryPath+'/list/:id', requireLogin, function(req, res) {
+app.get(backendDirectoryPath+'/list/:id', requireLogin, system_preferences, function(req, res) {
 	if(req.authenticationBool){
 		var pageRequested = req.params.id, loggedInUser = req.authenticatedUser, queryString= req.query, keywordStr="";
 		if(queryString.keyword){
@@ -2594,7 +2601,8 @@ app.get(backendDirectoryPath+'/list/:id', requireLogin, function(req, res) {
 					res.render(accessFilePath+'standard_listing', {
        	 				currentTemplate : pageRequested,
         				searched_keyword : keywordStr,
-        				authenticatedUser : req.authenticatedUser
+        				authenticatedUser : req.authenticatedUser,
+        				system_preferences :  req.system_preferences
     				});
    				});
    			}else{
@@ -2603,7 +2611,8 @@ app.get(backendDirectoryPath+'/list/:id', requireLogin, function(req, res) {
 						res.render(accessFilePath+'standard_listing', {
    	 						currentTemplate : pageRequested,
        						searched_keyword : keywordStr,
-       						authenticatedUser : req.authenticatedUser
+       						authenticatedUser : req.authenticatedUser,
+       						system_preferences :  req.system_preferences
    						});
    					});
    				}else{
@@ -2616,7 +2625,7 @@ app.get(backendDirectoryPath+'/list/:id', requireLogin, function(req, res) {
 	}
 })
 
-//fetch Table fields
+//api fetch Table fields
 app.get(backendDirectoryPath+'/fetchTableColumns', requireLogin, function(req, res) {
 	if(req.authenticationBool){
 		initFunctions.fetchTableColumns(db, req.query.e, function(result) {	
@@ -2630,7 +2639,7 @@ app.get(backendDirectoryPath+'/fetchTableColumns', requireLogin, function(req, r
 });
 
 // render pages
-app.get(backendDirectoryPath+'/:id', requireLogin, function(req, res) {
+app.get(backendDirectoryPath+'/:id', requireLogin, system_preferences, function(req, res) {
 	if(req.authenticationBool){
 		var pageRequested = req.params.id;
 		var requestedPageStr="/"+pageRequested;
@@ -2681,7 +2690,8 @@ app.get(backendDirectoryPath+'/:id', requireLogin, function(req, res) {
 						res.render(pageRequested, {
       						queryStr : req.query,
        						contentObj : contentObj,
-       						authenticatedUser : req.authenticatedUser
+       						authenticatedUser : req.authenticatedUser,
+       						system_preferences :  req.system_preferences
     					});
     				});
 				}else{
@@ -2707,7 +2717,8 @@ app.get(backendDirectoryPath+'/:id', requireLogin, function(req, res) {
       	 								editorValue : editFieldVal,
        									queryStr : req.query,
        									contentObj : contentObj,
-       									authenticatedUser : req.authenticatedUser
+       									authenticatedUser : req.authenticatedUser,
+       									system_preferences :  req.system_preferences
     								});
     							});
     						}); 
@@ -2733,7 +2744,8 @@ app.get(backendDirectoryPath+'/:id', requireLogin, function(req, res) {
       	 								editorValue : editFieldVal,
        									queryStr : req.query,
        									contentObj : contentObj,
-       									authenticatedUser : req.authenticatedUser
+       									authenticatedUser : req.authenticatedUser,
+       									system_preferences :  req.system_preferences
     								});
     							});
     						});
@@ -2743,7 +2755,8 @@ app.get(backendDirectoryPath+'/:id', requireLogin, function(req, res) {
 	      					res.render(pageRequested, {
 			      				queryStr : req.query,
        							contentObj : contentObj,
-       							authenticatedUser : req.authenticatedUser
+       							authenticatedUser : req.authenticatedUser,
+       							system_preferences :  req.system_preferences
     						});
     					});
     				}
@@ -2757,7 +2770,7 @@ app.get(backendDirectoryPath+'/:id', requireLogin, function(req, res) {
     }	
 }); 
 
-//save default system for admin
+//api save default system for admin
 app.post(backendDirectoryPath+'/default_system', requireLogin, (req, res) => {
 	if(req.authenticationBool){
 	var postJson=req.body;
@@ -2820,7 +2833,7 @@ app.post(backendDirectoryPath+'/default_system', requireLogin, (req, res) => {
 	}
 })
 
-//post action for saveMatchDetails
+//api post action for saveMatchDetails
 app.post(backendDirectoryPath+'/saveMatchDetails', requireLogin, (req, res) => {
  var myObj = new Object();
  if(req.authenticationBool){
@@ -3333,6 +3346,14 @@ function requireLogin (req, res, next) {
 		next();
    	}
 }
+function system_preferences (req, res, next) {
+	initFunctions.crudOpertions(db, 'system_preferences', 'findOne', null, "type", "default", "", function(result) {
+		if (result.aaData) {
+			req.system_preferences=result.aaData;
+		}
+		next();
+	});
+}
 
 var authenticatedUser =function (auth_session_id, cb) {
 	if(auth_session_id != null && auth_session_id != 'undefined' && auth_session_id !=""){
@@ -3361,12 +3382,7 @@ var authenticatedUser =function (auth_session_id, cb) {
 						if(session_result.fixture_page_selected_team && (session_result.fixture_page_selected_team!=null || session_result.fixture_page_selected_team!="null" || session_result.fixture_page_selected_team!="")){
 							returnUserDetsils['fixture_page_selected_team']=session_result.fixture_page_selected_team;
 						}
-						initFunctions.crudOpertions(db, 'system_preferences', 'findOne', null, "type", "default", "", function(result) {
-							if (result.aaData) {
-								returnUserDetsils['preferences']=result.aaData;
-							}
-							return cb(returnUserDetsils);
-						});
+						return cb(returnUserDetsils);
 					}
 				});
 				}else{
